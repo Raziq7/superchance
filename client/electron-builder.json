@@ -1,0 +1,18 @@
+{
+  "appId": "com.n-spinner.fortune",
+  "icon": "./desktopIcon.png", 
+  "directories": {
+    "output": "dist"
+  },
+  "files": ["dist/", "src/electron/**/*"],
+  "extraMetadata": {
+    "main": "src/electron/main.js"
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
