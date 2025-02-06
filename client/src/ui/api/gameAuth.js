@@ -1,19 +1,12 @@
-import axios from "axios";
+import axios from "../utils/baseUrl";
 
 export const login_user = async function (body) {
   try {
-    // const { data } = await axios.post("api/v1/user/login/", {
-    //   ...body,
-    // });
-    const {data} = await axios({
-      method: "post",
-      url: "api/v1/user/login/",
-      data: body,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    // Pass the body directly instead of wrapping it inside another object
+    const { data } = await axios.post("/api/user/login/", body);
     return data;
   } catch (error) {
-    console.log("error on  API", error);
+    console.log("Error on API", error);
     return error;
   }
 };

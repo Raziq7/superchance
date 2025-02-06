@@ -131,7 +131,7 @@ function Home() {
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [infoModal, setinfoModal] = useState(false);
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(1000);
   const [winAmount, setWinAmount] = useState(0);
   const [betHistory, setBetHistory] = useState([]);
   const [gameID, setGameID] = useLocalStorage("gameID", "");
