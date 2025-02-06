@@ -12,7 +12,7 @@ function Login() {
   const navigate = useNavigate();
   const [local, setLocal] = useLocalStorage("userDetails", {});
   const [formData, setFormData] = useState({
-    username: "",
+    userName: "",
     password: "",
   });
 
@@ -29,8 +29,8 @@ function Login() {
     console.log(res);
     if (res.statusCode === 200) {
       setIsLoading(false);
-      TokenManager.setAuthTokens(res.response.auth);
-      setLocal({ id: res.response.id, username: res.response.username });
+      // TokenManager.setAuthTokens(res.response.auth);
+      // setLocal({ id: res.response.id, userName: res.response.userName });
       navigate("game");
     }
   };
@@ -109,9 +109,9 @@ function Login() {
               <InputBase
                 placeholder="Login"
                 type="text"
-                value={formData.username}
+                value={formData.userName}
                 onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
+                  setFormData({ ...formData, userName: e.target.value })
                 }
                 sx={{
                   backgroundColor: "#3D3F85",

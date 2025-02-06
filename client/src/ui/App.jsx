@@ -4,7 +4,7 @@ import "./App.css";
 import Login from "./pages/credintials/Login";
 import { useEffect, useState } from "react";
 import "./api/axiosmain";
-import Router from "./router/Router";
+import Routers from "./router/Routers";
 import { createTheme, ThemeProvider } from "@mui/material";
 // Supports weights 100-900
 import '@fontsource-variable/hahmlet';
@@ -72,9 +72,9 @@ function App() {
         },
       })}
     >
-      <Home />
+      {/* <Home /> */}
       {/* <Login /> */}
-      {/* <Router /> */}
+      <Routers />
       {/* <Lobby /> */}
     </ThemeProvider>
   );

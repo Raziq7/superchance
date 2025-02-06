@@ -5,7 +5,7 @@ import { getCookie } from './functions';
 
 // Create an Axios instance with a base URL
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost:3000',
 });
 
 // Add headers globally for all requests
