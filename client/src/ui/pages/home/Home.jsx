@@ -370,8 +370,10 @@ function Home() {
   }, []);
 
   const fetchGameResult = async () => {
-    // const response = await get_game_result(idLocl.id, 1, 10);
-    // setBetHistory(response.response.data);
+    const response = await get_game_result(idLocl.id, 1, 10);
+    if(response.status === 200){
+      setBetHistory(response.data);
+    }
     // console.log(response.response.data, "response data ((((((((((((");
   };
 
@@ -729,7 +731,6 @@ function Home() {
     setWinAmount(0);
     openAlertBox(`PLACE YOUR BET`);
     placeYourBetsSound.play();
-    fetchGameResult();
     console.log("Triggered at 15sec!");
   }, []);
 
@@ -757,6 +758,7 @@ function Home() {
 
     // First handle the play animation
     handlePlay();
+    fetchGameResult();
 
     // Clear game state
     setIsDisabled(false);

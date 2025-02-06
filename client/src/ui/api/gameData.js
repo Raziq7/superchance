@@ -62,13 +62,13 @@ export const predict_winner = async function (game_id) {
 
 export const get_game_result = async function (id, page, pageSize = 10) {
   try {
-    const { data } = await axios(
-      "api/v1/game/result/" +
-        id +
-        "/?pageIndex=" +
-        page +
-        "&perPage=" +
-        pageSize
+    const data  = await axios(
+      "api/user/lastResults/" 
+        // +id +
+        // "/?pageIndex=" +
+        // page +
+        // "&perPage=" +
+        // pageSize
     );
     return data;
   } catch (error) {

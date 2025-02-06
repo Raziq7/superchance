@@ -195,12 +195,13 @@ function Historyinfo({ setinfoModal, betHistory }) {
                   mb: "4px",
                 }}
               >
-                {moment(e.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A")}
+                {/* {moment(e.dateTime, "HH:mm:ss.SSSSSS").format("hh:mm A")} */}
+                {moment(e.dateTime).format("hh:mm A")}
               </Typography>
               <Paper
                 elevation={0}
                 sx={{
-                  bgcolor: getColorForNumber(e.result) || "#F98C07",
+                  bgcolor: getColorForNumber(e.spinnerNumber) || "#F98C07",
                   borderRadius: "6px",
                   display: "flex",
                   justifyContent: "center",
@@ -217,7 +218,7 @@ function Historyinfo({ setinfoModal, betHistory }) {
                     fontFamily: "Poppins-Regular",
                   }}
                 >
-                  {e.result || e.bet}
+                  {e.spinnerNumber}
                 </Typography>
               </Paper>
             </Box>
