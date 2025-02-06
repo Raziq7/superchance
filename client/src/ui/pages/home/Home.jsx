@@ -828,9 +828,9 @@ function Home() {
           overflow: "hidden",
           width: "100vw",
           minHeight: "900px",
-          background: "rgb(171,44,4)",
+          // background: "rgb(171,44,4)",
           background:
-            " linear-gradient(180deg, rgba(171,44,4,1) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
+            " linear-gradient(180deg, rgb(21, 19, 18) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
         }}
       >
         <Header balance={balance} openAlertBox={openAlertBox} userData={userData} />
