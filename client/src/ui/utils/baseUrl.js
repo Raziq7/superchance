@@ -1,15 +1,16 @@
-// api.js (or axios.js)
 import axios from 'axios';
-import { getCookie } from './functions';
-
+import { getCookie } from './functions';  // Make sure getCookie is correctly implemented
 
 // Create an Axios instance with a base URL
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:3000',  // Your API base URL
 });
 
-// Add headers globally for all requests
-api.defaults.headers.common['Authorization'] = `Bearer ${getCookie("accessToken")}`;
+// Add Authorization and Content-Type headers globally
+const accessToken = getCookie("accessToken");
+if (accessToken) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+}
 api.defaults.headers.common['Content-Type'] = 'application/json';
 
 export default api;

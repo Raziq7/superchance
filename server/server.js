@@ -10,6 +10,7 @@ import { errorHandler, notFound } from "./middlewares/errorMiddlware.js";
 
 import sanitizedConfig from "./config.js";
 import authRouter from "./routes/authRouter.js";
+import userRouter from "./routes/userRouter.js";
 dotenv.config();
 const app = express();
 
@@ -51,6 +52,7 @@ connect().then(() => console.log("DB connected"));
 
 
 app.use("/api/auth/", authRouter);
+app.use("/api/user/", userRouter);
 
 
 
