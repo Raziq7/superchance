@@ -15,7 +15,7 @@ import InfoModal from "./components/InfoModal";
 import MessageModal from "../../components/CustomComponent/MessageModal";
 
 // API
-import { create_game, get_balance, predict_winner } from "../../api/gameData";
+import { create_game, get_gameUser, predict_winner } from "../../api/gameData";
 
 // Hooks
 import useLocalStorage from "../../utils/useLocalStorage";
@@ -358,7 +358,7 @@ function Home() {
   const id = open ? "simple-popover" : undefined;
 
   const fetchBalance = async function () {
-    await get_balance().then((e) => {
+    await get_gameUser().then((e) => {
       if (e.statusCode === 200) {
         setBalance(e.response.balance);
       }

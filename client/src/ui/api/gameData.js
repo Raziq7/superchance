@@ -1,9 +1,10 @@
-import axios from "axios";
-import { getCookie } from "../utils/functions";
+// import axios from "axios";
+import axios from "../utils/baseUrl";  // Import axios with base configuration
+// import { getCookie } from "../utils/functions";
 
-export const get_balance = async function () {
+export const get_gameUser = async function () {
   try {
-    const { data } = await axios("api/v1/user/balance/");
+    const data  = await axios("api/user/fetchUser/");
     return data;
   } catch (error) {
     console.log("error on  API", error);

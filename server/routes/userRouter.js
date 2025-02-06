@@ -4,6 +4,6 @@ import { verifyToken } from "../middlewares/tokenVerification.js";
 const router = express.Router();
 
 // Register a new user
-router.post('/fetchUser',verifyToken, getUserById);
+router.get('/fetchUser',verifyToken, getUserById);
 
 export default router;

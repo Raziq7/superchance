@@ -29,7 +29,7 @@ import { claim_unclamed_tickets, set_autoclame } from "../api/gameData";
 import useLocalStorage from "../utils/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 
-function Header({ balance, openAlertBox }) {
+function Header({ balance, openAlertBox, userData }) {
   const navigate = useNavigate();
   const [visibillity, setVisibillity] = useState(true);
   const [barcode, setBarcode] = useState("")
@@ -222,7 +222,7 @@ function Header({ balance, openAlertBox }) {
         </Button>
 
         <Typography sx={{ color: "#EEDE01", fontSize: "20px",fontFamily:"Poppins-Medium", }}>
-          Welcome, {local.username || "username"}
+          Welcome, {userData.userName || "username"}
         </Typography>
 
         <Paper
