@@ -3,6 +3,18 @@ import User from '../models/User.model.js';
 import SpinnerResult from "../models/SpinnerResult.model.js";
 import Bet from "../models/bet.model.js";
 
+
+// Function to generate a random unique ticket ID (for example, with prefix "SCP" and random numbers)
+export const generateTicketId = () => {
+  return `SCP${Math.floor(Math.random() * 10000)}-${Math.floor(Math.random() * 10000)}`;
+};
+
+// Function to generate a random unique game ID
+export const generateGameId = () => {
+  return Math.floor(Math.random() * 1000000).toString();
+};
+
+
 // @desc    Get user data by ID
 // @route   GET /api/users/fetchUser
 // @access  Private (or Public if necessary)
@@ -64,8 +76,13 @@ export const createBet = asyncHandler(async (req, res) => {
   if (!date || !draw_time || !ticket_time || !startPoint || !endPoint || !data) {
     return res.status(400).json({ message: "All fields are required" });
   }
-
   try {
+
+      // Generate unique ticket_id and game_id
+      const ticket_id = generateTicketId();
+      const game_id = generateGameId();
+
+      
     // Create a new bet object
     const newBet = new Bet({
       ticket_id,
@@ -76,7 +93,7 @@ export const createBet = asyncHandler(async (req, res) => {
       startPoint,
       endPoint,
       data,
-      status: "Pending", // Default status for new bets
+      status: "pending", // Default status for new bets
     });
 
     // Save the bet to the database
