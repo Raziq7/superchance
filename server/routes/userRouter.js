@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserById,getLastSpinnerResults, createBet, getAllBets } from '../controller/userController.js';
+import { getUserById,getLastSpinnerResults, createBet, getAllBets,submitBet } from '../controller/userController.js';
 import { verifyToken } from "../middlewares/tokenVerification.js";
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.post("/createBer",verifyToken, createBet);
 
 // Route to fetch all bets
 router.get("/getAllBets",verifyToken, getAllBets)
+
+router.post("/submitBet",verifyToken, submitBet)
 
 export default router;

@@ -33,8 +33,8 @@ const betSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "completed"],
-      default: "pending",
+      enum: ["Pending","Done","No win", "Completed"],
+      default: "blank",
     },
     result: {
       type: Number,  // You can modify it based on your actual result type

@@ -9,7 +9,8 @@ import { errorHandler, notFound } from "./middlewares/errorMiddlware.js";
 import sanitizedConfig from "./config.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
-import { spinAndStoreResult } from "./controller/spinAndStoreResult.js";
+import { runSpinner } from './controller/spinAndStoreResult.js'; // Import the runSpinner function
+
 
 dotenv.config();
 const app = express();
@@ -47,30 +48,9 @@ app.use(express.json());
 // Database connection
 connect().then(() => console.log("DB connected"));
 
-// Ensure that the spinner runs at fixed intervals (2 minutes)
-// Use a flag to prevent overlapping calls
-let isSpinning = false;
+// Call runSpinner to ensure spinner starts at intervals as soon as the server starts
+runSpinner(); // Call this function to start the spinner process immediately
 
-const runSpinner = async () => {
-  if (isSpinning) {
-    console.log("Skipping spinner run, previous run is still in progress.");
-    return;  // Skip this interval if the previous spinner is still running
-  }
-
-  try {
-    isSpinning = true; // Lock the spinner
-    console.log("Starting the spinner...");
-    await spinAndStoreResult(); // Trigger the spinner logic
-    console.log("Spinner finished.");
-  } catch (error) {
-    console.error("Error during spinner operation:", error);
-  } finally {
-    isSpinning = false; // Unlock the spinner after the operation is done
-  }
-};
-
-// Automatically trigger the spinner every 2 minutes
-setInterval(runSpinner, 2 * 60 * 1000); // 2 minutes in milliseconds
 
 // Routes for authentication and user handling
 app.use("/api/auth/", authRouter);

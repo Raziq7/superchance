@@ -82,7 +82,7 @@ export const createBet = asyncHandler(async (req, res) => {
       const ticket_id = generateTicketId();
       const game_id = generateGameId();
 
-      
+
     // Create a new bet object
     const newBet = new Bet({
       ticket_id,
@@ -93,7 +93,7 @@ export const createBet = asyncHandler(async (req, res) => {
       startPoint,
       endPoint,
       data,
-      status: "pending", // Default status for new bets
+      status: "blank", // Default status for new bets
     });
 
     // Save the bet to the database
@@ -131,3 +131,79 @@ export const getAllBets = asyncHandler(async (req, res) => {
   }
 });
 
+
+// @desc    Submit the bet and determine the winner
+// @route   POST /api/user/submitBet
+// @access  Public
+export const submitBet = asyncHandler(async (req, res) => {
+
+  const { status } = req.body; 
+  
+  try {
+    
+    const pendingBets = await Bet.find({ status: "blank" });
+
+    if (pendingBets.length === 0) {
+      return res.status(404).json({ message: "No pending bets found." });
+    }
+
+   
+    let selectedBet = null;
+    let lowestPlayedAmount = Infinity;
+
+    
+    for (const bet of pendingBets) {
+      for (const data of bet.data) {
+        if (data.played < lowestPlayedAmount) {
+          lowestPlayedAmount = data.played;
+          selectedBet = bet;
+        }
+      }
+    }
+
+    if (!selectedBet) {
+      return res.status(400).json({ message: "No valid bets found to select." });
+    }
+
+    
+    const betData = selectedBet.data.find(
+      (data) => data.played === lowestPlayedAmount
+    );
+    
+    const betAmount = betData.bet;
+    const playedAmount = betData.played;
+    
+    
+    const houseEdge = 0.10;
+    const profit = (betAmount * playedAmount) * houseEdge;
+    
+    console.log(`Profit for this round: ${profit}`);
+
+    
+    // const winThreshold = 30; // Example threshold for determining a "win"
+
+    
+    // if (betData.played <= winThreshold) {
+    //   selectedBet.status = "Done"; // Set status as "Done" if it wins
+    // } else {
+    //   selectedBet.status = "No win"; // Set status as "No win" if it doesn't win
+    // }
+
+    
+    selectedBet.result = betData.bet; 
+    
+    // Save the updated bet with the status and result
+    await selectedBet.save();
+    console.log("Bet updated successfully!");
+
+   
+    res.status(200).json({
+      message: "Bet processed successfully.",
+      betResult: selectedBet,
+      profit: profit,
+    });
+  } catch (error) {
+    console.error("Error processing the bet:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});

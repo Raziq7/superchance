@@ -1,4 +1,5 @@
 import SpinnerResult from "../models/SpinnerResult.model.js";
+import moment from "moment";
 
 // Function to simulate spinning the spinner (random number from predefined set)
 const spinSpinner = () => {
@@ -9,11 +10,10 @@ const spinSpinner = () => {
 
 // Controller function to spin the spinner and store the result
 const spinAndStoreResult = async () => {
-  // Step 1: Simulate the spinner
   const spinnerNumber = spinSpinner();
-  console.log(`Spinner landed on number: ${spinnerNumber, "-",  Date.now()}`);
+  console.log(`Spinner landed on number: ${spinnerNumber}, Date: ${Date.now()}`);
 
-  // Step 2: Store the result in the database
+  // Store the result in the database
   const spinnerResult = new SpinnerResult({
     spinnerNumber,
   });
@@ -24,4 +24,41 @@ const spinAndStoreResult = async () => {
   return spinnerResult;
 };
 
-export { spinAndStoreResult };
+// Ensure that the spinner runs at fixed intervals (2 minutes)
+// Use a flag to prevent overlapping calls
+let isSpinning = false;
+
+const runSpinner = async () => {
+  const time = 2; // Interval time in minutes
+  const intervalMs = time * 60 * 1000;
+
+  const now = moment();
+  const midnight = moment().startOf("day");
+  const elapsedTime = now.diff(midnight);
+  const timeUntilNextInterval = intervalMs - (elapsedTime % intervalMs);
+  const nextInterval = now.clone().add(timeUntilNextInterval, "milliseconds");
+
+  // Log the time calculation
+  console.log(`Time Until Next Interval: ${timeUntilNextInterval}ms, Next Interval: ${nextInterval.format("h:mm A")}`);
+
+  // Make sure spinner runs after time is calculated
+  if (isSpinning) {
+    console.log("Skipping spinner run, previous run is still in progress.");
+    return;
+  }
+
+  try {
+    isSpinning = true; // Lock the spinner
+    console.log("Starting the spinner...");
+    await spinAndStoreResult(); // Trigger the spinner logic
+    console.log("Spinner finished.");
+  } catch (error) {
+    console.error("Error during spinner operation:", error);
+  } finally {
+    isSpinning = false; // Unlock the spinner after the operation is done
+  }
+
+  setTimeout(runSpinner, timeUntilNextInterval); // Schedule the next spin
+};
+
+export { runSpinner }; // Ensure that runSpinner is exported
