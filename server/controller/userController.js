@@ -61,7 +61,7 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
 export const createBet = asyncHandler(async (req, res) => {
   const { ticket_id, game_id, date, draw_time, ticket_time, startPoint, endPoint, data } = req.body;
 
-  if (!ticket_id || !game_id || !date || !draw_time || !ticket_time || !startPoint || !endPoint || !data) {
+  if (!date || !draw_time || !ticket_time || !startPoint || !endPoint || !data) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
