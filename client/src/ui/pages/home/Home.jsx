@@ -785,7 +785,7 @@ function Home() {
           background: " linear-gradient(180deg, rgba(171,44,4,1) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)"
         }}
       >
-        {/* <Header balance={balance} openAlertBox={openAlertBox} /> */}
+        <Header balance={balance} openAlertBox={openAlertBox} />
 
 <Box sx={{display:"flex",flexDirection:"column",justifyContent:"space-between",height:'838px'  ,width:"100vw" ,position:"relative"}}  >
 

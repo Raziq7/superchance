@@ -72,10 +72,10 @@ function App() {
         },
       })}
     >
-      {/* <Home /> */}
+      <Home />
       {/* <Login /> */}
       {/* <Router /> */}
-      <Lobby />
+      {/* <Lobby /> */}
     </ThemeProvider>
   );
 }
