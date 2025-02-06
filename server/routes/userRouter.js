@@ -6,4 +6,6 @@ const router = express.Router();
 // Register a new user
 router.post('/fetchUser',verifyToken, getUserById);
 
+router.post('/spinning',verifyToken, spinning);
+
 export default router;
