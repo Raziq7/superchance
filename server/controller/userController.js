@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.model.js'; 
-import SpinnerResult from "../models/spinnerResult.model.js";
+import SpinnerResult from "../models/SpinnerResult.model.js";
+import Bet from "../models/bet.model.js";
 
 // @desc    Get user data by ID
 // @route   GET /api/users/fetchUser
@@ -53,3 +54,63 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// @desc    Create a new bet
+// @route   POST /api/bet/create
+// @access  Private (or Public if necessary)
+export const createBet = asyncHandler(async (req, res) => {
+  const { ticket_id, game_id, date, draw_time, ticket_time, startPoint, endPoint, data } = req.body;
+
+  if (!ticket_id || !game_id || !date || !draw_time || !ticket_time || !startPoint || !endPoint || !data) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    // Create a new bet object
+    const newBet = new Bet({
+      ticket_id,
+      game_id,
+      date,
+      draw_time,
+      ticket_time,
+      startPoint,
+      endPoint,
+      data,
+      status: "Pending", // Default status for new bets
+    });
+
+    // Save the bet to the database
+    const savedBet = await newBet.save();
+
+    // Respond with the created bet
+    res.status(201).json({
+      message: "Bet created successfully",
+      bet: savedBet,
+    });
+  } catch (error) {
+    console.error("Error creating bet:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+// @desc    Get all bets
+// @route   GET /api/bet/all
+// @access  Public
+export const getAllBets = asyncHandler(async (req, res) => {
+  try {
+    // Fetch all bets from the database
+    const bets = await Bet.find().sort({ createdAt: -1 }); // Sort by createdAt to get the most recent bets first
+
+    if (bets.length === 0) {
+      return res.status(404).json({ message: "No bets found" });
+    }
+
+    // Return the bets
+    res.status(200).json(bets);
+  } catch (error) {
+    console.error("Error fetching bets:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+

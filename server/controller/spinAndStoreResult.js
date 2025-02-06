@@ -1,4 +1,4 @@
-import SpinnerResult from "../models/spinnerResult.model.js";
+import SpinnerResult from "../models/SpinnerResult.model.js";
 
 // Function to simulate spinning the spinner (random number from predefined set)
 const spinSpinner = () => {
@@ -11,7 +11,7 @@ const spinSpinner = () => {
 const spinAndStoreResult = async () => {
   // Step 1: Simulate the spinner
   const spinnerNumber = spinSpinner();
-  console.log(`Spinner landed on number: ${spinnerNumber}`);
+  console.log(`Spinner landed on number: ${spinnerNumber, "-",  Date.now()}`);
 
   // Step 2: Store the result in the database
   const spinnerResult = new SpinnerResult({
