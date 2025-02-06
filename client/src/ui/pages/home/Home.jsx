@@ -1,5 +1,5 @@
 // import React from 'react'
-import anime from 'animejs/lib/anime.es.js';
+import anime from "animejs/lib/anime.es.js";
 import gsap from "gsap";
 import Header from "../../components/Header";
 import Spinner from "../../components/Spinner/Spinner";
@@ -23,7 +23,7 @@ import PlaceYourBets from "../../public/GAME SOUNDS/Place your bets.mp3";
 import MessageModal from "../../components/CustomComponent/MessageModal";
 import {
   create_game,
-  get_balance,
+  get_gameUser,
   get_game_result,
   predict_winner,
 } from "../../api/gameData";
@@ -36,7 +36,7 @@ import YouWin from "./components/YouWin";
 import Spinner3 from "../../components/Spinner/Spinner3";
 import Spinner4 from "../../components/Spinner/Spinner4";
 
-import { Back } from 'gsap';
+import { Back } from "gsap";
 
 // const crypto = window.crypto || window.msCrypto;
 
@@ -129,6 +129,8 @@ function Home() {
   // const [ismessModal, setIsmessageModal] = useState(false);
   const [play, setPlay] = useState(0);
 
+  const [isDisableBet, setIsDisableBet] = useState(false);
+
   const [isDisabled, setIsDisabled] = useState(false);
   const [infoModal, setinfoModal] = useState(false);
   const [balance, setBalance] = useState(1000);
@@ -142,7 +144,13 @@ function Home() {
     true
   );
 
-  const [bulbAnimation,setBulbAnimation]=useState(()=>{})
+  const [userData, setuserData] = useState({
+    id: "",
+    fullName: "",
+    userName: "",
+    deviceId: "",
+    balance: 0,
+  });
 
   const generateHistoryData = () => {
     const data = [];
@@ -179,8 +187,7 @@ function Home() {
   const innerWheelLight = useRef(null);
   const redLight = useRef(null);
   const orangeLight = useRef(null);
-  const greenLight= useRef(null);
-
+  const greenLight = useRef(null);
 
   const boxRef = useRef(null);
   const hasCountdownStarted = useRef(false); // Tracks if onCountdownStart has been called
@@ -212,30 +219,65 @@ function Home() {
       onComplete: () => {
         console.log(`Spinner landed on number: ${targetNumber}`);
 
-        
-       
-      var tl=anime.timeline({easing:"linear",duration:300, loop: 3})
-        tl.add({targets:[greenLight.current.querySelectorAll('g') , greenLight.current.querySelectorAll('circle')] ,
-          opacity:0
-        }).add({targets:[greenLight.current.querySelectorAll('g') , greenLight.current.querySelectorAll('circle')] ,
-         opacity:1,fillOpacity:1
-            }).add({targets:[orangeLight.current.querySelectorAll('g') , orangeLight.current.querySelectorAll('circle')] ,
-         opacity:0
-         }).add({targets:[orangeLight.current.querySelectorAll('g') , orangeLight.current.querySelectorAll('circle')] ,
-           opacity:1,fillOpacity:1
-              }).add({targets:[redLight.current.querySelectorAll('g') , redLight.current.querySelectorAll('circle')] ,
-           opacity:0
-           }).add({targets:[redLight.current.querySelectorAll('g') , redLight.current.querySelectorAll('circle')] ,
-             opacity:1,fillOpacity:1
-               
-            }) 
+        var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
+        tl.add({
+          targets: [
+            greenLight.current.querySelectorAll("g"),
+            greenLight.current.querySelectorAll("circle"),
+          ],
+          opacity: 0,
+        })
+          .add({
+            targets: [
+              greenLight.current.querySelectorAll("g"),
+              greenLight.current.querySelectorAll("circle"),
+            ],
+            opacity: 1,
+            fillOpacity: 1,
+          })
+          .add({
+            targets: [
+              orangeLight.current.querySelectorAll("g"),
+              orangeLight.current.querySelectorAll("circle"),
+            ],
+            opacity: 0,
+          })
+          .add({
+            targets: [
+              orangeLight.current.querySelectorAll("g"),
+              orangeLight.current.querySelectorAll("circle"),
+            ],
+            opacity: 1,
+            fillOpacity: 1,
+          })
+          .add({
+            targets: [
+              redLight.current.querySelectorAll("g"),
+              redLight.current.querySelectorAll("circle"),
+            ],
+            opacity: 0,
+          })
+          .add({
+            targets: [
+              redLight.current.querySelectorAll("g"),
+              redLight.current.querySelectorAll("circle"),
+            ],
+            opacity: 1,
+            fillOpacity: 1,
+          });
 
-           anime({targets:[greenLight.current.querySelectorAll('g') , redLight.current.querySelectorAll('g') , redLight.current.querySelectorAll('circle'),
-              ,orangeLight.current.querySelectorAll('g') , orangeLight.current.querySelectorAll('circle')
-            ] ,
-             fillOpacity:0,delay:1500
-             }) 
-   
+        anime({
+          targets: [
+            greenLight.current.querySelectorAll("g"),
+            redLight.current.querySelectorAll("g"),
+            redLight.current.querySelectorAll("circle"),
+            ,
+            orangeLight.current.querySelectorAll("g"),
+            orangeLight.current.querySelectorAll("circle"),
+          ],
+          fillOpacity: 0,
+          delay: 1500,
+        });
       },
     });
 
@@ -267,67 +309,69 @@ function Home() {
   }, []);
 
   // Outer Ring animation
- 
-  useEffect(() => {
 
+  useEffect(() => {}, []);
 
-  }, [])
-
-
-
- // Inner Ring animation
+  // Inner Ring animation
 
   useEffect(() => {
     var tl = anime.timeline({
-      easing: 'easeOutExpo',
-
+      easing: "easeOutExpo",
     });
 
     // Add children
     const spots = innerWheelLight.current.querySelectorAll(`g`);
     for (let i = 0; i <= spots.length; i++) {
       if (i % 2 == 0) {
-        let tl = anime.timeline({ easing: 'linear',direction:"alternate", duration: 500,loop:true })
+        let tl = anime.timeline({
+          easing: "linear",
+          direction: "alternate",
+          duration: 500,
+          loop: true,
+        });
         tl.add({
           targets: spots[i],
-          fillOpacity: 1
-          
+          fillOpacity: 1,
         })
-        .add({
-          targets: spots[i],
-          fillOpacity: 0
-        })
-        .add({
-          targets: spots[i],
-          fillOpacity: 1
-        })
+          .add({
+            targets: spots[i],
+            fillOpacity: 0,
+          })
+          .add({
+            targets: spots[i],
+            fillOpacity: 1,
+          });
       }
-          for (let i = 0; i < spots.length; i++) {
+      for (let i = 0; i < spots.length; i++) {
         if (!(i % 2 == 0)) {
-          let tl = anime.timeline({ easing: 'linear',direction:"alternate", duration: 500,delay:500 ,loop:true})
+          let tl = anime.timeline({
+            easing: "linear",
+            direction: "alternate",
+            duration: 500,
+            delay: 500,
+            loop: true,
+          });
           tl.add({
             targets: spots[i],
-            fillOpacity: 1
+            fillOpacity: 1,
           })
-          
-          .add({
-            targets: spots[i],
-            fillOpacity: 0
-          })
-          .add({
-            targets: spots[i],
-            fillOpacity: 1
-          })
+
+            .add({
+              targets: spots[i],
+              fillOpacity: 0,
+            })
+            .add({
+              targets: spots[i],
+              fillOpacity: 1,
+            });
         }
       }
     }
-
-
-  }, [])
+  }, []);
 
   const fetchGameResult = async () => {
-    const response = await get_game_result(idLocl.id, 1, 10);
-    setBetHistory(response.response.data);
+    // const response = await get_game_result(idLocl.id, 1, 10);
+    // setBetHistory(response.response.data);
     // console.log(response.response.data, "response data ((((((((((((");
   };
 
@@ -384,10 +428,7 @@ function Home() {
     }
   };
 
-
-
   const handleYouWin = () => {
-
     setIsOpen(true);
     youWinSound.play();
     setAlertMessage("message");
@@ -397,7 +438,7 @@ function Home() {
   const betFunc = function () {
     betFunction("clear");
     setPlay(0);
-    
+
     let betData = betNumList
       .filter((e) => e.token !== "")
       .map((e) => ({ bet: e.num, played: e.token }));
@@ -440,8 +481,8 @@ function Home() {
         <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
         <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
         <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
-        "DD-MM-YYYY h:mm A"
-      )}</p>
+          "DD-MM-YYYY h:mm A"
+        )}</p>
         <p style="margin-bottom: 4px;">Total Point: ${play}</p>
         <div style="display: flex; align-items: flex-start; gap: 14px;">
             <table>
@@ -452,8 +493,8 @@ function Home() {
                 <th>Point</th>
               </tr>
               ${pairedItems
-          .map(
-            (pair) => `
+                .map(
+                  (pair) => `
                   <tr>
                     <td>${pair[0]?.num || ""}</td>
                     <td>${pair[0]?.token || ""}</td>
@@ -461,8 +502,8 @@ function Home() {
                     <td>${pair[1]?.token || ""}</td>
                   </tr>
                 `
-          )
-          .join("")}
+                )
+                .join("")}
             </table>
           </div>
         </div>
@@ -510,7 +551,7 @@ function Home() {
         // Remove the token by returning the object without the token property
         return {
           ...e,
-          token: '', // or null, depending on how you want to represent no token
+          token: "", // or null, depending on how you want to represent no token
         };
       }
       return e;
@@ -628,9 +669,11 @@ function Home() {
   // const intervalMs = time * 60 * 1000;
 
   const fetchBalance = async function () {
-    await get_balance().then((e) => {
-      if (e.statusCode === 200) {
-        setBalance(e.response.balance);
+    await get_gameUser().then((e) => {
+      
+      if (e.status === 200) {
+        setBalance(e.data.balance);
+        setuserData(e.data);
       }
       // console.log(e.response.balance);
     });
@@ -774,7 +817,6 @@ function Home() {
 
   return (
     <>
-
       <Box
         sx={{
           position: "relative",
@@ -782,115 +824,119 @@ function Home() {
           width: "100vw",
           minHeight: "900px",
           background: "rgb(171,44,4)",
-          background: " linear-gradient(180deg, rgba(171,44,4,1) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)"
+          background:
+            " linear-gradient(180deg, rgba(171,44,4,1) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
         }}
       >
-        <Header balance={balance} openAlertBox={openAlertBox} />
-
-<Box sx={{display:"flex",flexDirection:"column",justifyContent:"space-between",height:'838px'  ,width:"100vw" ,position:"relative"}}  >
-
-        <Historyinfo betHistory={betHistory} setinfoModal={setinfoModal} />
-        <img src={StarPattern} alt="StarPattern"
-          style={{
-            position: "absolute",
-            top: "14%",
-            "mix-blend-mode": "screen",
-          }}
-        />
-
+        <Header balance={balance} openAlertBox={openAlertBox} userData={userData} />
 
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "space-between",
-            // pl: 2,
-            pt: 9,
+            height: "838px",
+            width: "100vw",
             position: "relative",
-            height: "729px",
-            zIndex: 0,
           }}
         >
-          <Box
-            aria-describedby={id}
-            sx={{
+          <Historyinfo betHistory={betHistory} setinfoModal={setinfoModal} />
+          <img
+            src={StarPattern}
+            alt="StarPattern"
+            style={{
               position: "absolute",
-              left: -20,
-              top: 45,
-              width: "680px",
+              top: "14%",
+              "mix-blend-mode": "screen",
             }}
-            ref={boxRef}
+          />
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              // pl: 2,
+              pt: 9,
+              position: "relative",
+              height: "729px",
+              zIndex: 0,
+            }}
           >
-            {/* <h1 >7x</h1> */}
-            {/* <Spinner2
+            <Box
+              aria-describedby={id}
+              sx={{
+                position: "absolute",
+                left: -20,
+                top: 45,
+                width: "680px",
+              }}
+              ref={boxRef}
+            >
+              {/* <h1 >7x</h1> */}
+              {/* <Spinner2
               wheelRef1={wheelRef1}
               wheelRef2={wheelRef2}
               currentRef={currentRef}
             /> */}
-            {/* <Spinner3
+              {/* <Spinner3
               wheelRef1={wheelRef1}
               wheelRef2={wheelRef2}
               currentRef={currentRef}
             /> */}
 
-            <Spinner4
+              <Spinner4
+                wheelRef1={wheelRef1}
+                wheelRef2={wheelRef2}
+                currentRef={currentRef}
+                innerWheelLight={innerWheelLight}
+                greenLight={greenLight}
+                redLight={redLight}
+                orangeLight={orangeLight}
+              />
+
+              {/* <Spinner5
+
               wheelRef1={wheelRef1}
               wheelRef2={wheelRef2}
               currentRef={currentRef}
               innerWheelLight={innerWheelLight}
-              greenLight={greenLight}
-              redLight={redLight}
-              orangeLight={orangeLight}   />
-
-            {/* <Spinner5
-
-              wheelRef1={wheelRef1}
-              wheelRef2={wheelRef2}
-              currentRef={currentRef}
-              innerWheelLight={innerWheelLight}
             /> */}
-            <YouWin
-              winAmount={winAmount}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-            />
+              <YouWin
+                winAmount={winAmount}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
+            </Box>
+            <Box sx={{ position: "absolute", right: "1.5rem", top: "6.5rem" }}>
+              <BetNumbers
+                isDisabled={isDisabled}
+                betNumList={betNumList}
+                betButtonClick={betButtonClick}
+                betremoveClick={betremoveClick}
+                chipSound={chipSound}
+              />
+            </Box>
           </Box>
-          <Box sx={{ position: "absolute", right: "1.5rem", top: "6.5rem" }}>
-            <BetNumbers
-              isDisabled={isDisabled}
-              betNumList={betNumList}
-              betButtonClick={betButtonClick}
-              betremoveClick={betremoveClick}
-              chipSound={chipSound}
-            />
-          </Box>
+
+          <BottomPortion
+            balance={balance}
+            chipNum={chipNum}
+            handlePlay={handlePlay}
+            setChipNum={setChipNum}
+            betFunction={betFunction}
+            chipSound={chipSound}
+            openAlertBox={openAlertBox}
+            remainingTime={countdown}
+            isDisabled={isDisabled}
+            betFunc={betFunc}
+            play={play}
+            betNumList={betNumList}
+            duration={nextIntervalTime}
+            // progressRef={progressRef}
+            totalWin={winAmount}
+          />
         </Box>
-
-
-        <BottomPortion
-          balance={balance}
-          chipNum={chipNum}
-          handlePlay={handlePlay}
-          setChipNum={setChipNum}
-          betFunction={betFunction}
-          chipSound={chipSound}
-          openAlertBox={openAlertBox}
-          remainingTime={countdown}
-          isDisabled={isDisabled}
-          betFunc={betFunc}
-          play={play}
-          betNumList={betNumList}
-          duration={nextIntervalTime}
-          // progressRef={progressRef}
-          totalWin={winAmount}
-        />
-
-
-</Box>
       </Box>
-
-
-
-
 
       <MessageModal
         id={id}

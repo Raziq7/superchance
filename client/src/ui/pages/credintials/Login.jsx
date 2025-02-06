@@ -26,11 +26,13 @@ function Login() {
     // setIsLoading(true);
     e.preventDefault();
     const res = await login_user(formData);
-    console.log(res);
-    if (res.statusCode === 200) {
+    // console.log(res);
+    if (res.status === 200) {
       setIsLoading(false);
-      // TokenManager.setAuthTokens(res.response.auth);
-      // setLocal({ id: res.response.id, userName: res.response.userName });
+      console.log(res.data.token);
+      
+      TokenManager.setAuthTokens({accessToken: res.data.token});
+      setLocal({ token: res.data.token });
       navigate("game");
     }
   };

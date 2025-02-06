@@ -61,8 +61,8 @@ function Result() {
   };
 
   const fetchGameResult = async () => {
-    const response = await get_game_result(idLocl.id, pageNum);
-    setGameResult(response.response.data);
+    // const response = await get_game_result(idLocl.id, pageNum);
+    // setGameResult(response.response.data);
   };
 
   useEffect(() => {
