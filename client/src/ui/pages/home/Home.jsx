@@ -670,8 +670,9 @@ function Home() {
 
   const fetchBalance = async function () {
     await get_gameUser().then((e) => {
-      
       if (e.status === 200) {
+        console.log(e.data.balance);  
+        
         setBalance(e.data.balance);
         setuserData(e.data);
       }
