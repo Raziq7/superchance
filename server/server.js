@@ -11,8 +11,10 @@ import { errorHandler, notFound } from "./middlewares/errorMiddlware.js";
 import sanitizedConfig from "./config.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
+import { spinAndStoreResult } from "./controller/spinAndStoreResult.js";
 dotenv.config();
 const app = express();
+const router = express.Router();
 
 app.use(cors({
   origin: "http://localhost:5173",  // Your frontend URL
@@ -49,6 +51,18 @@ app.use(express.json());
 
 // db Connectig
 connect().then(() => console.log("DB connected"));
+
+// Route to manually trigger the spinner
+
+// Automatic Spinner Trigger every 2 minutes
+setInterval(async () => {
+  try {
+    await spinAndStoreResult(); // Trigger the spinner logic every 2 minutes
+  } catch (error) {
+    console.error("Error spinning the spinner automatically:", error);
+  }
+}, 2 * 60 * 1000); // 2 minutes in milliseconds
+
 
 
 app.use("/api/auth/", authRouter);
