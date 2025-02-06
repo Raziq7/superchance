@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { claim_unclamed_tickets, set_autoclame } from "../api/gameData";
 import useLocalStorage from "../utils/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { logout_user } from "../api/gameAuth";
 
 function Header({ balance, openAlertBox, userData }) {
   const navigate = useNavigate();
@@ -50,8 +51,9 @@ function Header({ balance, openAlertBox, userData }) {
     window.electronAPI.minimize();
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     window.electronAPI.close();
+    await logout_user();
   };
 
   const handleAutoclame = (event) => {
@@ -68,7 +70,7 @@ function Header({ balance, openAlertBox, userData }) {
     setBarcode("");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Clear all cookies
     document.cookie.split(";").forEach((cookie) => {
       document.cookie = cookie
@@ -79,6 +81,8 @@ function Header({ balance, openAlertBox, userData }) {
     navigate("/");
     localStorage.clear();
     sessionStorage.clear();
+
+    await logout_user();
     // window.location.reload();
   };
 

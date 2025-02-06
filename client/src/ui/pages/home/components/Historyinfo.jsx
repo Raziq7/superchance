@@ -123,7 +123,6 @@ function Historyinfo({ setinfoModal, betHistory }) {
         // p: 1,
         zIndex: 1,
         position: "relative",
-
       }}
     >
       <img
@@ -142,8 +141,8 @@ function Historyinfo({ setinfoModal, betHistory }) {
           alignItems: "center",
           position: "absolute",
           top: -3,
-          gap:"10px", 
-          mr:3,
+          gap: "10px",
+          mr: 3,
           right: 20,
         }}
       >
@@ -152,7 +151,7 @@ function Historyinfo({ setinfoModal, betHistory }) {
             color: "#390206",
             fontSize: "32px",
             fontWeight: "600",
-            fontFamily:"Poppins-SemiBold",
+            fontFamily: "Poppins-SemiBold",
             textTransform: "uppercase",
             mr: 1,
           }}
@@ -166,26 +165,28 @@ function Historyinfo({ setinfoModal, betHistory }) {
             borderRadius: 2,
             display: "flex",
             alignItems: "center",
-            justifyContent: "end",
-            gap: 1,
-            width: "660px",
-            height: "110px",
-         position:"relative",
-         top:"-2px",
+            // justifyContent: "end",
+            // gap: 1,
+            // width: "660px",
+            // height: "110px",
+            position: "relative",
+            top: "-2px",
             justifyContent: "flex-end",
             gap: 1,
-            width: "605px",
+            minWidth: "605px",
             height: "104px",
           }}
         >
           {betHistory.map((e, i) => (
             <Box
               key={i}
-              sx={{
-                // display: "flex",
-                // flexDirection: "column",
-                // alignItems: "center",
-              }}
+              sx={
+                {
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // alignItems: "center",
+                }
+              }
             >
               <Typography
                 sx={{
@@ -224,8 +225,8 @@ function Historyinfo({ setinfoModal, betHistory }) {
             </Box>
           ))}
         </Box>
-        <IconButton sx={{width:"52px"}} onClick={() => setinfoModal(true)}>
-          <InfoIcon sx={{ fontSize: "42px",width:"52px" }} />
+        <IconButton sx={{ width: "52px" }} onClick={() => setinfoModal(true)}>
+          <InfoIcon sx={{ fontSize: "42px", width: "52px" }} />
         </IconButton>
       </Box>
     </Box>
