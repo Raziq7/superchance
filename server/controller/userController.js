@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.model.js'; 
 import SpinnerResult from "../models/SpinnerResult.model.js";
-import Bet from "../models/bet.model.js";
+import Bet from "../models/Bet.model.js";
 
 // @desc    Get user data by ID
 // @route   GET /api/users/fetchUser
