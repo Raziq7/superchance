@@ -28,7 +28,7 @@ export const set_autoclame = async function (bool) {
 
 export const create_game = async function (body) {
   try {
-    const { data } = await axios.post("api/v1/game/create/", body);
+    const { data } = await axios.post("api/user/createBer/", body);
     return data;
   } catch (error) {
     console.log("error on  API", error);

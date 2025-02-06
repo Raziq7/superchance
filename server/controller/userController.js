@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.model.js'; 
 import SpinnerResult from "../models/SpinnerResult.model.js";
-import Bet from "../models/bet.model.js";
+import Bet from "../models/Bet.model.js";
 
 
 // Function to generate a random unique ticket ID (for example, with prefix "SCP" and random numbers)

@@ -465,54 +465,56 @@ function Home() {
     }
 
     const payload = {
-      ticket_id: generateUniqueCode().toString(),
-      game_id: currentGameID, // Use the currentGameID here
+      // ticket_id: generateUniqueCode().toString(),
+      // game_id: currentGameID, // Use the currentGameID here
       date: moment().format("YYYY-MM-DD"),
       draw_time: moment(nextIntervalTime, "h:mm A").format("HH:mm:ss"),
       ticket_time: moment().format("HH:mm:ss"),
       data: betData,
+      startPoint: balance,
+      endPoint: balance - play,
     };
 
-    if (isPrinterEnabled) {
-      const billHTML = /*html*/ `
-        <div class="bill">
-        <p style="margin-bottom: 4px;">***Super Chance***</p>
-        <p style="margin-bottom: 4px;">From Amusement Only</p>
-        <p style="margin-bottom: 4px;">Agent: 634</p>
-        <p style="margin-bottom: 4px;">Game ID: ${payload.ticket_id}</p>
-        <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
-        <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
-        <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
-          "DD-MM-YYYY h:mm A"
-        )}</p>
-        <p style="margin-bottom: 4px;">Total Point: ${play}</p>
-        <div style="display: flex; align-items: flex-start; gap: 14px;">
-            <table>
-              <tr>
-                <th style="padding-right: 14px;">Item</th>
-                <th style="padding-right: 14px;">Point</th>
-                <th style="padding-right: 14px;">Item</th>
-                <th>Point</th>
-              </tr>
-              ${pairedItems
-                .map(
-                  (pair) => `
-                  <tr>
-                    <td>${pair[0]?.num || ""}</td>
-                    <td>${pair[0]?.token || ""}</td>
-                    <td>${pair[1]?.num ?? ""}</td>
-                    <td>${pair[1]?.token || ""}</td>
-                  </tr>
-                `
-                )
-                .join("")}
-            </table>
-          </div>
-        </div>
-        `;
+    // if (isPrinterEnabled) {
+    //   const billHTML = /*html*/ `
+    //     <div class="bill">
+    //     <p style="margin-bottom: 4px;">***Super Chance***</p>
+    //     <p style="margin-bottom: 4px;">From Amusement Only</p>
+    //     <p style="margin-bottom: 4px;">Agent: 634</p>
+    //     <p style="margin-bottom: 4px;">Game ID: ${payload.ticket_id}</p>
+    //     <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
+    //     <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
+    //     <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
+    //       "DD-MM-YYYY h:mm A"
+    //     )}</p>
+    //     <p style="margin-bottom: 4px;">Total Point: ${play}</p>
+    //     <div style="display: flex; align-items: flex-start; gap: 14px;">
+    //         <table>
+    //           <tr>
+    //             <th style="padding-right: 14px;">Item</th>
+    //             <th style="padding-right: 14px;">Point</th>
+    //             <th style="padding-right: 14px;">Item</th>
+    //             <th>Point</th>
+    //           </tr>
+    //           ${pairedItems
+    //             .map(
+    //               (pair) => `
+    //               <tr>
+    //                 <td>${pair[0]?.num || ""}</td>
+    //                 <td>${pair[0]?.token || ""}</td>
+    //                 <td>${pair[1]?.num ?? ""}</td>
+    //                 <td>${pair[1]?.token || ""}</td>
+    //               </tr>
+    //             `
+    //             )
+    //             .join("")}
+    //         </table>
+    //       </div>
+    //     </div>
+    //     `;
 
-      // window.electronAPI.printBill(billHTML, payload.ticket_id);
-    }
+    //   // window.electronAPI.printBill(billHTML, payload.ticket_id);
+    // }
 
     openAlertBox(`YOUR BET HAS BEEN ACCEPTED WITH ID: ${payload.ticket_id}`);
     setLocal([...betNumList]);
