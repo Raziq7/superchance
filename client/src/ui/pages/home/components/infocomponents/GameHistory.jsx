@@ -35,6 +35,8 @@ import {
 import useLocalStorage from "../../../../utils/useLocalStorage";
 import { printer_bill } from "../../../../utils/functions";
 
+const ITEMPERPAGE = 15
+
 function GameHistory() {
   const dateRefFrom = useRef(null);
   const dateRefTo = useRef(null);
@@ -51,7 +53,7 @@ function GameHistory() {
   const [open, setOpen] = useState(false);
   const [singleViewList, setSingleViewList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [pageNo, setPageNo] = useState(1)
   const handleDateChangeFrom = (event) => {
     const selectedDate = event.target.value; // Get the selected date as a string
     setDate({ ...date, from: moment(selectedDate) }); // Update the state with the new date
@@ -95,7 +97,7 @@ function GameHistory() {
 
   const handleRefreshClick = () => {
     setIsLoading(true);
-    game_history(idLocl.id).then((data) => {
+    game_history(ITEMPERPAGE, pageNo).then((data) => {
       setHistoryList(data.response.data);
       setIsLoading(false);
     });

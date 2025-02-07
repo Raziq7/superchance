@@ -28,7 +28,7 @@ export const set_autoclame = async function (bool) {
 
 export const create_game = async function (body) {
   try {
-    const { data } = await axios.post("api/user/createBer/", body);
+    const data  = await axios.post("api/user/submitBet", body);
     return data;
   } catch (error) {
     console.log("error on  API", error);
@@ -36,11 +36,11 @@ export const create_game = async function (body) {
   }
 };
 
-export const game_history = async function (id) {
+export const game_history = async function (ipt, pgNo) {
   // e51331a2-1fc9-40c5-9d9e-ffa6dcc863ae
   // let cookies = "e51331a2-1fc9-40c5-9d9e-ffa6dcc863ae";
   try {
-    const { data } = await axios("api/v1/game/history/" + id + "/");
+    const { data } = await axios("api/user/getBets/?page=" +pgNo+ "&limit=" + ipt + "/");
     return data;
   } catch (error) {
     console.log("error on  API", error);

@@ -371,7 +371,7 @@ function Home() {
 
   const fetchGameResult = async () => {
     const response = await get_game_result(idLocl.id, 1, 10);
-    if(response.status === 200){
+    if (response.status === 200) {
       setBetHistory(response.data);
     }
     // console.log(response.response.data, "response data ((((((((((((");
@@ -475,52 +475,53 @@ function Home() {
       endPoint: balance - play,
     };
 
-    // if (isPrinterEnabled) {
-    //   const billHTML = /*html*/ `
-    //     <div class="bill">
-    //     <p style="margin-bottom: 4px;">***Super Chance***</p>
-    //     <p style="margin-bottom: 4px;">From Amusement Only</p>
-    //     <p style="margin-bottom: 4px;">Agent: 634</p>
-    //     <p style="margin-bottom: 4px;">Game ID: ${payload.ticket_id}</p>
-    //     <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
-    //     <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
-    //     <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
-    //       "DD-MM-YYYY h:mm A"
-    //     )}</p>
-    //     <p style="margin-bottom: 4px;">Total Point: ${play}</p>
-    //     <div style="display: flex; align-items: flex-start; gap: 14px;">
-    //         <table>
-    //           <tr>
-    //             <th style="padding-right: 14px;">Item</th>
-    //             <th style="padding-right: 14px;">Point</th>
-    //             <th style="padding-right: 14px;">Item</th>
-    //             <th>Point</th>
-    //           </tr>
-    //           ${pairedItems
-    //             .map(
-    //               (pair) => `
-    //               <tr>
-    //                 <td>${pair[0]?.num || ""}</td>
-    //                 <td>${pair[0]?.token || ""}</td>
-    //                 <td>${pair[1]?.num ?? ""}</td>
-    //                 <td>${pair[1]?.token || ""}</td>
-    //               </tr>
-    //             `
-    //             )
-    //             .join("")}
-    //         </table>
-    //       </div>
-    //     </div>
-    //     `;
-
-    //   // window.electronAPI.printBill(billHTML, payload.ticket_id);
-    // }
-
-    openAlertBox(`YOUR BET HAS BEEN ACCEPTED WITH ID: ${payload.ticket_id}`);
-    setLocal([...betNumList]);
     create_game(payload).then((e) => {
-      if (e.statusCode === 200) {
+      if (e.status === 200) {
         fetchBalance();
+        setLocal([...betNumList]);
+        openAlertBox(
+          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${payload.ticket_id}`
+        );
+        // if (isPrinterEnabled) {
+        //   const billHTML = /*html*/ `
+        //     <div class="bill">
+        //     <p style="margin-bottom: 4px;">***Super Chance***</p>
+        //     <p style="margin-bottom: 4px;">From Amusement Only</p>
+        //     <p style="margin-bottom: 4px;">Agent: 634</p>
+        //     <p style="margin-bottom: 4px;">Game ID: ${payload.ticket_id}</p>
+        //     <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
+        //     <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
+        //     <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
+        //       "DD-MM-YYYY h:mm A"
+        //     )}</p>
+        //     <p style="margin-bottom: 4px;">Total Point: ${play}</p>
+        //     <div style="display: flex; align-items: flex-start; gap: 14px;">
+        //         <table>
+        //           <tr>
+        //             <th style="padding-right: 14px;">Item</th>
+        //             <th style="padding-right: 14px;">Point</th>
+        //             <th style="padding-right: 14px;">Item</th>
+        //             <th>Point</th>
+        //           </tr>
+        //           ${pairedItems
+        //             .map(
+        //               (pair) => `
+        //               <tr>
+        //                 <td>${pair[0]?.num || ""}</td>
+        //                 <td>${pair[0]?.token || ""}</td>
+        //                 <td>${pair[1]?.num ?? ""}</td>
+        //                 <td>${pair[1]?.token || ""}</td>
+        //               </tr>
+        //             `
+        //             )
+        //             .join("")}
+        //         </table>
+        //       </div>
+        //     </div>
+        //     `;
+
+        //   // window.electronAPI.printBill(billHTML, payload.ticket_id);
+        // }
       }
     });
   };
@@ -675,8 +676,8 @@ function Home() {
   const fetchBalance = async function () {
     await get_gameUser().then((e) => {
       if (e.status === 200) {
-        console.log(e.data.balance);  
-        
+        console.log(e.data.balance);
+
         setBalance(e.data.balance);
         setuserData(e.data);
       }
@@ -833,7 +834,11 @@ function Home() {
             " linear-gradient(180deg, rgb(21, 19, 18) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
         }}
       >
-        <Header balance={balance} openAlertBox={openAlertBox} userData={userData} />
+        <Header
+          balance={balance}
+          openAlertBox={openAlertBox}
+          userData={userData}
+        />
 
         <Box
           sx={{
