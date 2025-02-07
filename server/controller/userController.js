@@ -157,39 +157,42 @@ export const submitBet = asyncHandler(async (req, res) => {
   const { status } = req.body;
 
   try {
-    // Step 1: Find all the bets with status 'blank'
     const bets = await Bet.find({ status: "blank" });
 
     if (bets.length === 0) {
       return res.status(404).json({ message: "No active bets found" });
     }
 
-    // Step 2: Calculate the total amount spent by users (total played amount)
     let totalPlayedAmount = 0;
-    let slotBets = Array(10).fill(0); // Array to store total played amount per slot (0-9)
+    let slotBets = Array(10).fill(0); 
 
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
-        totalPlayedAmount += betData.played; // Total played amount
-        slotBets[betData.bet] += betData.played; // Sum of played amounts per slot
+        totalPlayedAmount += betData.played; 
+        slotBets[betData.bet] += betData.played; 
       });
     });
 
-    // Step 3: Calculate the target payout (90% of the total played amount)
+    // 90% of the total played amount
     const targetPayout = totalPlayedAmount * 0.9;
 
-    // Step 4: Choose a slot based on the highest bet amounts
-    let winningSlot = -1;
-    let maxBetAmount = 0;
-
+    let weightedSlots = [];
     slotBets.forEach((amount, index) => {
-      if (amount > maxBetAmount) {
-        maxBetAmount = amount;
-        winningSlot = index; // Choose the slot with the highest bet
-      }
+      let weight = (totalPlayedAmount - amount) / totalPlayedAmount; 
+      weightedSlots.push({ slot: index, weight });
     });
 
-    // Step 5: Calculate the profit margin and ensure 10% profit
+    let randomNum = Math.random();
+    let cumulativeWeight = 0;
+    let winningSlot = -1;
+    for (let i = 0; i < weightedSlots.length; i++) {
+      cumulativeWeight += weightedSlots[i].weight;
+      if (randomNum <= cumulativeWeight) {
+        winningSlot = weightedSlots[i].slot;
+        break;
+      }
+    }
+
     let totalWinningAmount = 0;
     let winningUsers = [];
 
@@ -203,9 +206,9 @@ export const submitBet = asyncHandler(async (req, res) => {
       });
     });
 
-    // Step 6: Adjust user balance and bet status
-    // 1. For winning users: Update the bet to 'Completed' and give them their winnings
-    // 2. For others: Deduct the played amount from their balance
+    let totalAmountToPay = Math.min(targetPayout, totalWinningAmount);
+    let remainingProfit = totalPlayedAmount - totalAmountToPay; // Ensure 10% margin
+
     for (let bet of bets) {
       let totalUserPlayedAmount = 0;
       let user = await User.findById(bet.userId);
@@ -215,45 +218,47 @@ export const submitBet = asyncHandler(async (req, res) => {
       }
 
       if (bet.status === "blank") {
-        // Check if this bet matches the winning slot
+        // If the user bet on the winning slot
         let userWinningAmount = 0;
         if (
           winningUsers.some(
             (winner) => winner.bet.userId === bet.userId
           )
         ) {
-          // User has won, calculate their share
+         
           userWinningAmount =
-            totalPlayedAmount *
-            0.1 *
+            totalAmountToPay *
             (totalUserPlayedAmount / totalWinningAmount);
-          user.balance += userWinningAmount; // Add winning amount to the user
+          user.balance += userWinningAmount; 
           bet.status = "Completed";
-          bet.result = winningSlot; // Assign the winning slot to the bet
+          bet.result = winningSlot; 
         } else {
-          // If the bet is not on the winning slot, we just take the profit from the bet
-          let profit = totalUserPlayedAmount * 0.1; // Deduct 10% of the user's played amount
-          user.balance -= profit; // Deduct the profit from the user
+          
+          
+          let profit = totalUserPlayedAmount * 0.1; 
+          user.balance -= profit; 
           bet.status = "No win";
         }
 
-        await user.save(); // Save user balance
-        await bet.save(); // Save bet status and result
+        await user.save(); 
+        await bet.save(); 
       }
     }
 
-    // Step 7: Respond with a success message
+    // Step 8: Respond with a success message
     res.status(200).json({
       message: "Wheel spun and bets processed successfully",
       winningSlot,
       targetPayout,
       totalPlayedAmount,
+      remainingProfit
     });
   } catch (error) {
     console.error("Error processing bets:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // @desc    Get all bets with pagination and limit
 // @route   GET /api/bets
