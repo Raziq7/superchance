@@ -28,7 +28,7 @@ export const set_autoclame = async function (bool) {
 
 export const create_game = async function (body) {
   try {
-    const data  = await axios.post("api/user/submitBet", body);
+    const data  = await axios.post("api/user/createBer", body);
     return data;
   } catch (error) {
     console.log("error on  API", error);
@@ -48,11 +48,9 @@ export const game_history = async function (ipt, pgNo) {
   }
 };
 
-export const predict_winner = async function (game_id) {
+export const predict_winner = async function () {
   try {
-    const { data } = await axios.post("api/v1/game/predict-winner/", {
-      game_id: game_id,
-    });
+    const { data } = await axios.post("api/user/submitBet/", );
     return data;
   } catch (error) {
     console.log("error on  API", error);

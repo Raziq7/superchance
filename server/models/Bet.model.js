@@ -33,7 +33,7 @@ const betSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending","Done","No win", "Completed"],
+      enum: ["Pending","Done","No win", "Completed", "blank"],
       default: "blank",
     },
     result: {
