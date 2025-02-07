@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const betSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',  // Reference to the User model
+      required: true,
+    },
     ticket_id: {
       type: String,
       required: true,
@@ -33,11 +38,11 @@ const betSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending","Done","No win", "Completed", "blank"],
+      enum: ["Pending","Done","No win", "Completed","blank"],
       default: "blank",
     },
     result: {
-      type: Number,  // You can modify it based on your actual result type
+      type: Number,
       default: null,
     },
     data: [
