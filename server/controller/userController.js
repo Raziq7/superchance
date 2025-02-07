@@ -219,7 +219,7 @@ export const submitBet = asyncHandler(async (req, res) => {
         let userWinningAmount = 0;
         if (
           winningUsers.some(
-            (winner) => winner.bet.userId.toString() === bet.userId.toString()
+            (winner) => winner.bet.userId === bet.userId
           )
         ) {
           // User has won, calculate their share

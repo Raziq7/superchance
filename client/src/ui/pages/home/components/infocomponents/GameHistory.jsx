@@ -159,7 +159,7 @@ function GameHistory() {
 
   useEffect(() => {
     setIsLoading(true);
-    game_history(idLocl.id).then((data) => {
+    game_history(ITEMPERPAGE, pageNo).then((data) => {
       setHistoryList(data.response.data);
       setIsLoading(false);
     });
