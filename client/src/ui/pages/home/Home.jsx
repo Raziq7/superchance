@@ -750,18 +750,19 @@ function Home() {
     const currentGameID = localStorage.getItem("gameID");
     console.log("1m45s - Current gameID:", currentGameID);
 
-    fetchPredictWinner();
+    // fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
     openAlertBox(`NO MORE BETS PLEASE`);
   }, []);
 
   const onEvery2min = useCallback(() => {
-    console.log("2min - Starting new game cycle");
+    alert("2min - Starting new game cycle");
 
     // First handle the play animation
     handlePlay();
     fetchGameResult();
+    fetchPredictWinner();
 
     // Clear game state
     setIsDisabled(false);
