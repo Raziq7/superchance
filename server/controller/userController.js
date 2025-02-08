@@ -154,8 +154,6 @@ export const getAllBets = asyncHandler(async (req, res) => {
 // @route   POST /api/bet/spin
 // @access  Private
 export const submitBet = asyncHandler(async (req, res) => {
-  const { status } = req.body;
-
   try {
     const bets = await Bet.find({ status: "blank" });
 
@@ -164,100 +162,98 @@ export const submitBet = asyncHandler(async (req, res) => {
     }
 
     let totalPlayedAmount = 0;
-    let slotBets = Array(10).fill(0); 
+    let slotBets = Array(10).fill(0);
+    let betCount = bets.length;
 
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
-        totalPlayedAmount += betData.played; 
-        slotBets[betData.bet] += betData.played; 
+        totalPlayedAmount += betData.played;
+        slotBets[betData.bet] += betData.played;
       });
     });
 
-    // 90% of the total played amount
-    const targetPayout = totalPlayedAmount * 0.9;
-
-    let weightedSlots = [];
-    slotBets.forEach((amount, index) => {
-      let weight = (totalPlayedAmount - amount) / totalPlayedAmount; 
-      weightedSlots.push({ slot: index, weight });
-    });
-
-    let randomNum = Math.random();
-    let cumulativeWeight = 0;
+    const targetPayout = totalPlayedAmount * 0.9; // Max we can pay
     let winningSlot = -1;
-    for (let i = 0; i < weightedSlots.length; i++) {
-      cumulativeWeight += weightedSlots[i].weight;
-      if (randomNum <= cumulativeWeight) {
-        winningSlot = weightedSlots[i].slot;
+    
+    // Step 1: Find the slot with the lowest played amount
+    let sortedSlots = slotBets
+      .map((amount, index) => ({ slot: index, amount }))
+      .sort((a, b) => a.amount - b.amount); // Ascending order
+    
+    for (let { slot, amount } of sortedSlots) {
+      let potentialPayout = amount * 10;
+
+      if (potentialPayout <= totalPlayedAmount) {
+        winningSlot = slot; // Choose this slot if we can afford 10x payout
         break;
+      }
+    }
+
+    // Step 2: If all slots exceed the payout limit, select a slot no one bet on
+    if (winningSlot === -1) {
+      let emptySlots = sortedSlots.filter((slot) => slot.amount === 0);
+      if (emptySlots.length > 0) {
+        winningSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)].slot;
+      } else {
+        // As a fallback, pick the lowest played slot (still results in loss, but minimizes it)
+        winningSlot = sortedSlots[0].slot;
       }
     }
 
     let totalWinningAmount = 0;
     let winningUsers = [];
 
-    // Collect all bets from users who bet on the winning slot
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
         if (betData.bet === winningSlot) {
-          totalWinningAmount += betData.played;
+          totalWinningAmount += betData.played * 10; // 10x payout
           winningUsers.push({ bet, betData });
         }
       });
     });
 
     let totalAmountToPay = Math.min(targetPayout, totalWinningAmount);
-    let remainingProfit = totalPlayedAmount - totalAmountToPay; // Ensure 10% margin
+    let remainingProfit = totalPlayedAmount - totalAmountToPay;
 
     for (let bet of bets) {
-      let totalUserPlayedAmount = 0;
       let user = await User.findById(bet.userId);
-
-      for (let betData of bet.data) {
-        totalUserPlayedAmount += betData.played;
-      }
+      let totalUserPlayedAmount = bet.data.reduce(
+        (sum, betData) => sum + betData.played,
+        0
+      );
 
       if (bet.status === "blank") {
-        // If the user bet on the winning slot
         let userWinningAmount = 0;
-        if (
-          winningUsers.some(
-            (winner) => winner.bet.userId === bet.userId
-          )
-        ) {
-         
+
+        if (winningUsers.some((winner) => winner.bet.userId === bet.userId)) {
           userWinningAmount =
-            totalAmountToPay *
-            (totalUserPlayedAmount / totalWinningAmount);
-          user.balance += userWinningAmount; 
+            totalAmountToPay * (totalUserPlayedAmount / totalWinningAmount);
+          user.balance += userWinningAmount;
           bet.status = "Completed";
-          bet.result = winningSlot; 
+          bet.result = winningSlot;
         } else {
-          
-          
-          let profit = totalUserPlayedAmount * 0.1; 
-          user.balance -= profit; 
+          let profit = totalUserPlayedAmount * 0.1;
+          user.balance -= profit;
           bet.status = "No win";
         }
 
-        await user.save(); 
-        await bet.save(); 
+        await user.save();
+        await bet.save();
       }
     }
 
-    // Step 8: Respond with a success message
     res.status(200).json({
       message: "Wheel spun and bets processed successfully",
       winningSlot,
-      targetPayout,
       totalPlayedAmount,
-      remainingProfit
+      remainingProfit,
     });
   } catch (error) {
     console.error("Error processing bets:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 
 // @desc    Get all bets with pagination and limit
