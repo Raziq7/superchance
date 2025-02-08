@@ -163,7 +163,6 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let totalPlayedAmount = 0;
     let slotBets = Array(10).fill(0);
-    let betCount = bets.length;
 
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
@@ -172,31 +171,30 @@ export const submitBet = asyncHandler(async (req, res) => {
       });
     });
 
-    const targetPayout = totalPlayedAmount * 0.9; // Max we can pay
+    const targetPayout = totalPlayedAmount * 0.9; // House keeps at least 10%
     let winningSlot = -1;
     
-    // Step 1: Find the slot with the lowest played amount
+    // Step 1: Sort bets by played amount (ascending)
     let sortedSlots = slotBets
       .map((amount, index) => ({ slot: index, amount }))
-      .sort((a, b) => a.amount - b.amount); // Ascending order
-    
+      .sort((a, b) => a.amount - b.amount); 
+
+    // Step 2: Find a slot where payout is <= targetPayout
     for (let { slot, amount } of sortedSlots) {
       let potentialPayout = amount * 10;
-
-      if (potentialPayout <= totalPlayedAmount) {
-        winningSlot = slot; // Choose this slot if we can afford 10x payout
+      if (potentialPayout <= targetPayout) {
+        winningSlot = slot; // Select the slot with the lowest bet that can be paid
         break;
       }
     }
 
-    // Step 2: If all slots exceed the payout limit, select a slot no one bet on
+    // Step 3: If no suitable slot is found, select an empty slot (guaranteed loss for users)
     if (winningSlot === -1) {
-      let emptySlots = sortedSlots.filter((slot) => slot.amount === 0);
+      let emptySlots = sortedSlots.filter((s) => s.amount === 0);
       if (emptySlots.length > 0) {
         winningSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)].slot;
       } else {
-        // As a fallback, pick the lowest played slot (still results in loss, but minimizes it)
-        winningSlot = sortedSlots[0].slot;
+        winningSlot = sortedSlots[0].slot; // Choose the lowest played slot
       }
     }
 
@@ -206,7 +204,7 @@ export const submitBet = asyncHandler(async (req, res) => {
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
         if (betData.bet === winningSlot) {
-          totalWinningAmount += betData.played * 10; // 10x payout
+          totalWinningAmount += betData.played * 10;
           winningUsers.push({ bet, betData });
         }
       });
