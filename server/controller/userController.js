@@ -164,6 +164,7 @@ export const submitBet = asyncHandler(async (req, res) => {
     let totalPlayedAmount = 0;
     let slotBets = Array(10).fill(0);
 
+    // Step 1: Calculate total played amount & group bets per slot
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
         totalPlayedAmount += betData.played;
@@ -173,38 +174,39 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     const targetPayout = totalPlayedAmount * 0.9; // House keeps at least 10%
     let winningSlot = -1;
-    
-    // Step 1: Sort bets by played amount (ascending)
+
+    // Step 2: Sort slots by played amount (ascending)
     let sortedSlots = slotBets
       .map((amount, index) => ({ slot: index, amount }))
-      .sort((a, b) => a.amount - b.amount); 
+      .sort((a, b) => a.amount - b.amount); // Smallest bet slots first
 
-    // Step 2: Find a slot where payout is <= targetPayout
+    // Step 3: Find a slot where payout (10x) is within targetPayout
     for (let { slot, amount } of sortedSlots) {
       let potentialPayout = amount * 10;
       if (potentialPayout <= targetPayout) {
-        winningSlot = slot; // Select the slot with the lowest bet that can be paid
+        winningSlot = slot;
         break;
       }
     }
 
-    // Step 3: If no suitable slot is found, select an empty slot (guaranteed loss for users)
+    // Step 4: If no slot is affordable, pick an empty slot (ensuring all users lose)
     if (winningSlot === -1) {
       let emptySlots = sortedSlots.filter((s) => s.amount === 0);
       if (emptySlots.length > 0) {
         winningSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)].slot;
       } else {
-        winningSlot = sortedSlots[0].slot; // Choose the lowest played slot
+        winningSlot = sortedSlots[0].slot; // Choose lowest played slot
       }
     }
 
     let totalWinningAmount = 0;
     let winningUsers = [];
 
+    // Step 5: Identify users who bet on the winning slot
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
         if (betData.bet === winningSlot) {
-          totalWinningAmount += betData.played * 10;
+          totalWinningAmount += betData.played * 10; // Total to be paid to winners
           winningUsers.push({ bet, betData });
         }
       });
@@ -213,24 +215,23 @@ export const submitBet = asyncHandler(async (req, res) => {
     let totalAmountToPay = Math.min(targetPayout, totalWinningAmount);
     let remainingProfit = totalPlayedAmount - totalAmountToPay;
 
+    // Step 6: Process each bet
     for (let bet of bets) {
       let user = await User.findById(bet.userId);
-      let totalUserPlayedAmount = bet.data.reduce(
-        (sum, betData) => sum + betData.played,
-        0
-      );
+      let totalUserPlayedAmount = bet.data.reduce((sum, betData) => sum + betData.played, 0);
 
       if (bet.status === "blank") {
         let userWinningAmount = 0;
 
         if (winningUsers.some((winner) => winner.bet.userId === bet.userId)) {
-          userWinningAmount =
-            totalAmountToPay * (totalUserPlayedAmount / totalWinningAmount);
+          // Step 7: Distribute winnings proportionally among winners
+          userWinningAmount = totalAmountToPay * (totalUserPlayedAmount / totalWinningAmount);
           user.balance += userWinningAmount;
           bet.status = "Completed";
           bet.result = winningSlot;
         } else {
-          let profit = totalUserPlayedAmount;
+          // Step 8: Deduct 10% as profit from losing bets
+          let profit = totalUserPlayedAmount * 0.1;
           user.balance -= profit;
           bet.status = "No win";
         }
