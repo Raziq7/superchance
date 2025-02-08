@@ -53,7 +53,7 @@ export const game_history = async function (ipt, pgNo) {
 
 export const predict_winner = async function () {
   try {
-    const { data } = await axios.post("api/user/submitBet/", );
+    const data  = await axios.post("api/user/submitBet/", );
     return data;
   } catch (error) {
     console.log("error on  API", error);

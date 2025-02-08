@@ -173,7 +173,7 @@ function Historyinfo({ setinfoModal, betHistory }) {
             top: "-2px",
             justifyContent: "flex-end",
             gap: 1,
-            minWidth: "605px",
+            minWidth: "588px",
             height: "104px",
           }}
         >

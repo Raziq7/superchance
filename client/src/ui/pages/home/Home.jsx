@@ -688,44 +688,54 @@ function Home() {
   // console.log(gameID);
 
   const fetchPredictWinner = async function () {
-    try {
-      let currentGameID = localStorage.getItem("gameID");
-      // Remove quotes, newlines, and trim whitespace
-      currentGameID = currentGameID
-        ? JSON.parse(currentGameID.replace(/\n/g, "").trim())
-        : null;
-      console.log("Fetching prediction for gameID:", currentGameID);
+    // try {
+    //   let currentGameID = localStorage.getItem("gameID");
+    //   // Remove quotes, newlines, and trim whitespace
+    //   currentGameID = currentGameID
+    //     ? JSON.parse(currentGameID.replace(/\n/g, "").trim())
+    //     : null;
+    //   console.log("Fetching prediction for gameID:", currentGameID);
 
-      if (!currentGameID) {
-        const response = await predict_winner();
-        console.warn("No gameID available, using default prediction");
-        if (response.statusCode === 200) {
-          const win = response.message.general[0];
-          localStorage.setItem("winPoint", JSON.stringify(win.win));
-          setWinAmount(win.amount);
-        }
-        return;
-      }
+    //   if (!currentGameID) {
+    //     const response = await predict_winner();
+    //     console.warn("No gameID available, using default prediction");
+    //     if (response.statusCode === 200) {
+    //       const win = response.message.general[0];
+    //       localStorage.setItem("winPoint", JSON.stringify(win.win));
+    //       setWinAmount(win.amount);
+    //     }
+    //     return;
+    //   }
 
-      const response = await predict_winner(currentGameID.toString());
-      console.log("Prediction response:", response);
+    //   const response = await predict_winner(currentGameID.toString());
+    //   console.log("Prediction response:", response);
 
-      if (response.statusCode === 200) {
-        const win = response.message.general[0];
-        // Explicitly stringify the win value and verify it's set
-        localStorage.setItem("winPoint", JSON.stringify(win.win));
-        console.log("Set winPoint in localStorage:", win.win);
-        // Verify the value was set correctly
-        const storedWinPoint = localStorage.getItem("winPoint");
-        console.log("Verified winPoint in localStorage:", storedWinPoint);
+    //   if (response.statusCode === 200) {
+    //     const win = response.message.general[0];
+    //     // Explicitly stringify the win value and verify it's set
+    //     localStorage.setItem("winPoint", JSON.stringify(win.win));
+    //     console.log("Set winPoint in localStorage:", win.win);
+    //     // Verify the value was set correctly
+    //     const storedWinPoint = localStorage.getItem("winPoint");
+    //     console.log("Verified winPoint in localStorage:", storedWinPoint);
 
-        setWinAmount(win.amount);
-      } else {
-        console.error("Prediction failed:", response);
-      }
-    } catch (error) {
-      console.error("Error predicting winner:", error);
+    //     setWinAmount(win.amount);
+    //   } else {
+    //     console.error("Prediction failed:", response);
+    //   }
+    // } catch (error) {
+    //   console.error("Error predicting winner:", error);
+    // }
+
+    const response = await predict_winner();
+    console.warn("No gameID available, using default prediction");
+    if (response.status === 200) {
+      console.log(response.data);
+      // const win = response.message.general[0];
+      // localStorage.setItem("winPoint", JSON.stringify(win.win));
+      setWinAmount(response.data.winningSlot);
     }
+    return;
   };
 
   const onEvery15sec = useCallback(() => {
@@ -750,19 +760,19 @@ function Home() {
     const currentGameID = localStorage.getItem("gameID");
     console.log("1m45s - Current gameID:", currentGameID);
 
-    // fetchPredictWinner();
+    fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
     openAlertBox(`NO MORE BETS PLEASE`);
   }, []);
 
   const onEvery2min = useCallback(() => {
-    alert("2min - Starting new game cycle");
+    // alert("2min - Starting new game cycle");
 
     // First handle the play animation
     handlePlay();
     fetchGameResult();
-    fetchPredictWinner();
+    // fetchPredictWinner();
 
     // Clear game state
     setIsDisabled(false);
