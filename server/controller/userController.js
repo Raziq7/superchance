@@ -230,7 +230,7 @@ export const submitBet = asyncHandler(async (req, res) => {
           bet.status = "Completed";
           bet.result = winningSlot;
         } else {
-          let profit = totalUserPlayedAmount * 0.1;
+          let profit = totalUserPlayedAmount;
           user.balance -= profit;
           bet.status = "No win";
         }
