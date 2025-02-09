@@ -157,9 +157,9 @@ export const daily_report = async function () {
   }
 }
 
-export const updateSpinner = async function () {
+export const updateSpinner = async function (winningSlot) {
   try {
-    const { data } = await axios.patch("api/user/updateSpinner/",);
+    const data = await axios.patch("api/user/updateSpinner/", {winningSlot:winningSlot});
     return data;
   } catch (error) {
     console.log("error on  API", error);

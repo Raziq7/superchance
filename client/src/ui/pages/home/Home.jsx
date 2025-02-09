@@ -26,6 +26,7 @@ import {
   get_gameUser,
   get_game_result,
   predict_winner,
+  updateSpinner,
 } from "../../api/gameData";
 import moment from "moment";
 import useLocalStorage from "../../utils/useLocalStorage";
@@ -139,6 +140,7 @@ function Home() {
   const [gameID, setGameID] = useLocalStorage("gameID", "");
   const [isOpen, setIsOpen] = useState(false);
   const [local, setLocal] = useLocalStorage("name", {});
+  const [winPoint, setWinnigPoint] = useLocalStorage("winPoint", null);
   const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
     "isPrinterEnabled",
     true
@@ -369,13 +371,6 @@ function Home() {
     }
   }, []);
 
-  const fetchGameResult = async () => {
-    const response = await get_game_result(idLocl.id, 1, 10);
-    if (response.status === 200) {
-      setBetHistory(response.data);
-    }
-    // console.log(response.response.data, "response data ((((((((((((");
-  };
 
   function generateGameID() {
     const timestamp = Date.now();
@@ -407,7 +402,8 @@ function Home() {
   // Handle Spin Button
   const handlePlay = () => {
     // localStorage.getItem('winPoint');
-    let spinum = JSON.parse(localStorage.getItem("winPoint"));
+    // let spinum = JSON.parse(localStorage.getItem("winPoint"));
+    let spinum = winPoint;
     const newHistory = [...historyList];
     newHistory.pop(); // Remove the last item
     setHistoryList([
@@ -477,7 +473,7 @@ function Home() {
 
     create_game(payload).then((e) => {
       // console.log(e.status, e);
-      
+
       if (e.status === 201) {
         console.log("Bet submitted successfully:", e.data.bet.ticket_id);
         openAlertBox(
@@ -732,16 +728,34 @@ function Home() {
     // }
 
     const response = await predict_winner();
-    console.warn("No gameID available, using default prediction");
+    console.warn(response, "No gameID available, using default prediction");
     if (response.status === 200) {
       console.log(response.data);
       // const win = response.message.general[0];
-      // localStorage.setItem("winPoint", JSON.stringify(win.win));
-      setWinAmount(response.data.winningSlot);
+      // localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
+      setWinnigPoint(response.data.winningSlot);
+      // setWinAmount(response.data.winningSlot);
     }
     return;
   };
-
+  
+  const fetchGameResult = async () => {
+    console.log(winPoint, "what is thsi");
+    
+    if (winPoint !== null) {
+      await updateSpinner(winPoint);
+      const response = await get_game_result();
+      if (response.status === 200) {
+        setBetHistory(response.data);
+      }
+    } else {
+      const response = await get_game_result();
+      if (response.status === 200) {
+        setBetHistory(response.data);
+      }
+    }
+  };
+  
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
     // setIsDisabled(true);
@@ -782,6 +796,7 @@ function Home() {
     setIsDisabled(false);
     setGameID(""); // Clear React state
     localStorage.removeItem("gameID"); // Clear localStorage
+    // setWinnigPoint(null);
     // localStorage.removeItem('winPoint');
 
     // Generate new gameID for next round
