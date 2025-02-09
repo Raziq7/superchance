@@ -156,3 +156,16 @@ export const daily_report = async function () {
     return error;
   }
 }
+
+export const updateSpinner = async function () {
+  try {
+    const { data } = await axios.patch("api/user/updateSpinner/",);
+    return data;
+  } catch (error) {
+    console.log("error on  API", error);
+    return error;
+  }
+}
+// API : /api/user/updateSpinner
+// method : patch
+// body : {winningSlot:10}
