@@ -102,7 +102,7 @@ export const createBet = asyncHandler(async (req, res) => {
 
     // Create a new bet object
     const newBet = new Bet({
-      userId:user._id,
+      userId: user._id,
       ticket_id,
       game_id,
       date,
@@ -155,7 +155,11 @@ export const getAllBets = asyncHandler(async (req, res) => {
 // @access  Private
 export const submitBet = asyncHandler(async (req, res) => {
   try {
-    const bets = await Bet.find({ status: "blank" });
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const bets = await Bet.find({ userId: user._id, status: "blank" });
 
     if (bets.length === 0) {
       return res.status(404).json({ message: "No active bets found" });
@@ -208,7 +212,9 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     // Step 3: If No Valid Slot Found, Follow Case 2 (Force a Loss)
     if (winningSlot === -1) {
-      let emptySlots = Array(10).fill(0).map((_, i) => i);
+      let emptySlots = Array(10)
+        .fill(0)
+        .map((_, i) => i);
       winningSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)];
     }
 
@@ -230,13 +236,17 @@ export const submitBet = asyncHandler(async (req, res) => {
     // Step 5: Update User Balances & Bet Status
     for (let bet of bets) {
       let user = await User.findById(bet.userId);
-      let totalUserPlayedAmount = bet.data.reduce((sum, betData) => sum + betData.played, 0);
+      let totalUserPlayedAmount = bet.data.reduce(
+        (sum, betData) => sum + betData.played,
+        0
+      );
 
       if (bet.status === "blank") {
         let userWinningAmount = 0;
 
         if (winningUsers.some((winner) => winner.bet.userId === bet.userId)) {
-          userWinningAmount = totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
+          userWinningAmount =
+            totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
           user.balance += userWinningAmount;
           bet.status = "Completed";
           bet.result = winningSlot;
@@ -262,10 +272,8 @@ export const submitBet = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 // @desc    Get all bets with pagination and limit
-// @route   GET /api/bets
+// @route   GET /api/users/getBets
 // @access  Public (or Private if necessary)
 export const getBets = asyncHandler(async (req, res) => {
   const { page, limit = 10 } = req.query;
@@ -297,3 +305,35 @@ export const getBets = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+// @desc    Update the last created bet's status
+// @route   PATCH /api/users/updateSpinner
+// @access  Private (or whichever access level is appropriate)
+export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
+  const { winningSlot } = req.body; // Get the new status from the request body
+
+  if (!winningSlot) {
+    return res.status(400).json({ message: "Winning Slot is required in the request body." });
+  }
+
+  try {
+    const result = await SpinnerResult.findOneAndUpdate(
+      {},
+      { $set: { spinnerNumber:winningSlot } }, // Use the status from the request body
+      { sort: { createdAt: -1 } }
+    );
+
+    if (!result) { 
+      return res.status(404).json({ message: "No Spinner Result found to update." }); 
+    }
+
+    res.status(200).json({ message: "Last Spinner Result status updated successfully.", updatedSpinnerResult: result }); 
+
+  } catch (error) {
+    console.error("Error updating last Spinner Result status:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+

@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 // Define the spinner result schema
 const spinnerResultSchema = new mongoose.Schema(
   {
+    // userId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User", // Reference to the User model
+    //   required: true,
+    // },
     spinnerNumber: {
       type: Number,
       required: true,
