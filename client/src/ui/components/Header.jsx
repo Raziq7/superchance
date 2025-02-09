@@ -32,7 +32,7 @@ import { logout_user } from "../api/gameAuth";
 
 function Header({ balance, openAlertBox, userData }) {
   const navigate = useNavigate();
-  const [visibillity, setVisibillity] = useState(true);
+  const [visibillity, setVisibillity] = useState(false);
   const [barcode, setBarcode] = useState("")
   const [toggle, setToggle] = useLocalStorage("isMute", false);
   const [isAutoClame, setIsAutoClame] = useLocalStorage("isAutoClame", true);
@@ -277,7 +277,7 @@ function Header({ balance, openAlertBox, userData }) {
               fontSize: "16px",
             }}
           >
-            {visibillity ? "***.**" : balance + ".00"}
+            {visibillity ? "***.**" : balance + ""}
           </Typography>
         </Paper>
 

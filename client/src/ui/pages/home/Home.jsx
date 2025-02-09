@@ -476,12 +476,16 @@ function Home() {
     };
 
     create_game(payload).then((e) => {
-      if (e.status === 200) {
+      // console.log(e.status, e);
+      
+      if (e.status === 201) {
+        console.log("Bet submitted successfully:", e.data.bet.ticket_id);
+        openAlertBox(
+          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${e.data.bet.ticket_id}`
+        );
         fetchBalance();
         setLocal([...betNumList]);
-        openAlertBox(
-          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${payload.ticket_id}`
-        );
+
         // if (isPrinterEnabled) {
         //   const billHTML = /*html*/ `
         //     <div class="bill">

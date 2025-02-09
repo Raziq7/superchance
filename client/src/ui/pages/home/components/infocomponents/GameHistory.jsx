@@ -88,7 +88,8 @@ function GameHistory() {
     setTicketID(obj.ticket_id === ticketID ? null : obj.ticket_id);
     setGameID(obj.game_id === gameID ? null : obj.game_id);
     setticketObj(obj);
-    console.log(ticketID, gameID);
+    setSingleViewList(obj.data);
+    // console.log(ticketID, gameID);
   };
 
   const handleViewClick = () => {
@@ -98,6 +99,12 @@ function GameHistory() {
   const handleRefreshClick = () => {
     setIsLoading(true);
     game_history(ITEMPERPAGE, pageNo).then((data) => {
+
+      console.log(data, "date is non is on");
+      if (data.status === 200) {
+        setHistoryList(data.data.bets);
+        setIsLoading(false);
+      }
       setHistoryList(data.response.data);
       setIsLoading(false);
     });
@@ -110,14 +117,14 @@ function GameHistory() {
   };
 
   const handleDetailsClick = () => {
-    if (ticketID && gameID) {
-      get_single_view(ticketID, gameID).then((data) => {
-        if (data.statusCode === 200) {
-          setSingleViewList(data.response);
+    // if (ticketID && gameID) {
+    //   get_single_view(ticketID, gameID).then((data) => {
+    //     if (data.statusCode === 200) {
+          // setSingleViewList(data);
           setOpen(true);
-        }
-      });
-    }
+    //     }
+    //   });
+    // }
   };
 
   const handleReprintClick = () => {
@@ -159,10 +166,11 @@ function GameHistory() {
 
   useEffect(() => {
     setIsLoading(true);
-    game_history(ITEMPERPAGE, pageNo).then((data) => {
-      setHistoryList(data.response.data);
-      setIsLoading(false);
-    });
+    // game_history(ITEMPERPAGE, pageNo).then((data) => {
+    //   setHistoryList(data.response.data);
+    //   setIsLoading(false);
+    // });
+    handleRefreshClick();
   }, []);
 
   return (
@@ -344,11 +352,11 @@ function GameHistory() {
                         {row.ticket_id}
                       </TableCell>
                       <TableCell>{row.game_id}</TableCell>
-                      <TableCell>{row.start_point}</TableCell>
+                      <TableCell>{row.startPoint}</TableCell>
                       <TableCell>{row.played}</TableCell>
                       <TableCell>{row.won}</TableCell>
                       <TableCell>{row.end}</TableCell>
-                      <TableCell>{row.end_point}</TableCell>
+                      <TableCell>{row.endPoint}</TableCell>
                       <TableCell
                         sx={{
                           color: row.status === "won" ? "green" : "red",
@@ -549,8 +557,8 @@ const GameHistoryModal = function ({ open, handleClose, singleViewList }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {singleViewList.map((row) => (
-                  <TableRow>
+                {singleViewList.map((row, index) => (
+                  <TableRow key={index}>
                     <TableCell>Singles : {row.bet}</TableCell>
                     <TableCell>{row.played}</TableCell>
                     <TableCell>{row.won}</TableCell>
