@@ -3,12 +3,19 @@ import User from "../models/User.model.js";
 import SpinnerResult from "../models/SpinnerResult.model.js";
 import Bet from "../models/Bet.model.js";
 
-// Function to generate a random unique ticket ID (for example, with prefix "SCP" and random numbers)
-export const generateTicketId = () => {
-  return `SCP${Math.floor(Math.random() * 10000)}-${Math.floor(
-    Math.random() * 10000
-  )}`;
+// Function to generate a random unique ticket ID with user full name as prefix
+export const generateTicketId = (userFullName) => {
+  // Format the user's full name to uppercase and replace spaces with underscores
+  const formattedName = userFullName.replace(/\s+/g, '_').toUpperCase();
+  
+  // Generate random numbers for the second part of the ticket ID
+  const randomPart1 = Math.floor(Math.random() * 10000);
+  // const randomPart2 = Math.floor(Math.random() * 10000);
+
+  // Return the ticket ID in the format: FULL_NAME-XXXX
+  return `${formattedName}-${randomPart1}`;
 };
+
 
 // Function to generate a random unique game ID
 export const generateGameId = () => {
@@ -68,16 +75,9 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
 // @route   POST /api/bet/create
 // @access  Private (or Public if necessary)
 export const createBet = asyncHandler(async (req, res) => {
-  const { date, draw_time, ticket_time, startPoint, endPoint, data } = req.body;
+  const { date, draw_time, ticket_time, data } = req.body;
 
-  if (
-    !date ||
-    !draw_time ||
-    !ticket_time ||
-    !startPoint ||
-    !endPoint ||
-    !data
-  ) {
+  if (!date || !draw_time || !ticket_time || !data) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -96,8 +96,37 @@ export const createBet = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
+    // Determine startPoint based on draw_time
+    let startPoint;
+    const previousBet = await Bet.findOne({ userId: user._id }).sort({ ticket_time: -1 });
+    const currentDate = new Date(); // Get the current date
+
+// Combine the current date with the `draw_time` string to create a full Date object
+const drawTimeString = `${currentDate.toISOString().split('T')[0]}T${draw_time}`; // "2025-02-10T13:26:00"
+const drawTimeDate = new Date(drawTimeString);
+
+if (previousBet) {
+  const previousDrawTimeString = `${currentDate.toISOString().split('T')[0]}T${previousBet.draw_time}`;
+  const previousDrawTimeDate = new Date(previousDrawTimeString);
+
+  // Compare the two full Date objects
+  if (drawTimeDate.toISOString() === previousDrawTimeDate.toISOString()) {
+    // If draw_time is the same as the previous bet's draw_time
+    startPoint = previousBet.endPoint;
+  } else {
+    // Otherwise, use the user's balance as the starting point
+    startPoint = user.balance;
+  }
+} else {
+  // If there's no previous bet, fallback to user balance as the starting point
+  startPoint = user.balance;
+}
+
+    // Calculate the endPoint by subtracting the total played amount
+    const endPoint = startPoint - totalPlayed;
+
     // Generate unique ticket_id and game_id
-    const ticket_id = generateTicketId();
+    const ticket_id = generateTicketId(user.fullName);
     const game_id = generateGameId();
 
     // Create a new bet object
@@ -110,14 +139,16 @@ export const createBet = asyncHandler(async (req, res) => {
       ticket_time,
       startPoint,
       endPoint,
+      endId:game_id,
       data,
       status: "blank",
     });
 
     const savedBet = await newBet.save();
 
+    // Update user's balance by subtracting the total played amount
     user.balance -= totalPlayed;
-    await user.save();
+    await user.save(); // Save the updated balance to the database
 
     // Respond with the created bet and success message
     res.status(201).json({
@@ -129,6 +160,7 @@ export const createBet = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // @desc    Get all bets
 // @route   GET /api/bet/all
@@ -227,6 +259,12 @@ export const submitBet = asyncHandler(async (req, res) => {
         if (betData.bet === winningSlot) {
           totalWinningAmount += betData.played * 10; // 10x payout
           winningUsers.push({ bet, betData });
+
+          // Update the won amount for the winning bet
+          betData.won = betData.played * 10; // 10x payout for winning bet
+        } else {
+          // If not a winning bet, set won to 0 (or keep it if already 0)
+          betData.won = 0;
         }
       });
     });
@@ -245,16 +283,18 @@ export const submitBet = asyncHandler(async (req, res) => {
         let userWinningAmount = 0;
 
         if (winningUsers.some((winner) => winner.bet.userId === bet.userId)) {
+          // Calculate winning amount based on the bet's played amount
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
           user.balance += userWinningAmount;
           bet.status = "Completed";
-          bet.result = winningSlot;
+          bet.result = winningSlot; // Add winning slot to the result for the user
         } else {
-          user.balance -= totalUserPlayedAmount * 0.1;
+          user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
           bet.status = "No win";
         }
 
+        // Save the updated bet with the won amounts and status
         await user.save();
         await bet.save();
       }
@@ -271,6 +311,7 @@ export const submitBet = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // @desc    Get all bets with pagination and limit
 // @route   GET /api/users/getBets

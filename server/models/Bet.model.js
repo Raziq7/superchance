@@ -36,9 +36,14 @@ const betSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    endId: {
+      type: String,
+      // required: true,
+    },
+
     status: {
       type: String,
-      enum: ["Pending","Done","No win", "Completed","blank"],
+      enum: ["Pending", "Done", "No win", "Completed", "blank"],
       default: "blank",
     },
     result: {
@@ -55,8 +60,23 @@ const betSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        won: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
       },
     ],
+    totalPlayed: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    won: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
