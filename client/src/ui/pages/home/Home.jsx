@@ -154,6 +154,8 @@ function Home() {
     balance: 0,
   });
 
+  const [isAutoClaim, setIsAutoClaim] = useState(false);
+
   const generateHistoryData = () => {
     const data = [];
     const baseTime = new Date();
@@ -371,7 +373,6 @@ function Home() {
     }
   }, []);
 
-
   function generateGameID() {
     const timestamp = Date.now();
     const lastSixTimestamp = timestamp.toString().slice(-6);
@@ -459,7 +460,7 @@ function Home() {
     if (!gameID) {
       setGameID(currentGameID);
     }
-
+    alert(isAutoClaim);
     const payload = {
       // ticket_id: generateUniqueCode().toString(),
       // game_id: currentGameID, // Use the currentGameID here
@@ -469,6 +470,7 @@ function Home() {
       data: betData,
       startPoint: balance,
       endPoint: balance - play,
+      isAutoClaim,
     };
 
     create_game(payload).then((e) => {
@@ -477,7 +479,7 @@ function Home() {
       if (e.status === 201) {
         console.log("Bet submitted successfully:", e.data.bet.ticket_id);
         openAlertBox(
-          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${e.data.bet.ticket_id}`
+          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${e.data.bet.ticket_id}`,"",""
         );
         fetchBalance();
         setLocal([...betNumList]);
@@ -654,9 +656,12 @@ function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const openAlertBox = (message) => {
+  const openAlertBox = (message, section, status) => {
     setAnchorEl(boxRef.current);
     setAlertMessage(message);
+    if (section === "autoClaim") {
+      setIsAutoClaim(status);
+    }
   };
 
   const handleClose = () => {
@@ -738,10 +743,10 @@ function Home() {
     }
     return;
   };
-  
+
   const fetchGameResult = async () => {
     console.log(winPoint, "what is thsi");
-    
+
     if (winPoint !== null) {
       await updateSpinner(winPoint);
       const response = await get_game_result();
@@ -755,12 +760,12 @@ function Home() {
       }
     }
   };
-  
+
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
     // setIsDisabled(true);
     setWinAmount(0);
-    openAlertBox(`PLACE YOUR BET`);
+    openAlertBox(`PLACE YOUR BET`,"","");
     placeYourBetsSound.play();
     console.log("Triggered at 15sec!");
   }, []);
@@ -768,7 +773,7 @@ function Home() {
   const onEvery1m40s = useCallback(() => {
     // fetchPredictWinner();
     // setIsDisabled(true);
-    openAlertBox(`LAST CHANCE`);
+    openAlertBox(`LAST CHANCE`,"","");
     lastChanceSound.play();
     console.log("Triggered at 1 minute 40 seconds!");
   }, []);
@@ -781,7 +786,7 @@ function Home() {
     fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
-    openAlertBox(`NO MORE BETS PLEASE`);
+    openAlertBox(`NO MORE BETS PLEASE`,"","");
   }, []);
 
   const onEvery2min = useCallback(() => {

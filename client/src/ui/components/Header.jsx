@@ -58,7 +58,7 @@ function Header({ balance, openAlertBox, userData }) {
 
   const handleAutoclame = (event) => {
     setIsAutoClame(event.target.checked);
-    openAlertBox("Auto Clame is " + (event.target.checked ? "ON" : "OFF"));
+    openAlertBox("Auto Claim is " + (event.target.checked ? "ON" : "OFF"), "autoClaim", event.target.checked);
     set_autoclame(event.target.checked).then((data) => {
       console.log(data);
     });
@@ -156,7 +156,7 @@ function Header({ balance, openAlertBox, userData }) {
           <FormControlLabel
             checked={isPrinterEnabled}
             onChange={(e) => {
-              openAlertBox("Print is " + (e.target.checked ? "ON" : "OFF"));
+              openAlertBox("Print is " + (e.target.checked ? "ON" : "OFF"),"","");
               setIsPrinterEnabled(e.target.checked);
             }}
             sx={{

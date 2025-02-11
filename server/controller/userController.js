@@ -6,8 +6,8 @@ import Bet from "../models/Bet.model.js";
 // Function to generate a random unique ticket ID with user full name as prefix
 export const generateTicketId = (userFullName) => {
   // Format the user's full name to uppercase and replace spaces with underscores
-  const formattedName = userFullName.replace(/\s+/g, '_').toUpperCase();
-  
+  const formattedName = userFullName.replace(/\s+/g, "_").toUpperCase();
+
   // Generate random numbers for the second part of the ticket ID
   const randomPart1 = Math.floor(Math.random() * 10000);
   // const randomPart2 = Math.floor(Math.random() * 10000);
@@ -15,7 +15,6 @@ export const generateTicketId = (userFullName) => {
   // Return the ticket ID in the format: FULL_NAME-XXXX
   return `${formattedName}-${randomPart1}`;
 };
-
 
 // Function to generate a random unique game ID
 export const generateGameId = () => {
@@ -75,7 +74,7 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
 // @route   POST /api/bet/create
 // @access  Private (or Public if necessary)
 export const createBet = asyncHandler(async (req, res) => {
-  const { date, draw_time, ticket_time, data } = req.body;
+  const { date, draw_time, ticket_time, data, isAutoClaim } = req.body;
 
   if (!date || !draw_time || !ticket_time || !data) {
     return res.status(400).json({ message: "All fields are required" });
@@ -98,29 +97,35 @@ export const createBet = asyncHandler(async (req, res) => {
 
     // Determine startPoint based on draw_time
     let startPoint;
-    const previousBet = await Bet.findOne({ userId: user._id }).sort({ ticket_time: -1 });
+    const previousBet = await Bet.findOne({ userId: user._id }).sort({
+      ticket_time: -1,
+    });
     const currentDate = new Date(); // Get the current date
 
-// Combine the current date with the `draw_time` string to create a full Date object
-const drawTimeString = `${currentDate.toISOString().split('T')[0]}T${draw_time}`; // "2025-02-10T13:26:00"
-const drawTimeDate = new Date(drawTimeString);
+    // Combine the current date with the `draw_time` string to create a full Date object
+    const drawTimeString = `${
+      currentDate.toISOString().split("T")[0]
+    }T${draw_time}`; // "2025-02-10T13:26:00"
+    const drawTimeDate = new Date(drawTimeString);
 
-if (previousBet) {
-  const previousDrawTimeString = `${currentDate.toISOString().split('T')[0]}T${previousBet.draw_time}`;
-  const previousDrawTimeDate = new Date(previousDrawTimeString);
+    if (previousBet) {
+      const previousDrawTimeString = `${
+        currentDate.toISOString().split("T")[0]
+      }T${previousBet.draw_time}`;
+      const previousDrawTimeDate = new Date(previousDrawTimeString);
 
-  // Compare the two full Date objects
-  if (drawTimeDate.toISOString() === previousDrawTimeDate.toISOString()) {
-    // If draw_time is the same as the previous bet's draw_time
-    startPoint = previousBet.endPoint;
-  } else {
-    // Otherwise, use the user's balance as the starting point
-    startPoint = user.balance;
-  }
-} else {
-  // If there's no previous bet, fallback to user balance as the starting point
-  startPoint = user.balance;
-}
+      // Compare the two full Date objects
+      if (drawTimeDate.toISOString() === previousDrawTimeDate.toISOString()) {
+        // If draw_time is the same as the previous bet's draw_time
+        startPoint = previousBet.endPoint;
+      } else {
+        // Otherwise, use the user's balance as the starting point
+        startPoint = user.balance;
+      }
+    } else {
+      // If there's no previous bet, fallback to user balance as the starting point
+      startPoint = user.balance;
+    }
 
     // Calculate the endPoint by subtracting the total played amount
     const endPoint = startPoint - totalPlayed;
@@ -139,16 +144,20 @@ if (previousBet) {
       ticket_time,
       startPoint,
       endPoint,
-      endId:game_id,
+      endId: game_id,
+      isAutoClaim,
       data,
       status: "blank",
     });
 
     const savedBet = await newBet.save();
 
-    // Update user's balance by subtracting the total played amount
-    user.balance -= totalPlayed;
-    await user.save(); // Save the updated balance to the database
+    // if (isAuoClaim) {
+      // Update user's balance by subtracting the total played amount
+      user.balance -= totalPlayed;
+      await user.save(); // Save the updated balance to the database
+    // } else {
+    // }
 
     // Respond with the created bet and success message
     res.status(201).json({
@@ -160,7 +169,6 @@ if (previousBet) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // @desc    Get all bets
 // @route   GET /api/bet/all
@@ -194,7 +202,12 @@ export const submitBet = asyncHandler(async (req, res) => {
     const bets = await Bet.find({ userId: user._id, status: "blank" });
 
     if (bets.length === 0) {
-      return res.status(404).json({ message: "No active bets found" });
+      const spinnerNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]; // Define spinner numbers
+      const randomIndex = Math.floor(Math.random() * spinnerNumbers.length); // Get a random index
+
+      return res
+        .status(404)
+        .json({ message: "No active bets found", winningSlot: spinnerNumbers[randomIndex] });
     }
 
     let totalSystemPlayedAmount = 0;
@@ -286,11 +299,22 @@ export const submitBet = asyncHandler(async (req, res) => {
           // Calculate winning amount based on the bet's played amount
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
-          user.balance += userWinningAmount;
-          bet.status = "Completed";
-          bet.result = winningSlot; // Add winning slot to the result for the user
-        } else {
-          user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
+            if(bet.isAutoClaim){
+              user.balance += userWinningAmount;
+              bet.status = "Completed";
+              bet.result = winningSlot; 
+              bet.isAutoClaim = true
+
+            }else{
+              bet.isAutoClaim = false,
+              bet.unclaimedAmount = userWinningAmount
+              bet.result = winningSlot;
+              bet.status = "Pending";
+
+            }
+        }
+         else {
+          // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
           bet.status = "No win";
         }
 
@@ -311,7 +335,6 @@ export const submitBet = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // @desc    Get all bets with pagination and limit
 // @route   GET /api/users/getBets
@@ -347,7 +370,6 @@ export const getBets = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Update the last created bet's status
 // @route   PATCH /api/users/updateSpinner
 // @access  Private (or whichever access level is appropriate)
@@ -355,26 +377,32 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
   const { winningSlot } = req.body; // Get the new status from the request body
 
   if (!winningSlot) {
-    return res.status(400).json({ message: "Winning Slot is required in the request body." });
+    return res
+      .status(400)
+      .json({ message: "Winning Slot is required in the request body." });
   }
 
   try {
     const result = await SpinnerResult.findOneAndUpdate(
       {},
-      { $set: { spinnerNumber:winningSlot } }, // Use the status from the request body
+      { $set: { spinnerNumber: winningSlot } }, // Use the status from the request body
       { sort: { createdAt: -1 } }
     );
 
-    if (!result) { 
-      return res.status(404).json({ message: "No Spinner Result found to update." }); 
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: "No Spinner Result found to update." });
     }
 
-    res.status(200).json({ message: "Last Spinner Result status updated successfully.", updatedSpinnerResult: result }); 
-
+    res
+      .status(200)
+      .json({
+        message: "Last Spinner Result status updated successfully.",
+        updatedSpinnerResult: result,
+      });
   } catch (error) {
     console.error("Error updating last Spinner Result status:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-

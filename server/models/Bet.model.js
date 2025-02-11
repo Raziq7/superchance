@@ -4,7 +4,7 @@ const betSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',  // Reference to the User model
+      ref: "User", // Reference to the User model
       required: true,
     },
     ticket_id: {
@@ -49,6 +49,13 @@ const betSchema = new mongoose.Schema(
     result: {
       type: Number,
       default: null,
+    },
+    isAutoClaim: {
+      type: Boolean,
+      required: true,
+    },
+    unclaimedAmount: {
+      type: Number,
     },
     data: [
       {
