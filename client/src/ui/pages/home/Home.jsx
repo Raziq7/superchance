@@ -140,7 +140,8 @@ function Home() {
   const [gameID, setGameID] = useLocalStorage("gameID", "");
   const [isOpen, setIsOpen] = useState(false);
   const [local, setLocal] = useLocalStorage("name", {});
-  const [winPoint, setWinnigPoint] = useLocalStorage("winPoint", null);
+  // const [winPoint, setWinnigPoint] = useLocalStorage("winPoint", null);
+  const [winPoint, setWinnigPoint] = useState(null);
   const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
     "isPrinterEnabled",
     true
@@ -400,39 +401,6 @@ function Home() {
     return `${randomDigits}-${randomLetters}${randomDigits2}`;
   }
 
-  // Handle Spin Button
-  const handlePlay = () => {
-    // localStorage.getItem('winPoint');
-    // let spinum = JSON.parse(localStorage.getItem("winPoint"));
-    let spinum = winPoint;
-    const newHistory = [...historyList];
-    newHistory.pop(); // Remove the last item
-    setHistoryList([
-      {
-        num: spinum,
-        time: moment().format("h:mm A"),
-      },
-      ...newHistory,
-    ]);
-    // spinner(8); // Spin and land on "1"
-    // setTicketID(generateUniqueCode().toString());
-    // fetchPredictWinner(); // Predict the winner
-    spinnerSound.play();
-    spinner(spinum); // Spin and land on "1"
-    // setTimeout(() => {
-    //   // location.reload();
-    // }, 150);
-    if (isOpen === true) {
-      handleYouWin();
-    }
-  };
-
-  const handleYouWin = () => {
-    setIsOpen(true);
-    youWinSound.play();
-    setAlertMessage("message");
-    fetchBalance();
-  };
 
   const betFunc = function () {
     betFunction("clear");
@@ -479,7 +447,9 @@ function Home() {
       if (e.status === 201) {
         console.log("Bet submitted successfully:", e.data.bet.ticket_id);
         openAlertBox(
-          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${e.data.bet.ticket_id}`,"",""
+          `YOUR BET HAS BEEN ACCEPTED WITH ID: ${e.data.bet.ticket_id}`,
+          "",
+          ""
         );
         fetchBalance();
         setLocal([...betNumList]);
@@ -664,11 +634,6 @@ function Home() {
     }
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-    setAlertMessage("");
-  };
-
   // const [remainingTime, setRemainingTime] = useState(
   //   moment.duration(0, "seconds")
   // );
@@ -693,55 +658,23 @@ function Home() {
   // console.log(gameID);
 
   const fetchPredictWinner = async function () {
-    // try {
-    //   let currentGameID = localStorage.getItem("gameID");
-    //   // Remove quotes, newlines, and trim whitespace
-    //   currentGameID = currentGameID
-    //     ? JSON.parse(currentGameID.replace(/\n/g, "").trim())
-    //     : null;
-    //   console.log("Fetching prediction for gameID:", currentGameID);
-
-    //   if (!currentGameID) {
-    //     const response = await predict_winner();
-    //     console.warn("No gameID available, using default prediction");
-    //     if (response.statusCode === 200) {
-    //       const win = response.message.general[0];
-    //       localStorage.setItem("winPoint", JSON.stringify(win.win));
-    //       setWinAmount(win.amount);
-    //     }
-    //     return;
-    //   }
-
-    //   const response = await predict_winner(currentGameID.toString());
-    //   console.log("Prediction response:", response);
-
-    //   if (response.statusCode === 200) {
-    //     const win = response.message.general[0];
-    //     // Explicitly stringify the win value and verify it's set
-    //     localStorage.setItem("winPoint", JSON.stringify(win.win));
-    //     console.log("Set winPoint in localStorage:", win.win);
-    //     // Verify the value was set correctly
-    //     const storedWinPoint = localStorage.getItem("winPoint");
-    //     console.log("Verified winPoint in localStorage:", storedWinPoint);
-
-    //     setWinAmount(win.amount);
-    //   } else {
-    //     console.error("Prediction failed:", response);
-    //   }
-    // } catch (error) {
-    //   console.error("Error predicting winner:", error);
-    // }
-
     const response = await predict_winner();
-    console.warn(response, "No gameID available, using default prediction");
+    console.log(
+      response.response.status,
+      response.response.data,
+      "No gameID available, using default prediction"
+    );
     if (response.status === 200) {
       console.log(response.data);
       // const win = response.message.general[0];
       // localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
       setWinnigPoint(response.data.winningSlot);
       // setWinAmount(response.data.winningSlot);
+    } else if (response.response.status === 404) {
+      console.log(response.response.data.winningSlot);
+      setWinnigPoint(response.response.data.winningSlot);
     }
-    return;
+    // return;
   };
 
   const fetchGameResult = async () => {
@@ -761,11 +694,52 @@ function Home() {
     }
   };
 
+  // Handle Spin Button
+  const handlePlay = () => {
+    // localStorage.getItem('winPoint');
+    // let spinum = JSON.parse(localStorage.getItem("winPoint"));
+    // let spinum = winPoint;
+    console.log(winPoint, "some is here");
+    
+    const newHistory = [...historyList];
+    newHistory.pop(); // Remove the last item
+    setHistoryList([
+      {
+        num: winPoint,
+        time: moment().format("h:mm A"),
+      },
+      ...newHistory,
+    ]);
+    // spinner(8); // Spin and land on "1"
+    // setTicketID(generateUniqueCode().toString());
+    // fetchPredictWinner(); // Predict the winner
+    spinnerSound.play();
+    spinner(winPoint); // Spin and land on "1"
+    // setTimeout(() => {
+    //   // location.reload();
+    // }, 150);
+    if (isOpen === true) {
+      handleYouWin();
+    }
+  };
+
+  const handleYouWin = () => {
+    setIsOpen(true);
+    youWinSound.play();
+    setAlertMessage("message");
+    fetchBalance();
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setAlertMessage("");
+  };
+
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
     // setIsDisabled(true);
     setWinAmount(0);
-    openAlertBox(`PLACE YOUR BET`,"","");
+    openAlertBox(`PLACE YOUR BET`, "", "");
     placeYourBetsSound.play();
     console.log("Triggered at 15sec!");
   }, []);
@@ -773,7 +747,7 @@ function Home() {
   const onEvery1m40s = useCallback(() => {
     // fetchPredictWinner();
     // setIsDisabled(true);
-    openAlertBox(`LAST CHANCE`,"","");
+    openAlertBox(`LAST CHANCE`, "", "");
     lastChanceSound.play();
     console.log("Triggered at 1 minute 40 seconds!");
   }, []);
@@ -786,7 +760,7 @@ function Home() {
     fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
-    openAlertBox(`NO MORE BETS PLEASE`,"","");
+    openAlertBox(`NO MORE BETS PLEASE`, "", "");
   }, []);
 
   const onEvery2min = useCallback(() => {
