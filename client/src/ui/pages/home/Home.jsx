@@ -141,7 +141,7 @@ function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [local, setLocal] = useLocalStorage("name", {});
   // const [winPoint, setWinnigPoint] = useLocalStorage("winPoint", null);
-  const [winPoint, setWinnigPoint] = useState(null);
+  // const [winPoint, setWinnigPoint] = useState(null);
   const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
     "isPrinterEnabled",
     true
@@ -667,21 +667,24 @@ function Home() {
     if (response.status === 200) {
       console.log(response.data);
       // const win = response.message.general[0];
-      // localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
-      setWinnigPoint(response.data.winningSlot);
+      // setWinnigPoint(response.data.winningSlot);
+      localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
       // setWinAmount(response.data.winningSlot);
     } else if (response.response.status === 404) {
-      console.log(response.response.data.winningSlot);
-      setWinnigPoint(response.response.data.winningSlot);
+      alert(response.response.data.winningSlot);
+      localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
+      // setWinnigPoint(response.response.data.winningSlot);
     }
     // return;
   };
 
   const fetchGameResult = async () => {
-    console.log(winPoint, "what is thsi");
-
-    if (winPoint !== null) {
-      await updateSpinner(winPoint);
+    const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
+    
+    if (storedWinPoint !== null) {
+      alert(storedWinPoint)
+      await updateSpinner(storedWinPoint);
+      // localStorage.removeItem("winPoint");
       const response = await get_game_result();
       if (response.status === 200) {
         setBetHistory(response.data);
@@ -699,13 +702,14 @@ function Home() {
     // localStorage.getItem('winPoint');
     // let spinum = JSON.parse(localStorage.getItem("winPoint"));
     // let spinum = winPoint;
-    console.log(winPoint, "some is here");
+    let spinPoint = JSON.parse(localStorage.getItem("winPoint"))
+    console.log(spinPoint, "some is here");
     
     const newHistory = [...historyList];
     newHistory.pop(); // Remove the last item
     setHistoryList([
       {
-        num: winPoint,
+        num: spinPoint,
         time: moment().format("h:mm A"),
       },
       ...newHistory,
@@ -714,7 +718,7 @@ function Home() {
     // setTicketID(generateUniqueCode().toString());
     // fetchPredictWinner(); // Predict the winner
     spinnerSound.play();
-    spinner(winPoint); // Spin and land on "1"
+    spinner(spinPoint); // Spin and land on "1"
     // setTimeout(() => {
     //   // location.reload();
     // }, 150);
