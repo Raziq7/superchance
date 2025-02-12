@@ -2,6 +2,8 @@ import asyncHandler from "express-async-handler";
 import User from "../models/User.model.js";
 import SpinnerResult from "../models/SpinnerResult.model.js";
 import Bet from "../models/Bet.model.js";
+import moment from "moment";
+
 
 // Function to generate a random unique ticket ID with user full name as prefix
 export const generateTicketId = (userFullName) => {
@@ -403,6 +405,68 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
       });
   } catch (error) {
     console.error("Error updating last Spinner Result status:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+// Get daily report (default to today's date)
+// @desc   Get daily report
+// @route   GET /api/users/fetchReport
+// @access  Private (or whichever access level is appropriate)
+export const getDailyReport = asyncHandler(async (req, res) => {
+  try {
+
+    let { date } = req.query;
+    if (!date) {
+      date = moment().format("YYYY-MM-DD"); 
+    }
+
+    const bets = await Bet.find({ date });
+
+    if (!bets.length) {
+      return res.status(200).json({
+        message: "No bets found for the selected date",
+        totalPlayedAmount: 0,
+        totalWinAmount: 0,
+        totalClaimedAmount: 0,
+        totalUnclaimedAmount: 0,
+        totalRevenue: 0,
+      });
+    }
+
+    // Initialize totals
+    let totalPlayedAmount = 0;
+    let totalWinAmount = 0;
+    let totalClaimedAmount = 0;
+    let totalUnclaimedAmount = 0;
+
+
+    bets.forEach((bet) => {
+      let playedAmount = bet.data.reduce((sum, entry) => sum + entry.played, 0);
+      let winAmount = bet.data.reduce((sum, entry) => sum + (entry.won || 0), 0);
+
+      totalPlayedAmount += playedAmount;
+      totalWinAmount += winAmount;
+      totalUnclaimedAmount += bet.unclaimedAmount || 0;
+
+      // Claimed amount = Total winnings - Unclaimed winnings
+      totalClaimedAmount += winAmount - (bet.unclaimedAmount || 0);
+    });
+
+    // Calculate revenue (profit for the house)
+    let totalRevenue = totalPlayedAmount - totalWinAmount;
+
+    res.status(200).json({
+      date,
+      totalPlayedAmount,
+      totalWinAmount,
+      totalClaimedAmount,
+      totalUnclaimedAmount,
+      totalRevenue,
+    });
+  } catch (error) {
+    console.error("Error fetching daily report:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
