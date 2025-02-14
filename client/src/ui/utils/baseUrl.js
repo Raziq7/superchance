@@ -3,7 +3,8 @@ import { getCookie } from './functions';  // Make sure getCookie is correctly im
 
 // Create an Axios instance with a base URL
 const api = axios.create({
-  baseURL: 'http://localhost:8000',  // Your API base URL
+  // baseURL: 'http://localhost:8000',  // Your API base URL
+  baseURL: 'http://15.206.178.245',
 });
 
 // Add Authorization and Content-Type headers globally

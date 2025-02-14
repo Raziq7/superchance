@@ -682,7 +682,6 @@ function Home() {
     const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
     
     if (storedWinPoint !== null) {
-      alert(storedWinPoint)
       await updateSpinner(storedWinPoint);
       // localStorage.removeItem("winPoint");
       const response = await get_game_result();
