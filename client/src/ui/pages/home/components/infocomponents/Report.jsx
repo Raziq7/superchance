@@ -23,7 +23,7 @@ import {
 } from "../../../../assets/Icones";
 import ViewButton from "../../../../public/icons/viewButton.png";
 import moment from "moment";
-import { daily_report } from "../../../../api/gameData";
+import { daily_report, fetchDailyGameReport } from "../../../../api/gameData";
 import useLocalStorage from "../../../../utils/useLocalStorage";
 
 function createData(name, play, win, claim, unclaim, end, ntp) {
@@ -42,10 +42,10 @@ function Report() {
     to: moment(),
   });
 
-  const [local, setLocal] = useLocalStorage("userDetails", {});
+  const [local, setLocal] = useLocalStorage("userDetails");
 
   const [reportData, setReportData] = useState({
-    name: local.username,
+    name: local.userName,
     play: "100000.00",
     win: "90000.00",
     claim: "90000.00",
@@ -98,14 +98,31 @@ function Report() {
   };
 
   const fetchDailyReport = async () => {
-    await daily_report().then((res) => {
-      if (res) {
-        console.log(res);
-      }
-    });
+    // await daily_report().then((res) => {
+    //   if (res) {
+    //     console.log(res);
+    //   }
+    // });
+    await fetchDailyGameReport(date.from.format("YYYY-MM-DD")).then((res) => {
+        if (res) {
+          console.log(res.data);
+          setReportData({
+            // name: local.username,
+            ...reportData,
+            play: res.data.totalPlayedAmount,
+            win: res.data.totalWinAmount,
+            claim: res.data.totalClaimedAmount,
+            end: res.data.totalUnclaimedAmount,
+            commission: res.data.totalRevenue,
+            net_profit: res.data.totalRevenue,
+          })
+        }
+      });
   };
 
   useEffect(() => {
+    console.log(local);
+    
     fetchDailyReport();
   }, []);
 
@@ -221,7 +238,7 @@ function Report() {
                 },
               }}
             >
-              <TableCell>NAME</TableCell>
+              <TableCell sx={{ width: "15%" }}>NAME</TableCell>
               <TableCell>PLAY</TableCell>
               <TableCell>WIN </TableCell>
               <TableCell>CLAIM</TableCell>

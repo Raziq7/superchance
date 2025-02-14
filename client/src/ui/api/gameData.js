@@ -1,4 +1,5 @@
 // import axios from "axios";
+import { createSessionStorage } from "react-router-dom";
 import axios from "../utils/baseUrl";  // Import axios with base configuration
 // import { getCookie } from "../utils/functions";
 
@@ -169,3 +170,14 @@ export const updateSpinner = async function (winningSlot) {
 // API : /api/user/updateSpinner
 // method : patch
 // body : {winningSlot:10}
+
+export const fetchDailyGameReport = async function (date) {
+  try {
+    const data = await axios("/api/user/fetchReport/", { params:{
+      date: date
+    }})
+    return data
+  } catch (error) {
+    return error
+  }
+}

@@ -32,7 +32,7 @@ function Login() {
       console.log(res.data.token);
       
       TokenManager.setAuthTokens({accessToken: res.data.token});
-      setLocal({ token: res.data.token });
+      setLocal({ token: res.data.token, ...res.data.admin });
       navigate("game");
     }
   };
