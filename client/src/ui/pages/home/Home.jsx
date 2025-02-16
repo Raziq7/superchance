@@ -671,19 +671,24 @@ function Home() {
       localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
       // setWinAmount(response.data.winningSlot);
     } else if (response.response.status === 404) {
-      alert(response.response.data.winningSlot);
-      localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
+      // alert(response.response.data.winningSlot);
+      localStorage.setItem("winPoint", JSON.stringify(response.response.data.winningSlot));
       // setWinnigPoint(response.response.data.winningSlot);
     }
     // return;
   };
 
+  const updateSpinnerFun = async (storedWinPoint) => {
+    await updateSpinner(storedWinPoint);
+  }
+
   const fetchGameResult = async () => {
     const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
     
     if (storedWinPoint !== null) {
-      await updateSpinner(storedWinPoint);
+      // alert(storedWinPoint)
       // localStorage.removeItem("winPoint");
+      updateSpinnerFun(storedWinPoint)
       const response = await get_game_result();
       if (response.status === 200) {
         setBetHistory(response.data);
@@ -704,15 +709,15 @@ function Home() {
     let spinPoint = JSON.parse(localStorage.getItem("winPoint"))
     console.log(spinPoint, "some is here");
     
-    const newHistory = [...historyList];
-    newHistory.pop(); // Remove the last item
-    setHistoryList([
-      {
-        num: spinPoint,
-        time: moment().format("h:mm A"),
-      },
-      ...newHistory,
-    ]);
+    // const newHistory = [...historyList];
+    // newHistory.pop(); // Remove the last item
+    // setHistoryList([
+    //   {
+    //     num: spinPoint,
+    //     time: moment().format("h:mm A"),
+    //   },
+    //   ...newHistory,
+    // ]);
     // spinner(8); // Spin and land on "1"
     // setTicketID(generateUniqueCode().toString());
     // fetchPredictWinner(); // Predict the winner

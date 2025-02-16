@@ -61,8 +61,12 @@ function Result() {
   };
 
   const fetchGameResult = async () => {
-    // const response = await get_game_result(idLocl.id, pageNum);
+    // const response = await fetchGameReport(idLocl.id, pageNum);
     // setGameResult(response.response.data);
+    const response = await get_game_result();
+    if (response.status === 200) {
+      setGameResult(response.data);
+    }
   };
 
   useEffect(() => {
@@ -210,9 +214,9 @@ function Result() {
                     }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.result}
+                      {row.spinnerNumber}
                     </TableCell>
-                    <TableCell>{moment(row.draw_time, 'HH:mm:ss.SSSSSS').format("hh:mm A")}</TableCell>
+                    <TableCell>{moment(row.dateTime).format("hh:mm A")}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

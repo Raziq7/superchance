@@ -35,7 +35,7 @@ import {
 import useLocalStorage from "../../../../utils/useLocalStorage";
 import { printer_bill } from "../../../../utils/functions";
 
-const ITEMPERPAGE = 15
+const ITEMPERPAGE = 15;
 
 function GameHistory() {
   const dateRefFrom = useRef(null);
@@ -53,7 +53,7 @@ function GameHistory() {
   const [open, setOpen] = useState(false);
   const [singleViewList, setSingleViewList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [pageNo, setPageNo] = useState(1)
+  const [pageNo, setPageNo] = useState(1);
   const handleDateChangeFrom = (event) => {
     const selectedDate = event.target.value; // Get the selected date as a string
     setDate({ ...date, from: moment(selectedDate) }); // Update the state with the new date
@@ -99,7 +99,6 @@ function GameHistory() {
   const handleRefreshClick = () => {
     setIsLoading(true);
     game_history(ITEMPERPAGE, pageNo).then((data) => {
-
       console.log(data, "date is non is on");
       if (data.status === 200) {
         setHistoryList(data.data.bets);
@@ -120,8 +119,8 @@ function GameHistory() {
     // if (ticketID && gameID) {
     //   get_single_view(ticketID, gameID).then((data) => {
     //     if (data.statusCode === 200) {
-          // setSingleViewList(data);
-          setOpen(true);
+    // setSingleViewList(data);
+    setOpen(true);
     //     }
     //   });
     // }
@@ -164,6 +163,19 @@ function GameHistory() {
     });
   };
 
+  const handleSetColor = (key) => {
+    switch (key) {
+      case "won":
+        return "secondary.main";
+
+      case "Pending":
+        return "primary.main";
+
+      default:
+        return "warning.main";
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     // game_history(ITEMPERPAGE, pageNo).then((data) => {
@@ -181,7 +193,8 @@ function GameHistory() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-         fontFamily:"Poppins-Bold",fontSize:"13.16px"
+          fontFamily: "Poppins-Bold",
+          fontSize: "13.16px",
         }}
       >
         <TableContainer
@@ -351,15 +364,21 @@ function GameHistory() {
                       <TableCell component="th" scope="row">
                         {row.ticket_id}
                       </TableCell>
-                      <TableCell>{row.game_id}</TableCell>
+                      <TableCell>
+                        {row.game_id}
+                      </TableCell>
                       <TableCell>{row.startPoint}</TableCell>
-                      <TableCell>{row.played}</TableCell>
-                      <TableCell>{row.won}</TableCell>
-                      <TableCell>{row.end}</TableCell>
+                      <TableCell>
+                        {row.data.reduce((sum, e) => sum + e.played, 0)}
+                      </TableCell>
+                      <TableCell>
+                        {row.data.reduce((sum, e) => sum + e.won, 0)}
+                      </TableCell>
+                      <TableCell>{row.game_id}</TableCell>
                       <TableCell>{row.endPoint}</TableCell>
                       <TableCell
                         sx={{
-                          color: row.status === "won" ? "green" : "red",
+                          color: handleSetColor(row.status),
                           textTransform: "uppercase",
                         }}
                       >

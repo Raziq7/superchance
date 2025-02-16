@@ -66,11 +66,11 @@ const getColorForNumber = (number) => {
     2: "#EF0202",
     3: "#F98C07",
     4: "#EEDE01",
-    5: "#0D9E7D",
-    6: "#0154C9",
-    7: "#042655",
+    5: "#5550A7",
+    6: "#0D9E7D",
+    7: "#3D07A5",
     8: "#EB1B90",
-    9: "#01A501",
+    9: "#00A500",
     0: "#06A5C1",
   };
   return colorMap[number] || "#F98C07"; // Default color if number not found

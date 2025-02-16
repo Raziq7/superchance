@@ -2,7 +2,7 @@ import axios from "axios";
 import { getCookie } from "../utils/functions";
 
 let cookies = getCookie("accessToken");
-axios.defaults.baseURL = "http://192.168.20.1:8000/";
+axios.defaults.baseURL = "http://192.168.20.1:3000/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 if (cookies) {
   axios.defaults.headers.common["Authorization"] = "Bearer " + cookies;
