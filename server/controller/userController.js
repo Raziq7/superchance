@@ -407,10 +407,6 @@ export const getUnclaimedBets = asyncHandler(async (req, res) => {
   }
 });
 
-import asyncHandler from "express-async-handler";
-import Bet from "../models/betModel.js";
-import User from "../models/userModel.js"; // Assuming you have a User model
-
 // @desc    Claim bet winnings and transfer to user balance
 // @route   PUT /api/users/claimBet/
 // @access  Private (or Public if necessary)
