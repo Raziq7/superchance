@@ -151,6 +151,8 @@ function GameHistory() {
 
   const handleClaimClick = () => {
     // setOpen(true);
+    console.log(ticketObj); 
+    
   };
 
   const handleCancelClick = () => {
@@ -382,7 +384,7 @@ function GameHistory() {
                           textTransform: "uppercase",
                         }}
                       >
-                        {row.status}
+                        {row.status === "blank" ? '' : row.status}
                       </TableCell>
                       <TableCell>
                         {row?.result ? row.result + "-N" : ""}
@@ -501,7 +503,7 @@ const MiniButton = function ({ name, onClick }) {
 };
 
 const GameHistoryModal = function ({ open, handleClose, singleViewList }) {
-  console.log(singleViewList);
+  // console.log(singleViewList);
   return (
     <Modal
       open={open}
