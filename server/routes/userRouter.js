@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserById,getLastSpinnerResults, createBet, getAllBets,submitBet, getBets, updateLastSpinnerResultStatus, getDailyReport, getUnclaimedBets } from '../controller/userController.js';
+import { getUserById,getLastSpinnerResults, createBet, getAllBets,submitBet, getBets, updateLastSpinnerResultStatus, getDailyReport, getUnclaimedBets, claimBetController } from '../controller/userController.js';
 import { verifyToken } from "../middlewares/tokenVerification.js";
 const router = express.Router();
 
@@ -19,6 +19,8 @@ router.post("/submitBet",verifyToken, submitBet)
 router.get("/getBets",verifyToken, getBets)
 
 router.get("/getUnclaimedBets",verifyToken, getUnclaimedBets)
+
+router.put("/claimBet",verifyToken, claimBetController)
 
 router.patch('/updateSpinner',verifyToken,updateLastSpinnerResultStatus);
 
