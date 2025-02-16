@@ -19,7 +19,7 @@ const router = express.Router();
 // Configure CORS, sessions, and body parsers
 app.use(cors({
   origin: "http://localhost:5173",  // Your frontend URL
-  methods: ["GET", "POST", "PUT"],
+  methods: ["GET", "POST", "PUT", "PATCH"],
   credentials: true,  // Allow cookies to be sent from the frontend
 }));
 
