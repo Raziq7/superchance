@@ -372,6 +372,79 @@ export const getBets = asyncHandler(async (req, res) => {
   }
 });
 
+
+// @desc    Get unclaimed bets with pagination and limit
+// @route   GET /api/users/getUnclaimedBets
+// @access  Public (or Private if necessary)
+export const getUnclaimedBets = asyncHandler(async (req, res) => {
+  const { page, limit = 10 } = req.query;
+
+  try {
+    const pageNum = parseInt(page, 10);
+    const pageLimit = parseInt(limit, 10);
+
+    if (pageNum < 1 || pageLimit < 1) {
+      return res.status(400).json({ message: "Invalid pagination values." });
+    }
+
+    // Step 2: Fetch the bets with pagination and limit
+    const bets = await Bet.find({status: "Pending"})
+      .skip((pageNum - 1) * pageLimit)
+      .limit(pageLimit)
+      .sort({ createdAt: -1 });
+
+    const totalBets = await Bet.countDocuments();
+
+    res.status(200).json({
+      totalBets,
+      currentPage: pageNum,
+      totalPages: Math.ceil(totalBets / pageLimit),
+      bets,
+    });
+  } catch (error) {
+    console.error("Error fetching bets:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// @desc    Claim bet winnings and transfer to user balance
+// @route   PUT /api/users/claimBet/
+// @access  Private (or Public if necessary)
+export const claimBetController = asyncHandler(async (req, res) => {
+  const { betId } = req.query;
+
+  try {
+    const bet = await Bet.findById(betId);
+    if (!bet) {
+      return res.status(404).json({ message: "Bet not found" });
+    }
+
+    if (!bet.unclaimedAmount || bet.unclaimedAmount <= 0) {
+      return res.status(400).json({ message: "No winnings to claim" });
+    }
+
+    const user = await User.findById(bet.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.balance = (user.balance || 0) + bet.unclaimedAmount;
+
+    bet.unclaimedAmount = 0;
+    bet.status = "Completed"; // Optional: Mark as claimed
+
+    await user.save();
+    await bet.save();
+
+    res.status(200).json({ message: "Bet winnings claimed successfully", balance: user.balance });
+  } catch (error) {
+    console.error("Error claiming bet:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
 // @desc    Update the last created bet's status
 // @route   PATCH /api/users/updateSpinner
 // @access  Private (or whichever access level is appropriate)

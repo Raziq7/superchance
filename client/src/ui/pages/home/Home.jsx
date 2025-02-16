@@ -690,7 +690,6 @@ function Home() {
   };
 
 
-
   const fetchGameResult = async () => {
     
     // if (storedWinPoint !== null) {

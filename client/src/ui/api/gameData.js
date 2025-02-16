@@ -1,6 +1,6 @@
 // import axios from "axios";
 import { createSessionStorage } from "react-router-dom";
-import axios from "../utils/baseUrl";  // Import axios with base configuration
+import axios from "../utils/baseUrl.js";  // Import axios with base configuration
 // import { getCookie } from "../utils/functions";
 
 export const get_gameUser = async function () {
@@ -160,7 +160,7 @@ export const daily_report = async function () {
 
 export const updateSpinner = async function (winningSlot) {
   try {
-    const data = await axios.patch("api/user/updateSpinner/", {winningSlot:winningSlot});
+    const data = await axios.patch("/api/user/updateSpinner/", {winningSlot:winningSlot});
     return data;
   } catch (error) {
     console.log("error on  API", error);
