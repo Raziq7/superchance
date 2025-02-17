@@ -178,7 +178,7 @@ export const createBet = asyncHandler(async (req, res) => {
 export const getAllBets = asyncHandler(async (req, res) => {
   try {
     // Fetch all bets from the database
-    const bets = await Bet.find().sort({ createdAt: -1 }); // Sort by createdAt to get the most recent bets first
+    const bets = await Bet.find({userId:req.user.id}).sort({ createdAt: -1 }); // Sort by createdAt to get the most recent bets first
 
     if (bets.length === 0) {
       return res.status(404).json({ message: "No bets found" });
@@ -353,7 +353,7 @@ export const getBets = asyncHandler(async (req, res) => {
     }
 
     // Step 2: Fetch the bets with pagination and limit
-    const bets = await Bet.find()
+    const bets = await Bet.find({userId:req.user.id})
       .skip((pageNum - 1) * pageLimit)
       .limit(pageLimit)
       .sort({ createdAt: -1 });
@@ -388,7 +388,7 @@ export const getUnclaimedBets = asyncHandler(async (req, res) => {
     }
 
     // Step 2: Fetch the bets with pagination and limit
-    const bets = await Bet.find({status: "Pending"})
+    const bets = await Bet.find({userId:req.user.id,status: "Pending"})
       .skip((pageNum - 1) * pageLimit)
       .limit(pageLimit)
       .sort({ createdAt: -1 });
@@ -495,7 +495,7 @@ export const getDailyReport = asyncHandler(async (req, res) => {
       date = moment().format("YYYY-MM-DD"); 
     }
 
-    const bets = await Bet.find({ date });
+    const bets = await Bet.find({userId:req.user.id, date });
 
     if (!bets.length) {
       return res.status(200).json({
