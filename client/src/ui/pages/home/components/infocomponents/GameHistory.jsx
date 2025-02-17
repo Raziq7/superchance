@@ -28,6 +28,7 @@ import ViewButton from "../../../../public/icons/viewButton.png";
 import moment from "moment";
 import {
   cancel_game,
+  claim_unclamed_tickets,
   clame_all_tickets,
   game_history,
   get_single_view,
@@ -149,10 +150,15 @@ function GameHistory() {
     }
   };
 
-  const handleClaimClick = () => {
+  const handleClaimClick = async () => {
     // setOpen(true);
     console.log(ticketObj); 
+    // const res = await claim_unclamed_tickets(ticketObj._id)
+    const res = await claim_unclamed_tickets(ticketObj.ticket_id);
     
+    if (res.status === 200 ){
+      handleRefreshClick()
+    }
   };
 
   const handleCancelClick = () => {
