@@ -411,37 +411,47 @@ export const getUnclaimedBets = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/claimBet/
 // @access  Private (or Public if necessary)
 export const claimBetController = asyncHandler(async (req, res) => {
-  const { betId } = req.query;
+  const { ticket_id } = req.query; // Accept ticket_id instead of betId
 
   try {
-    const bet = await Bet.findById(betId);
+
+    const bet = await Bet.findOne({ ticket_id });
+
     if (!bet) {
       return res.status(404).json({ message: "Bet not found" });
     }
 
+
     if (!bet.unclaimedAmount || bet.unclaimedAmount <= 0) {
       return res.status(400).json({ message: "No winnings to claim" });
     }
+
 
     const user = await User.findById(bet.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+
     user.balance = (user.balance || 0) + bet.unclaimedAmount;
 
-    bet.unclaimedAmount = 0;
-    bet.status = "Completed"; // Optional: Mark as claimed
 
+    bet.unclaimedAmount = 0;
+    bet.status = "Completed"; 
+    
     await user.save();
     await bet.save();
 
-    res.status(200).json({ message: "Bet winnings claimed successfully", balance: user.balance });
+    res.status(200).json({
+      message: "Bet winnings claimed successfully",
+      balance: user.balance,
+    });
   } catch (error) {
     console.error("Error claiming bet:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 
 
