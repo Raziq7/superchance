@@ -88,8 +88,10 @@ export const get_unclamed_tickets = async function (id) {
 
 export const claim_unclamed_tickets = async function (id) {
   try {
-    const { data } = await axios.patch("api/v1/game/claim/ticket/", {
-      ticket_id: id,
+    const data  = await axios.put("api/user/claimBet/?betId="+id, {
+      // params: {
+      //   betId: id
+      // }
     });
     return data;
   } catch (error) {
@@ -181,3 +183,4 @@ export const fetchDailyGameReport = async function (date) {
     return error
   }
 }
+
