@@ -443,7 +443,7 @@ function Home() {
     };
 
     create_game(payload).then((e) => {
-      // console.log(e.status, e);
+      console.log(e.data, "game bet api");
 
       if (e.status === 201) {
         console.log("Bet submitted successfully:", e.data.bet.ticket_id);
@@ -455,46 +455,48 @@ function Home() {
         fetchBalance();
         setLocal([...betNumList]);
 
-        // if (isPrinterEnabled) {
-        //   const billHTML = /*html*/ `
-        //     <div class="bill">
-        //     <p style="margin-bottom: 4px;">***Super Chance***</p>
-        //     <p style="margin-bottom: 4px;">From Amusement Only</p>
-        //     <p style="margin-bottom: 4px;">Agent: 634</p>
-        //     <p style="margin-bottom: 4px;">Game ID: ${payload.ticket_id}</p>
-        //     <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
-        //     <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
-        //     <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
-        //       "DD-MM-YYYY h:mm A"
-        //     )}</p>
-        //     <p style="margin-bottom: 4px;">Total Point: ${play}</p>
-        //     <div style="display: flex; align-items: flex-start; gap: 14px;">
-        //         <table>
-        //           <tr>
-        //             <th style="padding-right: 14px;">Item</th>
-        //             <th style="padding-right: 14px;">Point</th>
-        //             <th style="padding-right: 14px;">Item</th>
-        //             <th>Point</th>
-        //           </tr>
-        //           ${pairedItems
-        //             .map(
-        //               (pair) => `
-        //               <tr>
-        //                 <td>${pair[0]?.num || ""}</td>
-        //                 <td>${pair[0]?.token || ""}</td>
-        //                 <td>${pair[1]?.num ?? ""}</td>
-        //                 <td>${pair[1]?.token || ""}</td>
-        //               </tr>
-        //             `
-        //             )
-        //             .join("")}
-        //         </table>
-        //       </div>
-        //     </div>
-        //     `;
+        if (isPrinterEnabled) {
+          const billHTML = /*html*/ `
+            <div class="bill">
+            <p style="margin-bottom: 4px;">***Super Chance***</p>
+            <p style="margin-bottom: 4px;">From Amusement Only</p>
+            <p style="margin-bottom: 4px;">Agent: 634</p>
+            <p style="margin-bottom: 4px;">Game ID: ${e.data.bet.game_id}</p>
+            <p style="margin-bottom: 4px;">Game Name: Single Chance</p>
+            <p style="margin-bottom: 4px;">Draw Time: ${nextIntervalTime}</p>
+            <p style="margin-bottom: 4px;">Ticket Time: ${moment().format(
+              "DD-MM-YYYY h:mm A"
+            )}</p>
+            <p style="margin-bottom: 4px;">Total Point: ${play}</p>
+            <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <table>
+                  <tr>
+                    <th style="padding-right: 14px;">Item</th>
+                    <th style="padding-right: 14px;">Point</th>
+                    <th style="padding-right: 14px;">Item</th>
+                    <th>Point</th>
+                  </tr>
+                  ${pairedItems
+                    .map(
+                      (pair) => `
+                      <tr>
+                        <td>${pair[0]?.num ?? ""}</td>
+                        <td>${pair[0]?.token || ""}</td>
+                        <td>${pair[1]?.num ?? ""}</td>
+                        <td>${pair[1]?.token || ""}</td>
+                      </tr>
+                    `
+                    )
+                    .join("")}
+                </table>
+              </div>
+            </div>
+            `;
 
-        //   // window.electronAPI.printBill(billHTML, payload.ticket_id);
-        // }
+            // console.log("bill html isher 💁👌🎍😍", e.data.bet.ticket_id);
+
+          window.electronAPI.printBill(billHTML, e.data.bet.ticket_id);
+        }
       }
     });
   };

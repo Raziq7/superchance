@@ -291,6 +291,7 @@ function Report() {
               width: "100%",
             },
           }}
+          onClick={printReport}
         >
           <img
             src={ViewButton}

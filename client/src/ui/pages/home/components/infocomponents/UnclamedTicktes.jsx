@@ -33,6 +33,7 @@ import {
   get_unclamed_tickets,
 } from "../../../../api/gameData";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { printer_bill } from "../../../../utils/functions";
 
 function UnclamedTicktes() {
   const dateRefFrom = useRef(null);
@@ -46,9 +47,11 @@ function UnclamedTicktes() {
   const [idLocl, setLocalid] = useLocalStorage("userDetails", {});
   const [ticketID, setTicketID] = useState("");
   const [gameID, setGameID] = useState("");
+  const [ticketObj, setticketObj] = useState({});
   const [open, setOpen] = useState(false);
   const [singleViewList, setSingleViewList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
 
   const handleIconClickFrom = () => {
     if (dateRefFrom.current) {
@@ -80,10 +83,11 @@ function UnclamedTicktes() {
     setGameID(null);
   };
 
-  const handleRowClick = (ticketId, gameId) => {
-    setTicketID(ticketId === ticketID ? null : ticketId);
-    setGameID(gameId === gameID ? null : gameId);
-    console.log(ticketID, gameID);
+  const handleRowClick = (obj) => {
+    setTicketID(obj.ticket_id === ticketID ? null : obj.ticket_id);
+    setGameID(obj.game_id === gameID ? null : obj.game_id);
+    setticketObj(obj);
+    setSingleViewList(obj.data);
   };
 
   const handleViewClick = () => {
@@ -93,8 +97,8 @@ function UnclamedTicktes() {
 
   const handleRefreshClick = () => {
     setIsLoading(true);
-    get_unclamed_tickets(idLocl.id).then((data) => {
-      setHistoryList(data.response.data);
+    get_unclamed_tickets().then((data) => {
+      setHistoryList(data.data.bets);
       setIsLoading(false);
     });
   };
@@ -106,26 +110,44 @@ function UnclamedTicktes() {
   };
 
   const handleDetailsClick = () => {
-    if (ticketID && gameID) {
-      get_single_view(ticketID, gameID).then((data) => {
-        if (data.statusCode === 200) {
-          setSingleViewList(data.response);
+    // if (ticketID && gameID) {
+    //   get_single_view(ticketID, gameID).then((data) => {
+    //     if (data.statusCode === 200) {
+    //       setSingleViewList(data.response);
           setOpen(true);
-        }
-      });
-    }
+    //     }
+    //   });
+    // }
   };
 
   const handleReprintClick = () => {
-    // setOpen(true);
-    // printer_bill(ticketID, gameID, date.from, date.to, singleViewList);
+    // if (ticketID && gameID) {
+      // get_single_view(ticketID, gameID).then((data) => {
+      //   if (data.statusCode === 200) {
+      //     const fileterlist = data.response.map((e) => {
+      //       return {
+      //         num: e.bet,
+      //         token: e.played,
+      //       };
+      //     });
+          printer_bill(
+            ticketObj.ticket_id,
+            moment(ticketObj.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
+            moment(ticketObj.ticket_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
+            ticketObj.played,
+            ticketObj.data
+          );
+    //     }
+    //   });
+    // }
   };
 
   const handleClaimClick = async () => {
     // setOpen(true);
-    await claim_unclamed_tickets(ticketID);
-    handleRefreshClick();
-    // setBarcode("");
+    const res = await claim_unclamed_tickets(ticketObj._id);
+    if (res.status === 200 ){
+      handleRefreshClick()
+    }
   };
 
   const handleCancelClick = () => {
@@ -138,11 +160,21 @@ function UnclamedTicktes() {
     });
   };
 
+  const handleSetColor = (key) => {
+    switch (key) {
+      case "won":
+        return "secondary.main";
+
+      case "Pending":
+        return "primary.main";
+
+      default:
+        return "warning.main";
+    }
+  };
+
   useEffect(() => {
-    get_unclamed_tickets(idLocl.id).then((data) => {
-      console.log(data.response.data);
-      setHistoryList(data.response.data);
-    });
+    handleRefreshClick()
   }, []);
 
   return (
@@ -305,7 +337,7 @@ function UnclamedTicktes() {
                 ) : (
                   historyList.map((row) => (
                     <TableRow
-                      key={row.ticketId}
+                      key={row.ticket_id}
                       sx={{
                         "td,th": {
                           // mb: 10,
@@ -317,24 +349,34 @@ function UnclamedTicktes() {
                         },
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
-                      onClick={() => handleRowClick(row.ticket_id, row.game_id)}
+                      onClick={() => handleRowClick(row)}
                     >
                       <TableCell component="th" scope="row">
                         {row.ticket_id}
                       </TableCell>
-                      <TableCell>{row.game_id}</TableCell>
-                      <TableCell>{row.start_point}</TableCell>
-                      <TableCell>{row.played}</TableCell>
-                      <TableCell>{row.won}</TableCell>
-                      <TableCell>{row.end}</TableCell>
-                      <TableCell>{row.end_point}</TableCell>
-                      {/* <TableCell sx={{ color: "lightblue"}}>{row.status}</TableCell> */}
-                      <TableCell
-                        sx={{ color: "#90D69F", textTransform: "uppercase" }}
-                      >
-                        PENDING
+                      <TableCell>
+                        {row.game_id}
                       </TableCell>
-                      <TableCell>{row?.result}</TableCell>
+                      <TableCell>{row.startPoint}</TableCell>
+                      <TableCell>
+                        {row.data.reduce((sum, e) => sum + e.played, 0)}
+                      </TableCell>
+                      <TableCell>
+                        {row.data.reduce((sum, e) => sum + e.won, 0)}
+                      </TableCell>
+                      <TableCell>{row.game_id}</TableCell>
+                      <TableCell>{row.endPoint}</TableCell>
+                      <TableCell
+                        sx={{
+                          color: handleSetColor(row.status),
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {row.status === "blank" ? '' : row.status}
+                      </TableCell>
+                      <TableCell>
+                        {row?.result ? row.result + "-N" : ""}
+                      </TableCell>
                       <TableCell>{row.date}</TableCell>
                       <TableCell>
                         {moment(row.draw_time, "HH:mm:ss.SSSSSS").format(

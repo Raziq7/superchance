@@ -129,33 +129,31 @@ function GameHistory() {
 
   const handleReprintClick = () => {
     // setOpen(true);
-    if (ticketID && gameID) {
-      get_single_view(ticketID, gameID).then((data) => {
-        if (data.statusCode === 200) {
-          const fileterlist = data.response.map((e) => {
-            return {
-              num: e.bet,
-              token: e.played,
-            };
-          });
+    // if (ticketID && gameID) {
+    //   get_single_view(ticketID, gameID).then((data) => {
+    //     if (data.statusCode === 200) {
+    //       const fileterlist = data.response.map((e) => {
+    //         return {
+    //           num: e.bet,
+    //           token: e.played,
+    //         };
+    //       });
           printer_bill(
             ticketObj.ticket_id,
             moment(ticketObj.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
             moment(ticketObj.ticket_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
-            ticketObj.played,
-            fileterlist
+            ticketObj.data.reduce((sum, e) => sum + e.played, 0),
+            ticketObj.data
           );
-        }
-      });
-    }
+    //     }
+    //   });
+    // }
   };
 
   const handleClaimClick = async () => {
     // setOpen(true);
-    console.log(ticketObj); 
-    // const res = await claim_unclamed_tickets(ticketObj._id)
-    const res = await claim_unclamed_tickets(ticketObj.ticket_id);
-    
+    const res = await claim_unclamed_tickets(ticketObj._id)
+    // const res = await claim_unclamed_tickets(ticketObj.ticket_id);
     if (res.status === 200 ){
       handleRefreshClick()
     }

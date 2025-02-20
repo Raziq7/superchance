@@ -76,9 +76,9 @@ export const get_game_result = async function (id, page, pageSize = 10) {
   }
 };
 
-export const get_unclamed_tickets = async function (id) {
+export const get_unclamed_tickets = async function () {
   try {
-    const { data } = await axios("api/v1/game/history/unclaimed/" + id + "/");
+    const data  = await axios("api/user/getUnclaimedBets");
     return data;
   } catch (error) {
     console.log("error on  API", error);
