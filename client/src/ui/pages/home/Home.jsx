@@ -11,6 +11,9 @@ import BottomPortion from "./components/BottomPortion";
 // import StyledModal from "../../components/CustomComponent/StyledModal";
 import InfoModal from "./components/InfoModal";
 import Spinner2 from "../../components/Spinner/Spinner2";
+import Spinner3 from "../../components/Spinner/Spinner3";
+import Spinner4 from "../../components/Spinner/Spinner4";
+
 import { useGSAP } from "@gsap/react";
 import { Howl, Howler } from "howler";
 import ChipSound from "../../public/GAME SOUNDS/Chip Sound.mp3";
@@ -31,13 +34,16 @@ import {
 import moment from "moment";
 import useLocalStorage from "../../utils/useLocalStorage";
 import StarPattern from "../../public/svgs/StarPattern.svg";
-import CryptoJS from "crypto-js";
 import useSpinningGame from "../../hooks/useSpinningGame";
 import YouWin from "./components/YouWin";
-import Spinner3 from "../../components/Spinner/Spinner3";
-import Spinner4 from "../../components/Spinner/Spinner4";
-
 import { Back } from "gsap";
+import midShefN from "../../public/midShfl/N.png";
+import midShef2 from "../../public/midShfl/2X.png";
+import midShef3 from "../../public/midShfl/3X.png";
+import midShef4 from "../../public/midShfl/4X.png";
+import midShef5 from "../../public/midShfl/5X.png";
+import midShef6 from "../../public/midShfl/6X.png";
+import midShef7 from "../../public/midShfl/7X.png";
 
 // const crypto = window.crypto || window.msCrypto;
 
@@ -193,12 +199,51 @@ function Home() {
   const redLight = useRef(null);
   const orangeLight = useRef(null);
   const greenLight = useRef(null);
+  const spinnerWeel = useRef(null)
+  const spinnerRef = useRef(null);
+  const midImageRef = useRef(null);
 
   const boxRef = useRef(null);
   const hasCountdownStarted = useRef(false); // Tracks if onCountdownStart has been called
   const hasCountdownEnded = useRef(false); // Tracks if onCountdownEnd has been called
 
+  const [currentMultiplier, setCurrentMultiplier] = useState(midShefN);
+  const shuffleInterval = useRef(null);
+  const isSpinning = useRef(false);
+  
+  const multiplierImages = [midShefN, midShef2, midShef3, midShef4, midShef5, midShef6, midShef7];
+
+  const startImageShuffle = () => {
+    isSpinning.current = true;
+    let counter = 0;
+    // Clear any existing interval
+    if (shuffleInterval.current) {
+      clearInterval(shuffleInterval.current);
+    }
+    
+    // Start new shuffle interval
+    shuffleInterval.current = setInterval(() => {
+      if (!isSpinning.current) return; // Don't update if we're stopping
+      counter = (counter + 1) % multiplierImages.length;
+      setCurrentMultiplier(multiplierImages[counter]);
+    }, 100);
+  };
+  
+  const stopImageShuffle = () => {
+    isSpinning.current = false;
+    if (shuffleInterval.current) {
+      clearInterval(shuffleInterval.current);
+      // Ensure we reset to normal multiplier after a brief delay
+      setTimeout(() => {
+        if (!isSpinning.current) { // Double check we haven't started spinning again
+          setCurrentMultiplier(midShefN);
+        }
+      }, 50);
+    }
+  };
+
   const spinner = (targetNumber) => {
+    startImageShuffle(); // Start shuffling when spin begins
     const sections = 10; // Number of sections
     const sectionAngle = 360 / sections; // Angle for each section
     const angleOffset = sectionAngle / 2; // Offset to align with the center of the section
@@ -221,9 +266,34 @@ function Home() {
 
     // Spin the wheel to land on the target number
     const luckywheelTimeline = gsap.timeline({
+      onStart: () => {
+        isSpinning.current = true;
+      },
       onComplete: () => {
+        stopImageShuffle();
         fetchGameResult()
         console.log(`Spinner landed on number: ${targetNumber}`);
+        
+        // Reset all paths and highlight the winning one
+        const paths = spinnerRef.current.getElementsByTagName('path');
+        Array.from(paths).forEach(path => {
+            path.style.filter = 'brightness(0.5)'; // Darken non-winning sections
+        });
+        
+        const winningPath = Array.from(paths).find(path => 
+            path.getAttribute('index') === targetNumber.toString()
+        );
+        
+        if (winningPath) {
+            winningPath.style.filter = 'brightness(1)'; // Keep winning section bright
+            
+            // Reset all filters after 5 seconds
+            setTimeout(() => {
+                Array.from(paths).forEach(path => {
+                    path.style.filter = 'brightness(1)';
+                });
+            }, 5000);
+        }
 
         var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
         tl.add({
@@ -316,7 +386,9 @@ function Home() {
 
   // Outer Ring animation
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   console.log(spinnerWeel, "Somer is (((((((((((((((((((((((((())))))))))))))))))))))))))");
+  // }, []);
 
   // Inner Ring animation
 
@@ -743,7 +815,7 @@ function Home() {
   const handleYouWin = () => {
     setIsOpen(true);
     youWinSound.play();
-    setAlertMessage("message");
+    // setAlertMessage("message");
     fetchBalance();
   };
 
@@ -794,7 +866,7 @@ function Home() {
     setGameID(""); // Clear React state 
     localStorage.removeItem("gameID"); // Clear localStorage
     // setWinnigPoint(null);
-    localStorage.removeItem('winPoint');
+    // localStorage.removeItem('winPoint');
 
     // Generate new gameID for next round
     // const newGameID = generateGameID().toString();
@@ -850,6 +922,7 @@ function Home() {
 
   return (
     <>
+    {/*  */}
       <Box
         sx={{
           position: "relative",
@@ -920,7 +993,6 @@ function Home() {
               wheelRef2={wheelRef2}
               currentRef={currentRef}
             /> */}
-
               <Spinner4
                 wheelRef1={wheelRef1}
                 wheelRef2={wheelRef2}
@@ -929,8 +1001,22 @@ function Home() {
                 greenLight={greenLight}
                 redLight={redLight}
                 orangeLight={orangeLight}
+                spinnerWeel={spinnerWeel}
+                spinnerRef={spinnerRef}
               />
-
+                <img 
+                  ref={midImageRef} 
+                  src={currentMultiplier} 
+                  alt="" 
+                  style={{ 
+                    position: "absolute", 
+                    top: "55%", 
+                    left: "53%", 
+                    transform: "translate(-50%, -50%)", 
+                    zIndex: 100,
+                    transition: "opacity 0.1s ease-in-out" 
+                  }} 
+                />
               {/* <Spinner5
 
               wheelRef1={wheelRef1}

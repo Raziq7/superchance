@@ -171,14 +171,24 @@ function GameHistory() {
 
   const handleSetColor = (key) => {
     switch (key) {
-      case "won":
-        return "secondary.main";
+      case "Completed":
+        return "success.main";
 
       case "Pending":
         return "primary.main";
 
       default:
         return "warning.main";
+    }
+  };
+
+  const calculateEnd = (row) => {
+    if (row.status !== "Pending" || row.status === "Completed") {
+      console.log(Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0));
+      return Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0);
+    } else {
+      console.log(Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0));
+      return Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0);
     }
   };
 
@@ -381,7 +391,7 @@ function GameHistory() {
                         {row.data.reduce((sum, e) => sum + e.won, 0)}
                       </TableCell>
                       <TableCell>{row.game_id}</TableCell>
-                      <TableCell>{row.endPoint}</TableCell>
+                      <TableCell>{calculateEnd(row)}</TableCell>
                       <TableCell
                         sx={{
                           color: handleSetColor(row.status),

@@ -35,7 +35,7 @@ function Header({ balance, openAlertBox, userData }) {
   const [visibillity, setVisibillity] = useState(false);
   const [barcode, setBarcode] = useState("")
   const [toggle, setToggle] = useLocalStorage("isMute", false);
-  const [isAutoClame, setIsAutoClame] = useLocalStorage("isAutoClame", true);
+  const [isAutoClame, setIsAutoClame] = useLocalStorage("isAutoClame", false);
   const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
     "isPrinterEnabled",
     true
