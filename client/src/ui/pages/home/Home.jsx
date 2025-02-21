@@ -270,7 +270,6 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
-        stopImageShuffle();
         fetchGameResult()
         console.log(`Spinner landed on number: ${targetNumber}`);
         
@@ -474,7 +473,6 @@ function Home() {
     return `${randomDigits}-${randomLetters}${randomDigits2}`;
   }
 
-
   const betFunc = function () {
     betFunction("clear");
     setPlay(0);
@@ -565,7 +563,7 @@ function Home() {
             </div>
             `;
 
-            // console.log("bill html isher 💁👌🎍😍", e.data.bet.ticket_id);
+          // console.log("bill html isher 💁👌🎍😍", e.data.bet.ticket_id);
 
           window.electronAPI.printBill(billHTML, e.data.bet.ticket_id);
         }
@@ -732,12 +730,6 @@ function Home() {
 
   // console.log(gameID);
 
-  const updateSpinnerFun = async () => {
-    const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
-    await updateSpinner(storedWinPoint);
-
-  }
-
   const fetchPredictWinner = async function () {
     const response = await predict_winner();
     // console.log(
@@ -750,46 +742,35 @@ function Home() {
       // const win = response.message.general[0];
       // setWinnigPoint(response.data.winningSlot);
       console.log(response.data);
-      
-      localStorage.setItem("winPoint", JSON.stringify(response.data.winningSlot));
-      // setWinAmount(response.data.winningSlot);
-      // await updateSpinnerFun(response.data.winningSlot)
+
+      localStorage.setItem(
+        "winPoint",
+        JSON.stringify(response.data.winningSlot)
+      );
     } else if (response.response.status === 404) {
-      // alert(response.response.data.winningSlot);
-      localStorage.setItem("winPoint", JSON.stringify(response.response.data.winningSlot));
-      // await updateSpinnerFun(response.response.data.winningSlot)
-      // setWinnigPoint(response.response.data.winningSlot);
+      localStorage.setItem(
+        "winPoint",
+        JSON.stringify(response.response.data.winningSlot)
+      );
     }
     // return;
   };
 
-
   const fetchGameResult = async () => {
-    
-    // if (storedWinPoint !== null) {
-    //   // alert(storedWinPoint)
-    //   // localStorage.removeItem("winPoint");
-    //   updateSpinnerFun(storedWinPoint)
-    //   const response = await get_game_result();
-    //   if (response.status === 200) {
-    //     setBetHistory(response.data);
-    //   }
-    // } else {
-      const response = await get_game_result();
-      if (response.status === 200) {
-        setBetHistory(response.data);
-      }
-    // }
+    const response = await get_game_result();
+    if (response.status === 200) {
+      setBetHistory(response.data);
+    }
   };
 
   // Handle Spin Button
-  const handlePlay = () => {
+  const handlePlay = (storedWinPoint) => {
     // localStorage.getItem('winPoint');
     // let spinum = JSON.parse(localStorage.getItem("winPoint"));
     // let spinum = winPoint;
-    let spinPoint = JSON.parse(localStorage.getItem("winPoint"))
-    console.log(spinPoint, "some is here");
-    
+    // let spinPoint = JSON.parse(localStorage.getItem("winPoint"));
+    console.log(storedWinPoint, "some is here");
+
     // const newHistory = [...historyList];
     // newHistory.pop(); // Remove the last item
     // setHistoryList([
@@ -803,7 +784,7 @@ function Home() {
     // setTicketID(generateUniqueCode().toString());
     // fetchPredictWinner(); // Predict the winner
     spinnerSound.play();
-    spinner(spinPoint); // Spin and land on "1"
+    spinner(storedWinPoint); // Spin and land on "1"
     // setTimeout(() => {
     //   // location.reload();
     // }, 150);
@@ -852,18 +833,22 @@ function Home() {
     openAlertBox(`NO MORE BETS PLEASE`, "", "");
   }, []);
 
-  const onEvery2min = useCallback(() => {
+  const onEvery2min = useCallback(async() => {
     // alert("2min - Starting new game cycle");
-    updateSpinnerFun()
+    const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
+
+    setTimeout(async () => {
+      await updateSpinner(storedWinPoint);
+    }, 1000);
 
     // First handle the play animation
-    handlePlay();
+    handlePlay(storedWinPoint);
     // fetchGameResult();
     // fetchPredictWinner();
 
     // Clear game state
     setIsDisabled(false);
-    setGameID(""); // Clear React state 
+    setGameID(""); // Clear React state
     localStorage.removeItem("gameID"); // Clear localStorage
     // setWinnigPoint(null);
     // localStorage.removeItem('winPoint');

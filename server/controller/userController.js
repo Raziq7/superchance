@@ -302,14 +302,14 @@ export const submitBet = asyncHandler(async (req, res) => {
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
             if(bet.isAutoClaim){
-              user.balance += userWinningAmount;
+              user.balance += userWinningAmount * 10 ;
               bet.status = "Completed";
               bet.result = winningSlot; 
               bet.isAutoClaim = true
 
             }else{
               bet.isAutoClaim = false,
-              bet.unclaimedAmount = userWinningAmount
+              bet.unclaimedAmount = userWinningAmount * 10;
               bet.result = winningSlot;
               bet.status = "Pending";
 
@@ -411,11 +411,11 @@ export const getUnclaimedBets = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/claimBet/
 // @access  Private (or Public if necessary)
 export const claimBetController = asyncHandler(async (req, res) => {
-  const { ticket_id } = req.query; // Accept ticket_id instead of betId
+  const { betId } = req.query; // Accept ticket_id instead of betId
 
   try {
 
-    const bet = await Bet.findOne({ ticket_id });
+    const bet = await Bet.findOne({ _id:betId });
 
     if (!bet) {
       return res.status(404).json({ message: "Bet not found" });
@@ -461,6 +461,10 @@ export const claimBetController = asyncHandler(async (req, res) => {
 export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
   const { winningSlot } = req.body; // Get the new status from the request body
 
+
+  console.log(winningSlot,"winningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlot");
+  
+
   if (!winningSlot) {
     return res
       .status(400)
@@ -468,11 +472,14 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
   }
 
   try {
-    const result = await SpinnerResult.findOneAndUpdate(
-      {},
-      { $set: { spinnerNumber: winningSlot } }, // Use the status from the request body
-      { sort: { createdAt: -1 } }
-    );
+    const result = await SpinnerResult.findOne().sort({ createdAt: -1 });
+
+
+    result.spinnerNumber = winningSlot
+
+    await result.save()
+
+    
 
     if (!result) {
       return res
