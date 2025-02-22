@@ -913,7 +913,7 @@ function Home() {
     fetchBalance();
     fetchGameResult();
     // setGameID(generateRandomInt(100000, 999999).toString());
-  }, []);
+  }, [local]);
 
   return (
     <>

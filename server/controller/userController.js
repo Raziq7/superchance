@@ -4,7 +4,6 @@ import SpinnerResult from "../models/SpinnerResult.model.js";
 import Bet from "../models/Bet.model.js";
 import moment from "moment";
 
-
 // Function to generate a random unique ticket ID with user full name as prefix
 export const generateTicketId = (userFullName) => {
   // Format the user's full name to uppercase and replace spaces with underscores
@@ -155,9 +154,9 @@ export const createBet = asyncHandler(async (req, res) => {
     const savedBet = await newBet.save();
 
     // if (isAuoClaim) {
-      // Update user's balance by subtracting the total played amount
-      user.balance -= totalPlayed;
-      await user.save(); // Save the updated balance to the database
+    // Update user's balance by subtracting the total played amount
+    user.balance -= totalPlayed;
+    await user.save(); // Save the updated balance to the database
     // } else {
     // }
 
@@ -178,7 +177,9 @@ export const createBet = asyncHandler(async (req, res) => {
 export const getAllBets = asyncHandler(async (req, res) => {
   try {
     // Fetch all bets from the database
-    const bets = await Bet.find({userId:req.user.id}).sort({ createdAt: -1 }); // Sort by createdAt to get the most recent bets first
+    const bets = await Bet.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    }); // Sort by createdAt to get the most recent bets first
 
     if (bets.length === 0) {
       return res.status(404).json({ message: "No bets found" });
@@ -286,6 +287,8 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let remainingProfit = totalSystemPlayedAmount - totalWinningAmount;
 
+    let hasWon = false;
+
     // Step 5: Update User Balances & Bet Status
     for (let bet of bets) {
       let user = await User.findById(bet.userId);
@@ -314,6 +317,7 @@ export const submitBet = asyncHandler(async (req, res) => {
               bet.status = "Pending";
 
             }
+            hasWon = true;
         }
          else {
           // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
@@ -331,12 +335,14 @@ export const submitBet = asyncHandler(async (req, res) => {
       winningSlot,
       totalSystemPlayedAmount,
       remainingProfit,
+      hasWon
     });
   } catch (error) {
     console.error("Error processing bets:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // @desc    Get all bets with pagination and limit
 // @route   GET /api/users/getBets
@@ -353,7 +359,7 @@ export const getBets = asyncHandler(async (req, res) => {
     }
 
     // Step 2: Fetch the bets with pagination and limit
-    const bets = await Bet.find({userId:req.user.id})
+    const bets = await Bet.find({ userId: req.user.id })
       .skip((pageNum - 1) * pageLimit)
       .limit(pageLimit)
       .sort({ createdAt: -1 });
@@ -372,7 +378,6 @@ export const getBets = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Get unclaimed bets with pagination and limit
 // @route   GET /api/users/getUnclaimedBets
 // @access  Public (or Private if necessary)
@@ -388,7 +393,7 @@ export const getUnclaimedBets = asyncHandler(async (req, res) => {
     }
 
     // Step 2: Fetch the bets with pagination and limit
-    const bets = await Bet.find({userId:req.user.id,status: "Pending"})
+    const bets = await Bet.find({ userId: req.user.id, status: "Pending" })
       .skip((pageNum - 1) * pageLimit)
       .limit(pageLimit)
       .sort({ createdAt: -1 });
@@ -414,31 +419,26 @@ export const claimBetController = asyncHandler(async (req, res) => {
   const { betId } = req.query; // Accept ticket_id instead of betId
 
   try {
-
-    const bet = await Bet.findOne({ _id:betId });
+    const bet = await Bet.findOne({ _id: betId });
 
     if (!bet) {
       return res.status(404).json({ message: "Bet not found" });
     }
 
-
     if (!bet.unclaimedAmount || bet.unclaimedAmount <= 0) {
       return res.status(400).json({ message: "No winnings to claim" });
     }
-
 
     const user = await User.findById(bet.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-
     user.balance = (user.balance || 0) + bet.unclaimedAmount;
 
-
     bet.unclaimedAmount = 0;
-    bet.status = "Completed"; 
-    
+    bet.status = "Completed";
+
     await user.save();
     await bet.save();
 
@@ -452,18 +452,16 @@ export const claimBetController = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
 // @desc    Update the last created bet's status
 // @route   PATCH /api/users/updateSpinner
 // @access  Private (or whichever access level is appropriate)
 export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
   const { winningSlot } = req.body; // Get the new status from the request body
 
-
-  console.log(winningSlot,"winningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlot");
-  
+  console.log(
+    winningSlot,
+    "winningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlot"
+  );
 
   if (!winningSlot) {
     return res
@@ -474,12 +472,9 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
   try {
     const result = await SpinnerResult.findOne().sort({ createdAt: -1 });
 
+    result.spinnerNumber = winningSlot;
 
-    result.spinnerNumber = winningSlot
-
-    await result.save()
-
-    
+    await result.save();
 
     if (!result) {
       return res
@@ -487,18 +482,15 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
         .json({ message: "No Spinner Result found to update." });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Last Spinner Result status updated successfully.",
-        updatedSpinnerResult: result,
-      });
+    res.status(200).json({
+      message: "Last Spinner Result status updated successfully.",
+      updatedSpinnerResult: result,
+    });
   } catch (error) {
     console.error("Error updating last Spinner Result status:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // Get daily report (default to today's date)
 // @desc   Get daily report
@@ -506,13 +498,12 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
 // @access  Private (or whichever access level is appropriate)
 export const getDailyReport = asyncHandler(async (req, res) => {
   try {
-
     let { date } = req.query;
     if (!date) {
-      date = moment().format("YYYY-MM-DD"); 
+      date = moment().format("YYYY-MM-DD");
     }
 
-    const bets = await Bet.find({userId:req.user.id, date });
+    const bets = await Bet.find({ userId: req.user.id, date });
 
     if (!bets.length) {
       return res.status(200).json({
@@ -531,10 +522,12 @@ export const getDailyReport = asyncHandler(async (req, res) => {
     let totalClaimedAmount = 0;
     let totalUnclaimedAmount = 0;
 
-
     bets.forEach((bet) => {
       let playedAmount = bet.data.reduce((sum, entry) => sum + entry.played, 0);
-      let winAmount = bet.data.reduce((sum, entry) => sum + (entry.won || 0), 0);
+      let winAmount = bet.data.reduce(
+        (sum, entry) => sum + (entry.won || 0),
+        0
+      );
 
       totalPlayedAmount += playedAmount;
       totalWinAmount += winAmount;
