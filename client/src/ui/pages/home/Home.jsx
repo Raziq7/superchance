@@ -44,6 +44,7 @@ import midShef4 from "../../public/midShfl/4X.png";
 import midShef5 from "../../public/midShfl/5X.png";
 import midShef6 from "../../public/midShfl/6X.png";
 import midShef7 from "../../public/midShfl/7X.png";
+import StarsBg from "../../public/backgrounds/StarsBg.png";
 
 // const crypto = window.crypto || window.msCrypto;
 
@@ -217,7 +218,7 @@ function Home() {
     isSpinning.current = true;
     let counter = 0;
     // Clear any existing interval
-    if (shuffleInterval.current) {
+    if (shuffleInterval.current || wheelRef2.current) {
       clearInterval(shuffleInterval.current);
     }
     
@@ -227,6 +228,7 @@ function Home() {
       counter = (counter + 1) % multiplierImages.length;
       setCurrentMultiplier(multiplierImages[counter]);
     }, 100);
+
   };
   
   const stopImageShuffle = () => {
@@ -585,7 +587,7 @@ function Home() {
       if (index == i) {
         return {
           ...e,
-          token: chipNum,
+          token: chipNum + Number(e.token),
         };
       }
       return e;
@@ -755,7 +757,10 @@ function Home() {
       );
       console.log(response.data.totalSystemPlayedAmount, "Win Amount is this");
       // setWinAmount(response.data.totalSystemPlayedAmount);
-      localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
+      if (response.data.hasWon) {
+        localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
+      }
+
       // console.log(response.data.totalSystemPlayedAmount);
     } else if (response.response.status === 404) {
       localStorage.setItem(
@@ -926,7 +931,7 @@ function Home() {
           minHeight: "900px",
           // background: "rgb(171,44,4)",
           background:
-            " linear-gradient(180deg, rgb(21, 19, 18) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
+            "linear-gradient(90deg, rgba(201,88,1,1) 33%, rgba(181,51,4,1) 58%, rgba(171,44,4,1) 70%, rgba(116,14,3,1) 100%)",
         }}
       >
         <Header
@@ -955,6 +960,8 @@ function Home() {
               "mix-blend-mode": "screen",
             }}
           />
+
+          <img src={StarsBg} alt="" style={{ position: "absolute", top: "3%", left: "30%", }} />
 
           <Box
             sx={{
