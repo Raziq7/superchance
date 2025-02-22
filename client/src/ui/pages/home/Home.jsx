@@ -270,7 +270,16 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
+        stopImageShuffle()
         fetchGameResult()
+        // console.log(localStorage.getItem("winAmount"), "winner");
+        
+        if (localStorage.getItem("winAmount") > 0) {
+          handleYouWin();
+          setWinAmount(localStorage.getItem("winAmount"));
+          localStorage.removeItem("winAmount");
+        }
+
         console.log(`Spinner landed on number: ${targetNumber}`);
         
         // Reset all paths and highlight the winning one
@@ -360,7 +369,7 @@ function Home() {
       duration: 11.3,
       rotation: rotationNext,
       transformOrigin: "50% 50%",
-      ease: "power4",
+      ease: "power1.inOut",
     });
 
     // Optional: Spin the second wheel, if necessary
@@ -371,7 +380,7 @@ function Home() {
           duration: 11.3,
           rotation: rotationNext,
           transformOrigin: "50% 50%",
-          ease: "power4",
+          ease: "power1.inOut",
         },
         "<" // Start both animations simultaneously
       );
@@ -740,13 +749,14 @@ function Home() {
     console.log(response);
     if (response.status === 200) {
       // const win = response.message.general[0];
-      // setWinnigPoint(response.data.winningSlot);
-      console.log(response.data);
-
       localStorage.setItem(
         "winPoint",
         JSON.stringify(response.data.winningSlot)
       );
+      console.log(response.data.totalSystemPlayedAmount, "Win Amount is this");
+      // setWinAmount(response.data.totalSystemPlayedAmount);
+      localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
+      // console.log(response.data.totalSystemPlayedAmount);
     } else if (response.response.status === 404) {
       localStorage.setItem(
         "winPoint",
@@ -788,9 +798,9 @@ function Home() {
     // setTimeout(() => {
     //   // location.reload();
     // }, 150);
-    if (isOpen === true) {
-      handleYouWin();
-    }
+    // if (isOpen === true) {
+    //   handleYouWin();
+    // }
   };
 
   const handleYouWin = () => {
@@ -807,7 +817,7 @@ function Home() {
 
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
-    // setIsDisabled(true);
+    // setIsDisabled(false);
     setWinAmount(0);
     openAlertBox(`PLACE YOUR BET`, "", "");
     placeYourBetsSound.play();
