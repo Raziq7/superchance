@@ -76,7 +76,7 @@ const getColorForNumber = (number) => {
   return colorMap[number] || "#F98C07"; // Default color if number not found
 };
 
-function Historyinfo({ setinfoModal, betHistory }) {
+function Historyinfo({ setinfoModal, betHistory, }) {
   // const [historyList, sethistoryList] = useState([])
   // const [idLocl, setLocalid] = useLocalStorage("userDetails", {});
 

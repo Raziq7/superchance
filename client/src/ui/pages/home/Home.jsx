@@ -601,22 +601,25 @@ function Home() {
   };
 
   const betButtonClick = function (index) {
-    let newList = betNumList.map((e, i) => {
-      if (index == i) {
-        return {
-          ...e,
-          token: chipNum + Number(e.token),
-        };
-      }
-      return e;
-    });
-    const totalTokens = newList.reduce((sum, item) => {
-      const tokenValue = parseInt(item.token, 10) || 0; // Convert to integer, fallback to 0 if blank
-      return sum + tokenValue;
-    }, 0);
-    setBalance(balance - chipNum);
-    setPlay(totalTokens);
-    setBetNumList(newList);
+    if (chipNum) {
+      let newList = betNumList.map((e, i) => {
+        if (index == i) {
+          return {
+            ...e,
+            token: chipNum + Number(e.token),
+          };
+        }
+        return e;
+      });
+      const totalTokens = newList.reduce((sum, item) => {
+        const tokenValue = parseInt(item.token, 10) || 0; // Convert to integer, fallback to 0 if blank
+        return sum + tokenValue;
+      }, 0);
+      setBalance(balance - chipNum);
+      setPlay(totalTokens);
+      setBetNumList(newList);
+    }
+    
   };
 
   const betremoveClick = function (index) {
@@ -1097,7 +1100,7 @@ function Home() {
         alertMessage={alertMessage}
         handleClose={() => handleClose()}
       />
-      <InfoModal open={infoModal} handleClose={() => setinfoModal(false)} />
+      <InfoModal open={infoModal} handleClose={() => setinfoModal(false)} fetchBalance={fetchBalance} />
     </>
   );
 }

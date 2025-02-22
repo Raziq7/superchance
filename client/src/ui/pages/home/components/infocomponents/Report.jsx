@@ -269,7 +269,7 @@ function Report() {
               <TableCell>{reportData.end}</TableCell>
               <TableCell>{reportData.commission}</TableCell>
               <TableCell>{Number(reportData.net_profit) / 2}</TableCell>
-              <TableCell>{reportData.net_profit}</TableCell>
+              <TableCell>{Number(reportData.net_profit) / 2}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

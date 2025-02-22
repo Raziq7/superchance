@@ -51,7 +51,7 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function InfoModal({ open, handleClose }) {
+function InfoModal({ open, handleClose, fetchBalance }) {
   const [alignment, setAlignment] = useState("result");
 
   const handleAlignment = (event, newAlignment) => {
@@ -174,7 +174,7 @@ function InfoModal({ open, handleClose }) {
         <Result />
       </CustomTabPanel>
       <CustomTabPanel value={alignment} index={"gameHistory"}>
-        <GameHistory />
+        <GameHistory fetchBalance={fetchBalance} />
       </CustomTabPanel>
       <CustomTabPanel value={alignment} index={"rules"}>
         <Rules />
@@ -183,7 +183,7 @@ function InfoModal({ open, handleClose }) {
         <Report />
       </CustomTabPanel>
       <CustomTabPanel value={alignment} index={"unclameTickets"}>
-        <UnclamedTicktes />
+        <UnclamedTicktes fetchBalance={fetchBalance} />
       </CustomTabPanel>
     </StyledModal>
   );

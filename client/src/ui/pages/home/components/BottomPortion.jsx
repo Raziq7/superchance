@@ -542,7 +542,7 @@ const BackgroundSVG = (props) => (
 
 
 
-<svg style={{ position:"absolute",bottom:-20}} viewBox="0 0 1440 341" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg style={{ position:"absolute",bottom: 0}} viewBox="0 0 1440 341" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M751 1H750.971L750.941 1.00173C748.038 1.17248 738.824 1.93439 728.696 7.75108C718.544 13.5815 707.549 24.4486 701.048 44.6943C683.586 99.0749 638.713 201.764 516.077 259.094C433.644 297.63 315.622 307.131 211.77 285.193C107.878 263.246 18.5522 209.935 -7.0409 123.217L-9 123.5V364V365H-8H1440H1441V364V2V1H1440H751Z" fill="url(#paint0_linear_2362_976)" stroke="#6F2B02" stroke-width="2"/>
 <defs>
 <linearGradient id="paint0_linear_2362_976" x1="797.5" y1="-12" x2="797.5" y2="354" gradientUnits="userSpaceOnUse">

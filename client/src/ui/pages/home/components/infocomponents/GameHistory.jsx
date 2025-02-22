@@ -38,7 +38,7 @@ import { printer_bill } from "../../../../utils/functions";
 
 const ITEMPERPAGE = 15;
 
-function GameHistory() {
+function GameHistory({ fetchBalance }) {
   const dateRefFrom = useRef(null);
   const dateRefTo = useRef(null);
   const [date, setDate] = useState({
@@ -156,6 +156,7 @@ function GameHistory() {
     // const res = await claim_unclamed_tickets(ticketObj.ticket_id);
     if (res.status === 200 ){
       handleRefreshClick()
+      fetchBalance()
     }
   };
 
