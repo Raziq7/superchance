@@ -183,20 +183,10 @@ function GameHistory() {
   };
 
   const calculateEnd = (row) => {
-    // if (row.status !== "Pending" || row.status === "Completed") {
-    //   console.log(Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0));
-    //   return Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0);
-    // } else if (row.status === "Pending") {
-    //   console.log(Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0));
-    //   return Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0);
-    // }
-
     if(row.status === "Completed") {
       return Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0);
-    } else if (row.status === "Pending") {
+    } else  {
       return Number(row.endPoint);
-    } else {
-      return Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0);
     }
 
   };

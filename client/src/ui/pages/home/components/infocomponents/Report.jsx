@@ -244,6 +244,7 @@ function Report() {
               <TableCell>CLAIM</TableCell>
               <TableCell>UNCLAIM</TableCell>
               <TableCell>End</TableCell>
+              <TableCell>COMM</TableCell>
               <TableCell>NTP</TableCell>
             </TableRow>
           </TableHead>
@@ -267,6 +268,7 @@ function Report() {
               <TableCell>{reportData.claim}</TableCell>
               <TableCell>{reportData.end}</TableCell>
               <TableCell>{reportData.commission}</TableCell>
+              <TableCell>{Number(reportData.net_profit) / 2}</TableCell>
               <TableCell>{reportData.net_profit}</TableCell>
             </TableRow>
           </TableBody>
