@@ -9,7 +9,7 @@ router.get('/fetchUser',verifyToken, getUserById);
 router.get("/lastResults",verifyToken, getLastSpinnerResults);
 
 // Route to create a new bet
-router.post("/createBer",verifyToken, createBet);
+router.post("/createBet",verifyToken, createBet);
 
 // Route to fetch all bets
 router.get("/getAllBets",verifyToken, getAllBets)
