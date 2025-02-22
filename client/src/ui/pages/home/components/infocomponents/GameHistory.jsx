@@ -194,7 +194,7 @@ function GameHistory() {
     if(row.status === "Completed") {
       return Number(row.endPoint) + row.data.reduce((sum, e) => sum + e.won, 0);
     } else if (row.status === "Pending") {
-      return Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0);
+      return Number(row.endPoint);
     } else {
       return Number(row.endPoint) - row.data.reduce((sum, e) => sum + e.played, 0);
     }
