@@ -6,7 +6,7 @@ const router = express.Router();
 // Register a new user
 router.get('/fetchUser',verifyToken, getUserById);
 
-router.get("/lastResults",verifyToken, getLastSpinnerResults);
+router.get("/lastResults", getLastSpinnerResults);
 
 // Route to create a new bet
 router.post("/createBet",verifyToken, createBet);

@@ -12,6 +12,10 @@ const spinnerResultSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    time:{
+      type:String,
+      required:true
+    },
     // Adding a custom date and time field
     dateTime: {
       type: Date,
