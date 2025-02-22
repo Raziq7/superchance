@@ -287,6 +287,8 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let remainingProfit = totalSystemPlayedAmount - totalWinningAmount;
 
+    let haswon = false;
+
     // Step 5: Update User Balances & Bet Status
     for (let bet of bets) {
       let user = await User.findById(bet.userId);
@@ -315,6 +317,9 @@ export const submitBet = asyncHandler(async (req, res) => {
               bet.status = "Pending";
 
             }
+
+            haswon = true;
+
         }
          else {
           // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
@@ -332,6 +337,7 @@ export const submitBet = asyncHandler(async (req, res) => {
       winningSlot,
       totalSystemPlayedAmount,
       remainingProfit,
+      haswon
     });
   } catch (error) {
     console.error("Error processing bets:", error);

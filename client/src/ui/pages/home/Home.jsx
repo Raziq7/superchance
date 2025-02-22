@@ -314,64 +314,74 @@ function Home() {
           }, 5000);
         }
 
-        var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
-        tl.add({
-          targets: [
-            greenLight.current.querySelectorAll("g"),
-            greenLight.current.querySelectorAll("circle"),
-          ],
-          opacity: 0,
-        })
-          .add({
-            targets: [
-              greenLight.current.querySelectorAll("g"),
-              greenLight.current.querySelectorAll("circle"),
-            ],
-            opacity: 1,
-            fillOpacity: 1,
-          })
-          .add({
-            targets: [
-              orangeLight.current.querySelectorAll("g"),
-              orangeLight.current.querySelectorAll("circle"),
-            ],
-            opacity: 0,
-          })
-          .add({
-            targets: [
-              orangeLight.current.querySelectorAll("g"),
-              orangeLight.current.querySelectorAll("circle"),
-            ],
-            opacity: 1,
-            fillOpacity: 1,
-          })
-          .add({
-            targets: [
-              redLight.current.querySelectorAll("g"),
-              redLight.current.querySelectorAll("circle"),
-            ],
-            opacity: 0,
-          })
-          .add({
-            targets: [
-              redLight.current.querySelectorAll("g"),
-              redLight.current.querySelectorAll("circle"),
-            ],
-            opacity: 1,
-            fillOpacity: 1,
-          });
+        // var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
+        // tl.add({
+        //   targets: [
+        //     greenLight.current.querySelectorAll("g"),
+        //     greenLight.current.querySelectorAll("circle"),
+        //   ],
+        //   opacity: 0,
+        // })
+        //   .add({
+        //     targets: [
+        //       greenLight.current.querySelectorAll("g"),
+        //       greenLight.current.querySelectorAll("circle"),
+        //     ],
+        //     opacity: 1,
+        //     fillOpacity: 1,
+        //   })
+        //   .add({
+        //     targets: [
+        //       orangeLight.current.querySelectorAll("g"),
+        //       orangeLight.current.querySelectorAll("circle"),
+        //     ],
+        //     opacity: 0,
+        //   })
+        //   .add({
+        //     targets: [
+        //       orangeLight.current.querySelectorAll("g"),
+        //       orangeLight.current.querySelectorAll("circle"),
+        //     ],
+        //     opacity: 1,
+        //     fillOpacity: 1,
+        //   })
+        //   .add({
+        //     targets: [
+        //       redLight.current.querySelectorAll("g"),
+        //       redLight.current.querySelectorAll("circle"),
+        //     ],
+        //     opacity: 0,
+        //   })
+        //   .add({
+        //     targets: [
+        //       redLight.current.querySelectorAll("g"),
+        //       redLight.current.querySelectorAll("circle"),
+        //     ],
+        //     opacity: 1,
+        //     fillOpacity: 1,
+        //   });
 
-        anime({
-          targets: [
-            greenLight.current.querySelectorAll("g"),
-            redLight.current.querySelectorAll("g"),
-            redLight.current.querySelectorAll("circle"),
-            orangeLight.current.querySelectorAll("g"),
-            orangeLight.current.querySelectorAll("circle"),
-          ],
-          fillOpacity: 0,
-          delay: 1500,
-        });
+        // anime({
+        //   targets: [
+        //     greenLight.current.querySelectorAll("g"),
+        //     redLight.current.querySelectorAll("g"),
+        //     redLight.current.querySelectorAll("circle"),
+        //     ,
+        //     orangeLight.current.querySelectorAll("g"),
+        //     orangeLight.current.querySelectorAll("circle"),
+        //   ],
+        //   fillOpacity: 0,
+        //   delay: 1500,
+        // });
+
+        var tl=anime.timeline({direction:'alternate',duration:600,loop:4})
+        tl.add({targets:[greenLight.current.querySelectorAll('g') , greenLight.current.querySelectorAll('circle')] ,
+     opacity:[0,1,0],fillOpacity:[0,1,0]
+        }).add({targets: redLight.current.querySelectorAll('circle') ,
+          opacity:[0,1,0],fillOpacity:[0,1,0]
+            }).add({ targets:orangeLight.current.querySelectorAll('circle'),
+              opacity:[0,1,0],fillOpacity:[0,1,0]
+         })
       },
     });
 
@@ -759,14 +769,19 @@ function Home() {
     console.log(response);
     if (response.status === 200) {
       // const win = response.message.general[0];
+      console.log(response.data, "Win Amount is this");
       localStorage.setItem(
         "winPoint",
         JSON.stringify(response.data.winningSlot)
       );
-      console.log(response.data.totalSystemPlayedAmount, "Win Amount is this");
+      
       // setWinAmount(response.data.totalSystemPlayedAmount);
       if (response.data.hasWon) {
         localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
+
+        localStorage.setItem("hasWon", JSON.stringify(response.data.hasWon));
+
+        
       }
 
       // console.log(response.data.totalSystemPlayedAmount);
