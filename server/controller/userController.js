@@ -210,16 +210,13 @@ export const submitBet = asyncHandler(async (req, res) => {
 
       return res
         .status(404)
-        .json({
-          message: "No active bets found",
-          winningSlot: spinnerNumbers[randomIndex],
-        });
+        .json({ message: "No active bets found", winningSlot: spinnerNumbers[randomIndex] });
     }
 
     let totalSystemPlayedAmount = 0;
     let userBets = {};
 
-
+    // Step 1: Group Bets by User & Calculate Total System Played Amount
     bets.forEach((bet) => {
       let userId = bet.userId.toString();
       if (!userBets[userId]) {
@@ -240,14 +237,17 @@ export const submitBet = asyncHandler(async (req, res) => {
     let winningSlot = -1;
     let selectedUser = null;
 
+    // Step 2: Check Each User's Bets & Pick the Best Winning Slot
     for (let userId in userBets) {
       let { totalUserPlayedAmount, slots } = userBets[userId];
 
+      // Sort user's slots by played amount (ascending)
       let sortedSlots = Object.entries(slots).sort((a, b) => a[1] - b[1]);
 
       for (let [slot, playedAmount] of sortedSlots) {
         let potentialPayout = playedAmount * 10;
 
+        // Condition: Ensure house profit (payout must be within user's total played amount)
         if (potentialPayout <= totalUserPlayedAmount) {
           winningSlot = parseInt(slot);
           selectedUser = userId;
@@ -255,9 +255,10 @@ export const submitBet = asyncHandler(async (req, res) => {
         }
       }
 
-      if (winningSlot !== -1) break; 
+      if (winningSlot !== -1) break; // Stop once we find a valid slot
     }
 
+    // Step 3: If No Valid Slot Found, Follow Case 2 (Force a Loss)
     if (winningSlot === -1) {
       let emptySlots = Array(10)
         .fill(0)
@@ -268,14 +269,17 @@ export const submitBet = asyncHandler(async (req, res) => {
     let totalWinningAmount = 0;
     let winningUsers = [];
 
+    // Step 4: Process Winnings for Selected Users
     bets.forEach((bet) => {
       bet.data.forEach((betData) => {
         if (betData.bet === winningSlot) {
           totalWinningAmount += betData.played * 10; // 10x payout
           winningUsers.push({ bet, betData });
 
+          // Update the won amount for the winning bet
           betData.won = betData.played * 10; // 10x payout for winning bet
         } else {
+          // If not a winning bet, set won to 0 (or keep it if already 0)
           betData.won = 0;
         }
       });
@@ -283,8 +287,7 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let remainingProfit = totalSystemPlayedAmount - totalWinningAmount;
 
-    let hasWon = false;
-
+    // Step 5: Update User Balances & Bet Status
     for (let bet of bets) {
       let user = await User.findById(bet.userId);
       let totalUserPlayedAmount = bet.data.reduce(
@@ -296,25 +299,29 @@ export const submitBet = asyncHandler(async (req, res) => {
         let userWinningAmount = 0;
 
         if (winningUsers.some((winner) => winner.bet.userId === bet.userId)) {
+          // Calculate winning amount based on the bet's played amount
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
-          if (bet.isAutoClaim) {
-            user.balance += userWinningAmount * 10;
-            bet.status = "Completed";
-            bet.result = winningSlot;
-            bet.isAutoClaim = true;
-          } else {
-            bet.isAutoClaim = false;
-            bet.unclaimedAmount = userWinningAmount * 10;
-            bet.result = winningSlot;
-            bet.status = "Pending";
-          }
+            if(bet.isAutoClaim){
+              user.balance += userWinningAmount;
+              bet.status = "Completed";
+              bet.result = winningSlot; 
+              bet.isAutoClaim = true
 
-          hasWon = true; 
-        } else {
+            }else{
+              bet.isAutoClaim = false,
+              bet.unclaimedAmount = userWinningAmount
+              bet.result = winningSlot;
+              bet.status = "Pending";
+
+            }
+        }
+         else {
+          // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
           bet.status = "No win";
         }
 
+        // Save the updated bet with the won amounts and status
         await user.save();
         await bet.save();
       }
@@ -325,7 +332,6 @@ export const submitBet = asyncHandler(async (req, res) => {
       winningSlot,
       totalSystemPlayedAmount,
       remainingProfit,
-      hasWon, 
     });
   } catch (error) {
     console.error("Error processing bets:", error);

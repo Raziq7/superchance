@@ -44,6 +44,7 @@ import midShef4 from "../../public/midShfl/4X.png";
 import midShef5 from "../../public/midShfl/5X.png";
 import midShef6 from "../../public/midShfl/6X.png";
 import midShef7 from "../../public/midShfl/7X.png";
+import StarsBg from "../../public/backgrounds/StarsBg.png";
 
 // const crypto = window.crypto || window.msCrypto;
 
@@ -225,7 +226,7 @@ function Home() {
     isSpinning.current = true;
     let counter = 0;
     // Clear any existing interval
-    if (shuffleInterval.current) {
+    if (shuffleInterval.current || wheelRef2.current) {
       clearInterval(shuffleInterval.current);
     }
 
@@ -235,21 +236,22 @@ function Home() {
       counter = (counter + 1) % multiplierImages.length;
       setCurrentMultiplier(multiplierImages[counter]);
     }, 100);
+
   };
 
-  // const stopImageShuffle = () => {
-  //   isSpinning.current = false;
-  //   if (shuffleInterval.current) {
-  //     clearInterval(shuffleInterval.current);
-  //     // Ensure we reset to normal multiplier after a brief delay
-  //     setTimeout(() => {
-  //       if (!isSpinning.current) {
-  //         // Double check we haven't started spinning again
-  //         setCurrentMultiplier(midShefN);
-  //       }
-  //     }, 50);
-  //   }
-  // };
+  const stopImageShuffle = () => {
+    isSpinning.current = false;
+    if (shuffleInterval.current) {
+      clearInterval(shuffleInterval.current);
+      // Ensure we reset to normal multiplier after a brief delay
+      setTimeout(() => {
+        if (!isSpinning.current) {
+          // Double check we haven't started spinning again
+          setCurrentMultiplier(midShefN);
+        }
+      }, 50);
+    }
+  };
 
   const spinner = (targetNumber) => {
     startImageShuffle(); // Start shuffling when spin begins
@@ -279,7 +281,16 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
-        fetchGameResult();
+        stopImageShuffle()
+        fetchGameResult()
+        // console.log(localStorage.getItem("winAmount"), "winner");
+        
+        if (localStorage.getItem("winAmount") > 0) {
+          handleYouWin();
+          setWinAmount(localStorage.getItem("winAmount"));
+          localStorage.removeItem("winAmount");
+        }
+
         console.log(`Spinner landed on number: ${targetNumber}`);
 
         // Reset all paths and highlight the winning one
@@ -368,7 +379,7 @@ function Home() {
       duration: 11.3,
       rotation: rotationNext,
       transformOrigin: "50% 50%",
-      ease: "power4",
+      ease: "power1.inOut",
     });
 
     // Optional: Spin the second wheel, if necessary
@@ -379,7 +390,7 @@ function Home() {
           duration: 11.3,
           rotation: rotationNext,
           transformOrigin: "50% 50%",
-          ease: "power4",
+          ease: "power1.inOut",
         },
         "<" // Start both animations simultaneously
       );
@@ -584,7 +595,7 @@ function Home() {
       if (index == i) {
         return {
           ...e,
-          token: chipNum,
+          token: chipNum + Number(e.token),
         };
       }
       return e;
@@ -748,13 +759,17 @@ function Home() {
     console.log(response);
     if (response.status === 200) {
       // const win = response.message.general[0];
-      // setWinnigPoint(response.data.winningSlot);
-      console.log(response.data);
-
       localStorage.setItem(
         "winPoint",
         JSON.stringify(response.data.winningSlot)
       );
+      console.log(response.data.totalSystemPlayedAmount, "Win Amount is this");
+      // setWinAmount(response.data.totalSystemPlayedAmount);
+      if (response.data.hasWon) {
+        localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
+      }
+
+      // console.log(response.data.totalSystemPlayedAmount);
     } else if (response.response.status === 404) {
       localStorage.setItem(
         "winPoint",
@@ -800,9 +815,9 @@ function Home() {
     // setTimeout(() => {
     //   // location.reload();
     // }, 150);
-    if (isOpen === true) {
-      handleYouWin();
-    }
+    // if (isOpen === true) {
+    //   handleYouWin();
+    // }
   };
 
   const handleYouWin = () => {
@@ -819,7 +834,7 @@ function Home() {
 
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
-    // setIsDisabled(true);
+    // setIsDisabled(false);
     setWinAmount(0);
     openAlertBox(`PLACE YOUR BET`, "", "");
     placeYourBetsSound.play();
@@ -928,7 +943,7 @@ function Home() {
           minHeight: "900px",
           // background: "rgb(171,44,4)",
           background:
-            " linear-gradient(180deg, rgb(21, 19, 18) 14%, rgba(181,51,4,1) 33%, rgba(171,44,4,1) 48%, rgba(112,12,1,1) 84%)",
+            "linear-gradient(90deg, rgba(201,88,1,1) 33%, rgba(181,51,4,1) 58%, rgba(171,44,4,1) 70%, rgba(116,14,3,1) 100%)",
         }}
       >
         <Header
@@ -957,6 +972,8 @@ function Home() {
               "mix-blend-mode": "screen",
             }}
           />
+
+          <img src={StarsBg} alt="" style={{ position: "absolute", top: "3%", left: "30%", }} />
 
           <Box
             sx={{

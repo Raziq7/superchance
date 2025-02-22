@@ -1,7 +1,6 @@
 // import axios from "axios";
 import { createSessionStorage } from "react-router-dom";
 import axios from "../utils/baseUrl.js";  // Import axios with base configuration
-import { getCookie } from "../utils/functions.js";
 // import { getCookie } from "../utils/functions";
 
 export const get_gameUser = async function () {
@@ -62,11 +61,8 @@ export const predict_winner = async function () {
 
 export const get_game_result = async function (id, page, pageSize = 10) {
   try {
-
-    const accessToken = getCookie("accessToken");
-
-    const data  = await axios.get(
-      accessToken ? "api/spinner/getSpinner/" : "api/user/lastResults/"
+    const data  = await axios(
+      "api/user/lastResults/" 
         // +id +
         // "/?pageIndex=" +
         // page +
