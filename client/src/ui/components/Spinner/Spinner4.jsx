@@ -5,7 +5,7 @@ const Spinner4 = React.forwardRef(function (
     ref
 ) {
     return (
-        <svg style={{ position: "relative", top: "20px", left: "20px" }} viewBox="0 0 684.93 643" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg style={{ position: "relative", top: "4px", left: "20px" }} viewBox="0 0 684.93 643" fill="none" xmlns="http://www.w3.org/2000/svg">
 
             <g className="wheelSpinner" ref={wheelRef1}>
                 <g ref={spinnerRef}>

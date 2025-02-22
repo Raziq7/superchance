@@ -147,6 +147,7 @@ function UnclamedTicktes() {
     const res = await claim_unclamed_tickets(ticketObj._id);
     if (res.status === 200 ){
       handleRefreshClick()
+      fetchBalance()
     }
   };
 
