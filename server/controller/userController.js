@@ -268,6 +268,7 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let totalWinningAmount = 0;
     let winningUsers = [];
+    let winningAmount;
 
     // Step 4: Process Winnings for Selected Users
     bets.forEach((bet) => {
@@ -278,6 +279,7 @@ export const submitBet = asyncHandler(async (req, res) => {
 
           // Update the won amount for the winning bet
           betData.won = betData.played * 10; // 10x payout for winning bet
+          winningAmount =+ betData.played * 10;
         } else {
           // If not a winning bet, set won to 0 (or keep it if already 0)
           betData.won = 0;
@@ -287,7 +289,7 @@ export const submitBet = asyncHandler(async (req, res) => {
 
     let remainingProfit = totalSystemPlayedAmount - totalWinningAmount;
 
-    let hasWon = false;
+    let haswon = false;
 
     // Step 5: Update User Balances & Bet Status
     for (let bet of bets) {
@@ -304,20 +306,25 @@ export const submitBet = asyncHandler(async (req, res) => {
           // Calculate winning amount based on the bet's played amount
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
+
+            console.log(winningAmount,"userWinningAmountuserWinningAmountuserWinningAmountuserWinningAmount");
+            
             if(bet.isAutoClaim){
-              user.balance += userWinningAmount * 10 ;
+              user.balance += winningAmount;
               bet.status = "Completed";
               bet.result = winningSlot; 
               bet.isAutoClaim = true
 
             }else{
               bet.isAutoClaim = false,
-              bet.unclaimedAmount = userWinningAmount * 10;
+              bet.unclaimedAmount = winningAmount;
               bet.result = winningSlot;
               bet.status = "Pending";
 
             }
-            hasWon = true;
+
+            haswon = true;
+
         }
          else {
           // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
@@ -335,7 +342,7 @@ export const submitBet = asyncHandler(async (req, res) => {
       winningSlot,
       totalSystemPlayedAmount,
       remainingProfit,
-      hasWon
+      haswon
     });
   } catch (error) {
     console.error("Error processing bets:", error);

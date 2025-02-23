@@ -9,6 +9,7 @@ import { errorHandler, notFound } from "./middlewares/errorMiddlware.js";
 import sanitizedConfig from "./config.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
+import spinnerRouter from "./routes/spinnerRouter.js"
 import { runSpinner } from './controller/spinAndStoreResult.js'; // Import the runSpinner function
 
 
@@ -55,6 +56,7 @@ runSpinner(); // Call this function to start the spinner process immediately
 // Routes for authentication and user handling
 app.use("/api/auth/", authRouter);
 app.use("/api/user/", userRouter);
+app.use("/api/spinner/",spinnerRouter)
 
 // Basic route for testing
 app.get("/", (req, res) => {

@@ -1,5 +1,7 @@
+import asyncHandler from "express-async-handler";
 import SpinnerResult from "../models/SpinnerResult.model.js";
 import moment from "moment";
+import SpinnerUserResult from "../models/SpinnerUserResult.model.js";
 
 // Function to simulate spinning the spinner (random number from predefined set)
 const spinSpinner = () => {
@@ -9,18 +11,21 @@ const spinSpinner = () => {
 };
 
 // Controller function to spin the spinner and store the result
-const spinAndStoreResult = async () => {
+const spinAndStoreResult = async (time) => {
   const spinnerNumber = spinSpinner();
-  console.log(`Spinner landed on number: ${spinnerNumber}, Date: ${Date.now()}`);
+  console.log(
+    `Spinner landed on number: ${spinnerNumber}, Date: ${Date.now()}`
+  );
 
   // Store the result in the database
   const spinnerResult = new SpinnerResult({
     spinnerNumber,
+    time: time,
   });
 
   await spinnerResult.save();
   console.log("Spinner result saved to the database:", spinnerResult);
-  
+
   return spinnerResult;
 };
 
@@ -39,7 +44,11 @@ const runSpinner = async () => {
   const nextInterval = now.clone().add(timeUntilNextInterval, "milliseconds");
 
   // Log the time calculation
-  console.log(`Time Until Next Interval: ${timeUntilNextInterval}ms, Next Interval: ${nextInterval.format("h:mm A")}`);
+  console.log(
+    `Time Until Next Interval: ${timeUntilNextInterval}ms, Next Interval: ${nextInterval.format(
+      "h:mm A"
+    )}`
+  );
 
   // Make sure spinner runs after time is calculated
   if (isSpinning) {
@@ -50,7 +59,7 @@ const runSpinner = async () => {
   try {
     isSpinning = true; // Lock the spinner
     console.log("Starting the spinner...");
-    await spinAndStoreResult(); // Trigger the spinner logic
+    await spinAndStoreResult(nextInterval.format("h:mm A")); // Trigger the spinner logic
     console.log("Spinner finished.");
   } catch (error) {
     console.error("Error during spinner operation:", error);
@@ -62,3 +71,24 @@ const runSpinner = async () => {
 };
 
 export { runSpinner }; // Ensure that runSpinner is exported
+
+// @desc    simulate spinning the spinner (random number from predefined set for specific users)
+// @route   GET /api/spinner/getSpinner
+// @access  @private
+export const getAllUserSpinner = asyncHandler(async (req, res) => {
+  try {
+   
+    const results = await SpinnerUserResult.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+      if (results.length === 0) {
+        return res.status(404).json({ message: "No spinner results found" });
+      }
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching bets:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});

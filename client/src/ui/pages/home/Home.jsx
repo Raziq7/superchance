@@ -2,20 +2,20 @@
 import anime from "animejs/lib/anime.es.js";
 import gsap from "gsap";
 import Header from "../../components/Header";
-import Spinner from "../../components/Spinner/Spinner";
+// import Spinner from "../../components/Spinner/Spinner";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Box, Button, Popover, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Historyinfo from "./components/Historyinfo";
 import BetNumbers from "./components/BetNumbers";
 import BottomPortion from "./components/BottomPortion";
 // import StyledModal from "../../components/CustomComponent/StyledModal";
 import InfoModal from "./components/InfoModal";
-import Spinner2 from "../../components/Spinner/Spinner2";
-import Spinner3 from "../../components/Spinner/Spinner3";
+// import Spinner2 from "../../components/Spinner/Spinner2";
+// import Spinner3 from "../../components/Spinner/Spinner3";
 import Spinner4 from "../../components/Spinner/Spinner4";
 
 import { useGSAP } from "@gsap/react";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 import ChipSound from "../../public/GAME SOUNDS/Chip Sound.mp3";
 import SpinnerSound from "../../public/GAME SOUNDS/Spinning Wheel.mp3";
 import NoMoreBetsPlease from "../../public/GAME SOUNDS/No more bets please.mp3";
@@ -36,7 +36,7 @@ import useLocalStorage from "../../utils/useLocalStorage";
 import StarPattern from "../../public/svgs/StarPattern.svg";
 import useSpinningGame from "../../hooks/useSpinningGame";
 import YouWin from "./components/YouWin";
-import { Back } from "gsap";
+// import { Back } from "gsap";
 import midShefN from "../../public/midShfl/N.png";
 import midShef2 from "../../public/midShfl/2X.png";
 import midShef3 from "../../public/midShfl/3X.png";
@@ -131,13 +131,13 @@ function Home() {
     },
   ]);
 
-  const [idLocl, setLocalid] = useLocalStorage("userDetails", {});
+  useLocalStorage("userDetails", {});
   // const [duration, setDuration] = useState(moment());
   const [chipNum, setChipNum] = useState(null);
   // const [ismessModal, setIsmessageModal] = useState(false);
   const [play, setPlay] = useState(0);
 
-  const [isDisableBet, setIsDisableBet] = useState(false);
+  // const [isDisableBet, setIsDisableBet] = useState(false);
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [infoModal, setinfoModal] = useState(false);
@@ -147,12 +147,9 @@ function Home() {
   const [gameID, setGameID] = useLocalStorage("gameID", "");
   const [isOpen, setIsOpen] = useState(false);
   const [local, setLocal] = useLocalStorage("name", {});
-  // const [winPoint, setWinnigPoint] = useLocalStorage("winPoint", null);
+  useLocalStorage("winPoint", null);
   // const [winPoint, setWinnigPoint] = useState(null);
-  const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
-    "isPrinterEnabled",
-    true
-  );
+  const [isPrinterEnabled] = useLocalStorage("isPrinterEnabled", true);
 
   const [userData, setuserData] = useState({
     id: "",
@@ -188,10 +185,7 @@ function Home() {
     return data;
   };
 
-  const [historyList, setHistoryList] = useLocalStorage(
-    "historyList",
-    generateHistoryData()
-  );
+  useLocalStorage("historyList", generateHistoryData());
 
   const wheelRef1 = useRef(null);
   const wheelRef2 = useRef(null);
@@ -200,19 +194,27 @@ function Home() {
   const redLight = useRef(null);
   const orangeLight = useRef(null);
   const greenLight = useRef(null);
-  const spinnerWeel = useRef(null)
+  const spinnerWeel = useRef(null);
   const spinnerRef = useRef(null);
   const midImageRef = useRef(null);
 
   const boxRef = useRef(null);
-  const hasCountdownStarted = useRef(false); // Tracks if onCountdownStart has been called
-  const hasCountdownEnded = useRef(false); // Tracks if onCountdownEnd has been called
+  // const hasCountdownStarted = useRef(false); // Tracks if onCountdownStart has been called
+  // const hasCountdownEnded = useRef(false); // Tracks if onCountdownEnd has been called
 
   const [currentMultiplier, setCurrentMultiplier] = useState(midShefN);
   const shuffleInterval = useRef(null);
   const isSpinning = useRef(false);
-  
-  const multiplierImages = [midShefN, midShef2, midShef3, midShef4, midShef5, midShef6, midShef7];
+
+  const multiplierImages = [
+    midShefN,
+    midShef2,
+    midShef3,
+    midShef4,
+    midShef5,
+    midShef6,
+    midShef7,
+  ];
 
   const startImageShuffle = () => {
     isSpinning.current = true;
@@ -221,23 +223,23 @@ function Home() {
     if (shuffleInterval.current || wheelRef2.current) {
       clearInterval(shuffleInterval.current);
     }
-    
+
     // Start new shuffle interval
     shuffleInterval.current = setInterval(() => {
       if (!isSpinning.current) return; // Don't update if we're stopping
       counter = (counter + 1) % multiplierImages.length;
       setCurrentMultiplier(multiplierImages[counter]);
     }, 100);
-
   };
-  
+
   const stopImageShuffle = () => {
     isSpinning.current = false;
     if (shuffleInterval.current) {
       clearInterval(shuffleInterval.current);
       // Ensure we reset to normal multiplier after a brief delay
       setTimeout(() => {
-        if (!isSpinning.current) { // Double check we haven't started spinning again
+        if (!isSpinning.current) {
+          // Double check we haven't started spinning again
           setCurrentMultiplier(midShefN);
         }
       }, 50);
@@ -245,6 +247,7 @@ function Home() {
   };
 
   const spinner = (targetNumber) => {
+    // alert(JSON.parse(localStorage.getItem("haswon")));
     startImageShuffle(); // Start shuffling when spin begins
     const sections = 10; // Number of sections
     const sectionAngle = 360 / sections; // Angle for each section
@@ -272,37 +275,39 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
-        stopImageShuffle()
-        fetchGameResult()
+        stopImageShuffle();
+        fetchGameResult();
         // console.log(localStorage.getItem("winAmount"), "winner");
-        
-        if (localStorage.getItem("winAmount") > 0) {
+
+        if (JSON.parse(localStorage.getItem("hasWon"))) {
           handleYouWin();
           setWinAmount(localStorage.getItem("winAmount"));
           localStorage.removeItem("winAmount");
+          localStorage.removeItem("hasWon");
+
         }
 
         console.log(`Spinner landed on number: ${targetNumber}`);
-        
+
         // Reset all paths and highlight the winning one
-        const paths = spinnerRef.current.getElementsByTagName('path');
-        Array.from(paths).forEach(path => {
-            path.style.filter = 'brightness(0.5)'; // Darken non-winning sections
+        const paths = spinnerRef.current.getElementsByTagName("path");
+        Array.from(paths).forEach((path) => {
+          path.style.filter = "brightness(0.5)"; // Darken non-winning sections
         });
-        
-        const winningPath = Array.from(paths).find(path => 
-            path.getAttribute('index') === targetNumber.toString()
+
+        const winningPath = Array.from(paths).find(
+          (path) => path.getAttribute("index") === targetNumber.toString()
         );
-        
+
         if (winningPath) {
-            winningPath.style.filter = 'brightness(1)'; // Keep winning section bright
-            
-            // Reset all filters after 5 seconds
-            setTimeout(() => {
-                Array.from(paths).forEach(path => {
-                    path.style.filter = 'brightness(1)';
-                });
-            }, 5000);
+          winningPath.style.filter = "brightness(1)"; // Keep winning section bright
+
+          // Reset all filters after 5 seconds
+          setTimeout(() => {
+            Array.from(paths).forEach((path) => {
+              path.style.filter = "brightness(1)";
+            });
+          }, 5000);
         }
 
         // var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
@@ -365,14 +370,29 @@ function Home() {
         //   delay: 1500,
         // });
 
-        var tl=anime.timeline({direction:'alternate',duration:600,loop:4})
-        tl.add({targets:[greenLight.current.querySelectorAll('g') , greenLight.current.querySelectorAll('circle')] ,
-     opacity:[0,1,0],fillOpacity:[0,1,0]
-        }).add({targets: redLight.current.querySelectorAll('circle') ,
-          opacity:[0,1,0],fillOpacity:[0,1,0]
-            }).add({ targets:orangeLight.current.querySelectorAll('circle'),
-              opacity:[0,1,0],fillOpacity:[0,1,0]
-         })
+        var tl = anime.timeline({
+          direction: "alternate",
+          duration: 600,
+          loop: 4,
+        });
+        tl.add({
+          targets: [
+            greenLight.current.querySelectorAll("g"),
+            greenLight.current.querySelectorAll("circle"),
+          ],
+          opacity: [0, 1, 0],
+          fillOpacity: [0, 1, 0],
+        })
+          .add({
+            targets: redLight.current.querySelectorAll("circle"),
+            opacity: [0, 1, 0],
+            fillOpacity: [0, 1, 0],
+          })
+          .add({
+            targets: orangeLight.current.querySelectorAll("circle"),
+            opacity: [0, 1, 0],
+            fillOpacity: [0, 1, 0],
+          });
       },
     });
 
@@ -412,7 +432,7 @@ function Home() {
   // Inner Ring animation
 
   useEffect(() => {
-    var tl = anime.timeline({
+    anime.timeline({
       easing: "easeOutExpo",
     });
 
@@ -479,19 +499,19 @@ function Home() {
     return parseInt(uniqueNumber);
   }
 
-  function generateUniqueCode() {
-    // Generate 4 random digits
-    const randomDigits = Math.floor(1000 + Math.random() * 9000).toString();
+  // function generateUniqueCode() {
+  //   // Generate 4 random digits
+  //   const randomDigits = Math.floor(1000 + Math.random() * 9000).toString();
 
-    // Generate 3 random uppercase letters
-    const randomLetters = "SCP";
+  //   // Generate 3 random uppercase letters
+  //   const randomLetters = "SCP";
 
-    // Generate 4 random digits
-    const randomDigits2 = Math.floor(1000 + Math.random() * 9000).toString();
+  //   // Generate 4 random digits
+  //   const randomDigits2 = Math.floor(1000 + Math.random() * 9000).toString();
 
-    // Combine into the desired format
-    return `${randomDigits}-${randomLetters}${randomDigits2}`;
-  }
+  //   // Combine into the desired format
+  //   return `${randomDigits}-${randomLetters}${randomDigits2}`;
+  // }
 
   const betFunc = function () {
     betFunction("clear");
@@ -610,7 +630,6 @@ function Home() {
       setPlay(totalTokens);
       setBetNumList(newList);
     }
-    
   };
 
   const betremoveClick = function (index) {
@@ -688,7 +707,7 @@ function Home() {
         });
         break;
       case "double":
-        newList = betNumList.map((e, i) => ({
+        newList = betNumList.map((e) => ({
           ...e,
           token: e.token ? e.token * 2 : "",
         }));
@@ -736,7 +755,7 @@ function Home() {
   const [isCounting, setIsCounting] = useState(false);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const time = 2;
+  // const time = 2;
   // const intervalMs = time * 60 * 1000;
 
   const fetchBalance = async function () {
@@ -760,18 +779,26 @@ function Home() {
     //   response.response.data,
     //   "No gameID available, using default prediction"
     // );
-    console.log(response);
+    console.log(response, "responseresponseresponseresponseresponse");
     if (response.status === 200) {
       // const win = response.message.general[0];
       localStorage.setItem(
         "winPoint",
         JSON.stringify(response.data.winningSlot)
       );
-      console.log(response.data.totalSystemPlayedAmount, "Win Amount is this");
-      // setWinAmount(response.data.totalSystemPlayedAmount);
-      if (response.data.hasWon) {
-        localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
-      }
+
+
+      alert(response.data.haswon);
+      let hasWon = response.data.haswon;
+
+      localStorage.setItem(
+        "winAmount",
+        JSON.stringify(response.data.totalSystemPlayedAmount)
+      );
+      localStorage.setItem("hasWon", JSON.stringify(hasWon));
+
+      // alert(response.data.haswon);
+      // }
 
       // console.log(response.data.totalSystemPlayedAmount);
     } else if (response.response.status === 404) {
@@ -791,7 +818,7 @@ function Home() {
   };
 
   // Handle Spin Button
-  const handlePlay = (storedWinPoint) => {
+  const handlePlay = async (storedWinPoint) => {
     // localStorage.getItem('winPoint');
     // let spinum = JSON.parse(localStorage.getItem("winPoint"));
     // let spinum = winPoint;
@@ -811,7 +838,10 @@ function Home() {
     // setTicketID(generateUniqueCode().toString());
     // fetchPredictWinner(); // Predict the winner
     spinnerSound.play();
-    spinner(storedWinPoint); // Spin and land on "1"
+
+    let { data } = await updateSpinner(storedWinPoint);
+
+    spinner(storedWinPoint || 0); // Spin and land on "1"
     // setTimeout(() => {
     //   // location.reload();
     // }, 150);
@@ -860,13 +890,13 @@ function Home() {
     openAlertBox(`NO MORE BETS PLEASE`, "", "");
   }, []);
 
-  const onEvery2min = useCallback(async() => {
+  const onEvery2min = useCallback(async () => {
     // alert("2min - Starting new game cycle");
     const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
 
-    setTimeout(async () => {
-      await updateSpinner(storedWinPoint);
-    }, 1000);
+    // setTimeout(async () => {
+    //   await updateSpinner(storedWinPoint);
+    // }, 1000);
 
     // First handle the play animation
     handlePlay(storedWinPoint);
@@ -934,7 +964,7 @@ function Home() {
 
   return (
     <>
-    {/*  */}
+      {/*  */}
       <Box
         sx={{
           position: "relative",
@@ -973,7 +1003,11 @@ function Home() {
             }}
           />
 
-          <img src={StarsBg} alt="" style={{ position: "absolute", top: "3%", left: "30%", }} />
+          <img
+            src={StarsBg}
+            alt=""
+            style={{ position: "absolute", top: "3%", left: "30%" }}
+          />
 
           <Box
             sx={{
@@ -1018,19 +1052,19 @@ function Home() {
                 spinnerWeel={spinnerWeel}
                 spinnerRef={spinnerRef}
               />
-                <img 
-                  ref={midImageRef} 
-                  src={currentMultiplier} 
-                  alt="" 
-                  style={{ 
-                    position: "absolute", 
-                    top: "55%", 
-                    left: "53%", 
-                    transform: "translate(-50%, -50%)", 
-                    zIndex: 100,
-                    transition: "opacity 0.1s ease-in-out" 
-                  }} 
-                />
+              <img
+                ref={midImageRef}
+                src={currentMultiplier}
+                alt=""
+                style={{
+                  position: "absolute",
+                  top: "55%",
+                  left: "53%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 100,
+                  transition: "opacity 0.1s ease-in-out",
+                }}
+              />
               {/* <Spinner5
 
               wheelRef1={wheelRef1}
@@ -1082,7 +1116,11 @@ function Home() {
         alertMessage={alertMessage}
         handleClose={() => handleClose()}
       />
-      <InfoModal open={infoModal} handleClose={() => setinfoModal(false)} fetchBalance={fetchBalance} />
+      <InfoModal
+        open={infoModal}
+        handleClose={() => setinfoModal(false)}
+        fetchBalance={fetchBalance}
+      />
     </>
   );
 }
