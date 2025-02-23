@@ -4,7 +4,7 @@ import gsap from "gsap";
 import Header from "../../components/Header";
 // import Spinner from "../../components/Spinner/Spinner";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Box, } from "@mui/material";
+import { Box } from "@mui/material";
 import Historyinfo from "./components/Historyinfo";
 import BetNumbers from "./components/BetNumbers";
 import BottomPortion from "./components/BottomPortion";
@@ -131,7 +131,7 @@ function Home() {
     },
   ]);
 
- useLocalStorage("userDetails", {});
+  useLocalStorage("userDetails", {});
   // const [duration, setDuration] = useState(moment());
   const [chipNum, setChipNum] = useState(null);
   // const [ismessModal, setIsmessageModal] = useState(false);
@@ -149,10 +149,7 @@ function Home() {
   const [local, setLocal] = useLocalStorage("name", {});
   useLocalStorage("winPoint", null);
   // const [winPoint, setWinnigPoint] = useState(null);
-  const [isPrinterEnabled] = useLocalStorage(
-    "isPrinterEnabled",
-    true
-  );
+  const [isPrinterEnabled] = useLocalStorage("isPrinterEnabled", true);
 
   const [userData, setuserData] = useState({
     id: "",
@@ -188,10 +185,7 @@ function Home() {
     return data;
   };
 
- useLocalStorage(
-    "historyList",
-    generateHistoryData()
-  );
+  useLocalStorage("historyList", generateHistoryData());
 
   const wheelRef1 = useRef(null);
   const wheelRef2 = useRef(null);
@@ -236,7 +230,6 @@ function Home() {
       counter = (counter + 1) % multiplierImages.length;
       setCurrentMultiplier(multiplierImages[counter]);
     }, 100);
-
   };
 
   const stopImageShuffle = () => {
@@ -254,6 +247,7 @@ function Home() {
   };
 
   const spinner = (targetNumber) => {
+    // alert(JSON.parse(localStorage.getItem("haswon")));
     startImageShuffle(); // Start shuffling when spin begins
     const sections = 10; // Number of sections
     const sectionAngle = 360 / sections; // Angle for each section
@@ -281,14 +275,16 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
-        stopImageShuffle()
-        fetchGameResult()
+        stopImageShuffle();
+        fetchGameResult();
         // console.log(localStorage.getItem("winAmount"), "winner");
-        
-        if (localStorage.getItem("winAmount") > 0) {
+
+        if (JSON.parse(localStorage.getItem("hasWon"))) {
           handleYouWin();
           setWinAmount(localStorage.getItem("winAmount"));
           localStorage.removeItem("winAmount");
+          localStorage.removeItem("hasWon");
+
         }
 
         console.log(`Spinner landed on number: ${targetNumber}`);
@@ -374,14 +370,29 @@ function Home() {
         //   delay: 1500,
         // });
 
-        var tl=anime.timeline({direction:'alternate',duration:600,loop:4})
-        tl.add({targets:[greenLight.current.querySelectorAll('g') , greenLight.current.querySelectorAll('circle')] ,
-     opacity:[0,1,0],fillOpacity:[0,1,0]
-        }).add({targets: redLight.current.querySelectorAll('circle') ,
-          opacity:[0,1,0],fillOpacity:[0,1,0]
-            }).add({ targets:orangeLight.current.querySelectorAll('circle'),
-              opacity:[0,1,0],fillOpacity:[0,1,0]
-         })
+        var tl = anime.timeline({
+          direction: "alternate",
+          duration: 600,
+          loop: 4,
+        });
+        tl.add({
+          targets: [
+            greenLight.current.querySelectorAll("g"),
+            greenLight.current.querySelectorAll("circle"),
+          ],
+          opacity: [0, 1, 0],
+          fillOpacity: [0, 1, 0],
+        })
+          .add({
+            targets: redLight.current.querySelectorAll("circle"),
+            opacity: [0, 1, 0],
+            fillOpacity: [0, 1, 0],
+          })
+          .add({
+            targets: orangeLight.current.querySelectorAll("circle"),
+            opacity: [0, 1, 0],
+            fillOpacity: [0, 1, 0],
+          });
       },
     });
 
@@ -619,7 +630,6 @@ function Home() {
       setPlay(totalTokens);
       setBetNumList(newList);
     }
-    
   };
 
   const betremoveClick = function (index) {
@@ -769,23 +779,26 @@ function Home() {
     //   response.response.data,
     //   "No gameID available, using default prediction"
     // );
-    console.log(response);
+    console.log(response, "responseresponseresponseresponseresponse");
     if (response.status === 200) {
       // const win = response.message.general[0];
-      console.log(response.data, "Win Amount is this");
       localStorage.setItem(
         "winPoint",
         JSON.stringify(response.data.winningSlot)
       );
-      
-      // setWinAmount(response.data.totalSystemPlayedAmount);
-      if (response.data.hasWon) {
-        localStorage.setItem("winAmount", JSON.stringify(response.data.totalSystemPlayedAmount));
 
-        localStorage.setItem("hasWon", JSON.stringify(response.data.hasWon));
 
-        
-      }
+      alert(response.data.haswon);
+      let hasWon = response.data.haswon;
+
+      localStorage.setItem(
+        "winAmount",
+        JSON.stringify(response.data.totalSystemPlayedAmount)
+      );
+      localStorage.setItem("hasWon", JSON.stringify(hasWon));
+
+      // alert(response.data.haswon);
+      // }
 
       // console.log(response.data.totalSystemPlayedAmount);
     } else if (response.response.status === 404) {
@@ -827,7 +840,6 @@ function Home() {
     spinnerSound.play();
 
     let { data } = await updateSpinner(storedWinPoint);
-
 
     spinner(storedWinPoint || 0); // Spin and land on "1"
     // setTimeout(() => {
@@ -991,7 +1003,11 @@ function Home() {
             }}
           />
 
-          <img src={StarsBg} alt="" style={{ position: "absolute", top: "3%", left: "30%", }} />
+          <img
+            src={StarsBg}
+            alt=""
+            style={{ position: "absolute", top: "3%", left: "30%" }}
+          />
 
           <Box
             sx={{
@@ -1100,7 +1116,11 @@ function Home() {
         alertMessage={alertMessage}
         handleClose={() => handleClose()}
       />
-      <InfoModal open={infoModal} handleClose={() => setinfoModal(false)} fetchBalance={fetchBalance} />
+      <InfoModal
+        open={infoModal}
+        handleClose={() => setinfoModal(false)}
+        fetchBalance={fetchBalance}
+      />
     </>
   );
 }
