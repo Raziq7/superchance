@@ -77,6 +77,8 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
 export const createBet = asyncHandler(async (req, res) => {
   const { date, draw_time, ticket_time, data, isAutoClaim } = req.body;
 
+  console.log(req.body, "000000000000000000000000000000000000000");
+
   if (!date || !draw_time || !ticket_time || !data) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -210,7 +212,10 @@ export const submitBet = asyncHandler(async (req, res) => {
 
       return res
         .status(404)
-        .json({ message: "No active bets found", winningSlot: spinnerNumbers[randomIndex] });
+        .json({
+          message: "No active bets found",
+          winningSlot: spinnerNumbers[randomIndex],
+        });
     }
 
     let totalSystemPlayedAmount = 0;
@@ -279,7 +284,7 @@ export const submitBet = asyncHandler(async (req, res) => {
 
           // Update the won amount for the winning bet
           betData.won = betData.played * 10; // 10x payout for winning bet
-          winningAmount =+ betData.played * 10;
+          winningAmount = +betData.played * 10;
         } else {
           // If not a winning bet, set won to 0 (or keep it if already 0)
           betData.won = 0;
@@ -307,26 +312,24 @@ export const submitBet = asyncHandler(async (req, res) => {
           userWinningAmount =
             totalWinningAmount * (totalUserPlayedAmount / totalWinningAmount);
 
-            console.log(winningAmount,"userWinningAmountuserWinningAmountuserWinningAmountuserWinningAmount");
-            
-            if(bet.isAutoClaim){
-              user.balance += winningAmount;
-              bet.status = "Completed";
-              bet.result = winningSlot; 
-              bet.isAutoClaim = true
+          console.log(
+            winningAmount,
+            "userWinningAmountuserWinningAmountuserWinningAmountuserWinningAmount"
+          );
 
-            }else{
-              bet.isAutoClaim = false,
-              bet.unclaimedAmount = winningAmount;
-              bet.result = winningSlot;
-              bet.status = "Pending";
+          if (bet.isAutoClaim) {
+            user.balance += winningAmount;
+            bet.status = "Completed";
+            bet.result = winningSlot;
+            bet.isAutoClaim = true;
+          } else {
+            (bet.isAutoClaim = false), (bet.unclaimedAmount = winningAmount);
+            bet.result = winningSlot;
+            bet.status = "Pending";
+          }
 
-            }
-
-            haswon = true;
-
-        }
-         else {
+          haswon = true;
+        } else {
           // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
           bet.status = "No win";
         }
@@ -342,14 +345,13 @@ export const submitBet = asyncHandler(async (req, res) => {
       winningSlot,
       totalSystemPlayedAmount,
       remainingProfit,
-      haswon
+      haswon,
     });
   } catch (error) {
     console.error("Error processing bets:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // @desc    Get all bets with pagination and limit
 // @route   GET /api/users/getBets

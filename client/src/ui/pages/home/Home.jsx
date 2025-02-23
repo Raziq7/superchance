@@ -159,7 +159,9 @@ function Home() {
     balance: 0,
   });
 
-  const [isAutoClaim, setIsAutoClaim] = useState(false);
+  const isAutoClaim = localStorage.getItem("isAutoClaim");
+
+  // const [isAutoClaim, setIsAutoClaim] = useState(true);
 
   const generateHistoryData = () => {
     const data = [];
@@ -539,7 +541,7 @@ function Home() {
     if (!gameID) {
       setGameID(currentGameID);
     }
-    // alert(isAutoClaim);
+    alert(isAutoClaim+"jshf");
     const payload = {
       // ticket_id: generateUniqueCode().toString(),
       // game_id: currentGameID, // Use the currentGameID here
@@ -745,7 +747,7 @@ function Home() {
     setAnchorEl(boxRef.current);
     setAlertMessage(message);
     if (section === "autoClaim") {
-      setIsAutoClaim(status);
+      // setIsAutoClaim(status);
     }
   };
 

@@ -35,7 +35,7 @@ function Header({ balance, openAlertBox, userData }) {
   const [visibillity, setVisibillity] = useState(false);
   const [barcode, setBarcode] = useState("")
   const [toggle, setToggle] = useLocalStorage("isMute", false);
-  const [isAutoClame, setIsAutoClame] = useLocalStorage("isAutoClame", false);
+  const [isAutoClaim, setisAutoClaim] = useLocalStorage("isAutoClaim", true);
   const [isPrinterEnabled, setIsPrinterEnabled] = useLocalStorage(
     "isPrinterEnabled",
     true
@@ -58,7 +58,7 @@ function Header({ balance, openAlertBox, userData }) {
   };
 
   const handleAutoclame = (event) => {
-    setIsAutoClame(event.target.checked);
+    setisAutoClaim(event.target.checked);
     openAlertBox("Auto Claim is " + (event.target.checked ? "ON" : "OFF"), "autoClaim", event.target.checked);
     set_autoclame(event.target.checked).then((data) => {
       console.log(data);
@@ -184,7 +184,7 @@ function Header({ balance, openAlertBox, userData }) {
 
         <FormGroup>
           <FormControlLabel
-            checked={isAutoClame}
+            checked={isAutoClaim}
             onChange={handleAutoclame}
             sx={{
               "& .MuiTypography-root": { color: "#EEDE01", fontSize: "20px" },
@@ -231,7 +231,7 @@ function Header({ balance, openAlertBox, userData }) {
           }}
           onClick={handlClame}
         >
-          Clame
+          Claim
         </Button>
 
         <Typography sx={{ color: "#EEDE01", fontSize: "20px",fontFamily:"Poppins-Medium", }}>
