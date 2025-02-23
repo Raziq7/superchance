@@ -53,6 +53,7 @@ function Header({ balance, openAlertBox, userData }) {
 
   const handleClose = async () => {
     window.electronAPI.close();
+    handleLogout();
     await logout_user();
   };
 
@@ -77,13 +78,21 @@ function Header({ balance, openAlertBox, userData }) {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    // Clear storages and reload
-    navigate("/");
+    
+    // Save userDetails before clearing
+    const userDetails = localStorage.getItem('userDetails');
+    
+    // Clear storages
     localStorage.clear();
     sessionStorage.clear();
+    
+    // Restore userDetails
+    if (userDetails) {
+      localStorage.setItem('userDetails', userDetails);
+    }
 
     await logout_user();
-    // window.location.reload();
+    navigate("/");
   };
 
 

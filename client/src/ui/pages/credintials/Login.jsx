@@ -2,7 +2,7 @@ import { Box, Typography, InputBase, IconButton, Button } from "@mui/material";
 import { GameButton } from "../../components/Utils/StyledComponents";
 import { Visbility } from "../../assets/Icones";
 import SpinnerSound from "../../public/backgrounds/loginWeel.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login_user } from "../../api/gameAuth";
 import TokenManager from "../../utils/TokenManager";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,7 @@ function Login() {
       console.log(res.data.token);
       
       TokenManager.setAuthTokens({accessToken: res.data.token});
-      setLocal({ token: res.data.token, ...res.data.admin });
+      setLocal({ token: res.data.token, password: formData.password, ...res.data.admin });
       navigate("game");
     }
   };
@@ -47,6 +47,16 @@ function Login() {
   const handleClose = () => {
     window.electronAPI.close();
   };
+
+  useEffect(() => {
+    let userData = localStorage.getItem("userDetails");
+    if (userData) {
+      setFormData({
+        userName: JSON.parse(userData).userName,
+        password: JSON.parse(userData).password,
+      });
+    }
+  }, []);
 
   return (
     <Box
