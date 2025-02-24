@@ -54,9 +54,15 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access  Public (or Private if necessary)
 export const getLastSpinnerResults = asyncHandler(async (req, res) => {
   try {
+    const now = new Date(); // Get current time
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0); // Set to 12:00 AM
+
     // Fetch the last 10 spinner results from the database, sorted by the most recent date
-    const results = await SpinnerResult.find()
-      .sort({ createdAt: -1 })
+    const results = await SpinnerResult.find({
+      dateTime: { $gte: todayStart, $lte: now },
+    })
+      .sort({ dateTime: 1 })
       .limit(10);
 
     // If no results are found
@@ -76,8 +82,6 @@ export const getLastSpinnerResults = asyncHandler(async (req, res) => {
 // @access  Private (or Public if necessary)
 export const createBet = asyncHandler(async (req, res) => {
   const { date, draw_time, ticket_time, data, isAutoClaim } = req.body;
-
-  console.log(req.body, "000000000000000000000000000000000000000");
 
   if (!date || !draw_time || !ticket_time || !data) {
     return res.status(400).json({ message: "All fields are required" });
@@ -210,12 +214,10 @@ export const submitBet = asyncHandler(async (req, res) => {
       const spinnerNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]; // Define spinner numbers
       const randomIndex = Math.floor(Math.random() * spinnerNumbers.length); // Get a random index
 
-      return res
-        .status(404)
-        .json({
-          message: "No active bets found",
-          winningSlot: spinnerNumbers[randomIndex],
-        });
+      return res.status(404).json({
+        message: "No active bets found",
+        winningSlot: spinnerNumbers[randomIndex],
+      });
     }
 
     let totalSystemPlayedAmount = 0;
@@ -477,11 +479,14 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
       .status(400)
       .json({ message: "Winning Slot is required in the request body." });
   }
+  const now = new Date();
+  now.setSeconds(0, 0);
 
   try {
-    const result = await SpinnerResult.findOne().sort({ createdAt: -1 });
-
-    result.spinnerNumber = winningSlot;
+    const result = await SpinnerResult.updateOne(
+      { dateTime: now },
+      { $set: { spinnerNumber: winningSlot } }
+    );
 
     await result.save();
 

@@ -50,7 +50,7 @@ app.use(express.json());
 connect().then(() => console.log("DB connected"));
 
 // Call runSpinner to ensure spinner starts at intervals as soon as the server starts
-runSpinner(); // Call this function to start the spinner process immediately
+// runSpinner(); // Call this function to start the spinner process immediately
 
 
 // Routes for authentication and user handling
