@@ -274,6 +274,7 @@ function Home() {
     // Spin the wheel to land on the target number
     const luckywheelTimeline = gsap.timeline({
       onStart: () => {
+        spinnerSound.play();
         isSpinning.current = true;
       },
       onComplete: () => {
@@ -289,11 +290,14 @@ function Home() {
 
         }
 
-        console.log(`Spinner landed on number: ${targetNumber}`);
-
         // Reset all paths and highlight the winning one
         const paths = spinnerRef.current.getElementsByTagName("path");
+        const paths2 = wheelRef2.current.getElementsByTagName("path");
         Array.from(paths).forEach((path) => {
+          path.style.filter = "brightness(0.5)"; // Darken non-winning sections
+        });
+
+        Array.from(paths2).forEach((path) => {
           path.style.filter = "brightness(0.5)"; // Darken non-winning sections
         });
 
@@ -301,16 +305,40 @@ function Home() {
           (path) => path.getAttribute("index") === targetNumber.toString()
         );
 
+        const winningPath2 = Array.from(paths2).filter(
+          (path) => path.getAttribute("index") === targetNumber.toString()
+        );
+
+        console.log(winningPath2, "same is one");
+
         if (winningPath) {
           winningPath.style.filter = "brightness(1)"; // Keep winning section bright
-
           // Reset all filters after 5 seconds
-          setTimeout(() => {
-            Array.from(paths).forEach((path) => {
-              path.style.filter = "brightness(1)";
-            });
-          }, 5000);
         }
+
+        if (winningPath2) {
+          // winningPath2.style.filter = "brightness(1)"; // Keep winning section bright
+
+          winningPath2.forEach((path) => {
+            path.style.filter = "brightness(1)"; // Keep winning section bright
+          });
+        }
+
+        if (winningPath2 && winningPath) {
+
+        setTimeout(() => {
+          Array.from(paths).forEach((path) => {
+            path.style.filter = "brightness(1)";
+          });
+        }, 5000);
+
+        setTimeout(() => {
+          Array.from(paths2).forEach((path) => {
+            path.style.filter = "brightness(1)";
+          });
+        }, 5000);
+        }
+
 
         // var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
         // tl.add({
@@ -399,10 +427,10 @@ function Home() {
     });
 
     luckywheelTimeline.to(wheelRef1.current, {
-      duration: 11.3,
+      duration: 9,
       rotation: rotationNext,
       transformOrigin: "50% 50%",
-      ease: "power1.inOut",
+      ease: "none",
     });
 
     // Optional: Spin the second wheel, if necessary
@@ -410,10 +438,10 @@ function Home() {
       luckywheelTimeline.to(
         wheelRef2.current,
         {
-          duration: 11.3,
+          duration: 9,
           rotation: rotationNext,
           transformOrigin: "50% 50%",
-          ease: "power1.inOut",
+          ease: "none",
         },
         "<" // Start both animations simultaneously
       );
@@ -839,7 +867,7 @@ function Home() {
     // spinner(8); // Spin and land on "1"
     // setTicketID(generateUniqueCode().toString());
     // fetchPredictWinner(); // Predict the winner
-    spinnerSound.play();
+    // spinnerSound.play();
 
     let { data } = await updateSpinner(storedWinPoint);
 
@@ -1000,7 +1028,7 @@ function Home() {
             alt="StarPattern"
             style={{
               position: "absolute",
-              top: "14%",
+              top: "10%",
               "mix-blend-mode": "screen",
             }}
           />
@@ -1008,7 +1036,7 @@ function Home() {
           <img
             src={StarsBg}
             alt=""
-            style={{ position: "absolute", top: "3%", left: "30%" }}
+            style={{ position: "absolute", top: "2%", left: "30%" }}
           />
 
           <Box
@@ -1060,7 +1088,7 @@ function Home() {
                 alt=""
                 style={{
                   position: "absolute",
-                  top: "55%",
+                  top: "52%",
                   left: "53%",
                   transform: "translate(-50%, -50%)",
                   zIndex: 100,
