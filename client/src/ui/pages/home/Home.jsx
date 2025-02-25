@@ -817,7 +817,7 @@ function Home() {
       );
 
 
-      alert(response.data.haswon);
+      // alert(response.data.haswon);
       let hasWon = response.data.haswon;
 
       localStorage.setItem(
