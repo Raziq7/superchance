@@ -569,7 +569,6 @@ function Home() {
     if (!gameID) {
       setGameID(currentGameID);
     }
-    alert(isAutoClaim+"jshf");
     const payload = {
       // ticket_id: generateUniqueCode().toString(),
       // game_id: currentGameID, // Use the currentGameID here
@@ -823,7 +822,7 @@ function Home() {
 
       localStorage.setItem(
         "winAmount",
-        JSON.stringify(response.data.totalSystemPlayedAmount)
+        JSON.stringify(response.data.winningAmount)
       );
       localStorage.setItem("hasWon", JSON.stringify(hasWon));
 

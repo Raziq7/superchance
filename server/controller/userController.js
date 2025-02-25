@@ -356,6 +356,7 @@ export const submitBet = asyncHandler(async (req, res) => {
       totalSystemPlayedAmount,
       remainingProfit,
       haswon,
+      winningAmount
     });
   } catch (error) {
     console.error("Error processing bets:", error);

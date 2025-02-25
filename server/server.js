@@ -26,11 +26,11 @@ app.use(cors({
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: sanitizedConfig.JWT_SECRET,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl: 'mongodb://localhost:27017/session-db',
+      mongoUrl: sanitizedConfig.MONGO_URI,
       ttl: 14 * 24 * 60 * 60, // Session expiration time in seconds (optional)
     }),
     cookie: {

@@ -76,7 +76,7 @@ const getColorForNumber = (number) => {
   return colorMap[number] || "#F98C07"; // Default color if number not found
 };
 
-function Historyinfo({ setinfoModal, betHistory, }) {
+function Historyinfo({ setinfoModal, betHistory }) {
   // const [historyList, sethistoryList] = useState([])
   // const [idLocl, setLocalid] = useLocalStorage("userDetails", {});
 
@@ -197,7 +197,7 @@ function Historyinfo({ setinfoModal, betHistory, }) {
                 }}
               >
                 {/* {moment(e.dateTime, "HH:mm:ss.SSSSSS").format("hh:mm A")} */}
-                {e.time}
+                {e.time.replace(/:\d{2} /, " ")}
               </Typography>
               <Paper
                 elevation={0}
