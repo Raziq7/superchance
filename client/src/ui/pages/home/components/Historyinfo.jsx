@@ -197,7 +197,7 @@ function Historyinfo({ setinfoModal, betHistory, }) {
                 }}
               >
                 {/* {moment(e.dateTime, "HH:mm:ss.SSSSSS").format("hh:mm A")} */}
-                {moment(e.dateTime).format("hh:mm A")}
+                {e.time}
               </Typography>
               <Paper
                 elevation={0}
