@@ -54,30 +54,39 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access  Public (or Private if necessary)
 export const getLastSpinnerResults = asyncHandler(async (req, res) => {
   try {
-    // Fetch the last 10 spinner results from the database, sorted by the most recent date
-    const results = await SpinnerResult.find()
-      .sort({ createdAt: -1 })
+    // Get current time in minutes
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
+
+    console.log("Current Time (Minutes Since Midnight):", currentMinutes);
+
+    // Fetch last 10 records up to now
+    const results = await SpinnerResult.find({
+      timeInMinutes: { $lte: currentMinutes }, // Find entries before the current time
+    })
+      .sort({ timeInMinutes: -1 }) // Sort descending (latest first)
       .limit(10);
 
-    // If no results are found
+    console.log("Fetched Results:", results);
+
     if (results.length === 0) {
       return res.status(404).json({ message: "No spinner results found" });
     }
 
-    // Return the spinner results
     res.status(200).json(results);
   } catch (error) {
+    console.error("Error fetching spinner results:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 
 // @desc    Create a new bet
 // @route   POST /api/bet/create
 // @access  Private (or Public if necessary)
 export const createBet = asyncHandler(async (req, res) => {
   const { date, draw_time, ticket_time, data, isAutoClaim } = req.body;
-
-  console.log(req.body, "000000000000000000000000000000000000000");
 
   if (!date || !draw_time || !ticket_time || !data) {
     return res.status(400).json({ message: "All fields are required" });
@@ -206,16 +215,16 @@ export const submitBet = asyncHandler(async (req, res) => {
     }
     const bets = await Bet.find({ userId: user._id, status: "blank" });
 
+    let withoutBets;
     if (bets.length === 0) {
       const spinnerNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]; // Define spinner numbers
       const randomIndex = Math.floor(Math.random() * spinnerNumbers.length); // Get a random index
 
-      return res
-        .status(404)
-        .json({
-          message: "No active bets found",
-          winningSlot: spinnerNumbers[randomIndex],
-        });
+      withoutBets = spinnerNumbers[randomIndex]
+      return res.status(404).json({
+        message: "No active bets found",
+        winningSlot: withoutBets,
+      });
     }
 
     let totalSystemPlayedAmount = 0;
@@ -332,6 +341,7 @@ export const submitBet = asyncHandler(async (req, res) => {
         } else {
           // user.balance -= totalUserPlayedAmount * 0.1; // Deduct 10% if no win
           bet.status = "No win";
+          bet.result = winningSlot;
         }
 
         // Save the updated bet with the won amounts and status
@@ -346,6 +356,7 @@ export const submitBet = asyncHandler(async (req, res) => {
       totalSystemPlayedAmount,
       remainingProfit,
       haswon,
+      winningAmount
     });
   } catch (error) {
     console.error("Error processing bets:", error);
@@ -465,30 +476,27 @@ export const claimBetController = asyncHandler(async (req, res) => {
 // @route   PATCH /api/users/updateSpinner
 // @access  Private (or whichever access level is appropriate)
 export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
-  const { winningSlot } = req.body; // Get the new status from the request body
-
-  console.log(
-    winningSlot,
-    "winningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlotwinningSlot"
-  );
+  const { winningSlot } = req.body;
 
   if (!winningSlot) {
-    return res
-      .status(400)
-      .json({ message: "Winning Slot is required in the request body." });
+    return res.status(400).json({ message: "Winning Slot is required in the request body." });
   }
 
+  // Get current time in total minutes since midnight
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
+
+  console.log("Updating record for timeInMinutes:", currentMinutes);
+
   try {
-    const result = await SpinnerResult.findOne().sort({ createdAt: -1 });
-
-    result.spinnerNumber = winningSlot;
-
-    await result.save();
+    const result = await SpinnerResult.findOneAndUpdate(
+      { timeInMinutes: currentMinutes }, // Match using timeInMinutes
+      { $set: { spinnerNumber: winningSlot } },
+      { new: true } // Return updated document
+    );
 
     if (!result) {
-      return res
-        .status(404)
-        .json({ message: "No Spinner Result found to update." });
+      return res.status(404).json({ message: "No Spinner Result found to update." });
     }
 
     res.status(200).json({
@@ -500,6 +508,8 @@ export const updateLastSpinnerResultStatus = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 
 // Get daily report (default to today's date)
 // @desc   Get daily report

@@ -3,26 +3,24 @@ import mongoose from "mongoose";
 // Define the spinner result schema
 const spinnerResultSchema = new mongoose.Schema(
   {
-    // userId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User", // Reference to the User model
-    //   required: true,
-    // },
     spinnerNumber: {
       type: Number,
       required: true,
     },
-    time:{
-      type:String,
-      required:true
+    time: {
+      type: String, // Store as "12:30 AM"
+      required: true,
     },
-    // Adding a custom date and time field
+    timeInMinutes: {
+      type: Number, // Store as 750 (12:30 AM = 750 minutes since midnight)
+      required: true,
+    },
     dateTime: {
       type: Date,
-      default: Date.now, // Set the default value to the current time when the document is created
+      default: Date.now,
     },
   },
-  { timestamps: true } // This adds the `createdAt` and `updatedAt` fields automatically
+  { timestamps: true }
 );
 
 // Create and export the model

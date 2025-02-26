@@ -755,7 +755,7 @@ function Home() {
 
       localStorage.setItem(
         "winAmount",
-        JSON.stringify(response.data.totalSystemPlayedAmount)
+        JSON.stringify(response.data.winningAmount)
       );
       localStorage.setItem("hasWon", JSON.stringify(hasWon));
 

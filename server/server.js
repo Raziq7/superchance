@@ -9,8 +9,8 @@ import { errorHandler, notFound } from "./middlewares/errorMiddlware.js";
 import sanitizedConfig from "./config.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
-import spinnerRouter from "./routes/spinnerRouter.js"
-import { runSpinner } from './controller/spinAndStoreResult.js'; // Import the runSpinner function
+// import spinnerRouter from "./routes/spinnerRouter.js"
+// import { runSpinner } from './controller/spinAndStoreResult.js'; // Import the runSpinner function
 
 
 dotenv.config();
@@ -26,11 +26,11 @@ app.use(cors({
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: sanitizedConfig.JWT_SECRET,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl: 'mongodb://localhost:27017/session-db',
+      mongoUrl: sanitizedConfig.MONGO_URI,
       ttl: 14 * 24 * 60 * 60, // Session expiration time in seconds (optional)
     }),
     cookie: {
@@ -50,13 +50,13 @@ app.use(express.json());
 connect().then(() => console.log("DB connected"));
 
 // Call runSpinner to ensure spinner starts at intervals as soon as the server starts
-runSpinner(); // Call this function to start the spinner process immediately
+// runSpinner(); // Call this function to start the spinner process immediately
 
 
 // Routes for authentication and user handling
 app.use("/api/auth/", authRouter);
 app.use("/api/user/", userRouter);
-app.use("/api/spinner/",spinnerRouter)
+// app.use("/api/spinner/",spinnerRouter)
 
 // Basic route for testing
 app.get("/", (req, res) => {
