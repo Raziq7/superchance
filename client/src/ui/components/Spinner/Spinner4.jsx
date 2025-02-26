@@ -263,81 +263,81 @@ const Spinner4 = React.forwardRef(function (
                 {/* redLight */}
 
                 <g className="redLight" ref={redLight}>
-                    <circle cx="442" cy="60" r="9.25" fill="url(#paint25_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="442" cy="60" r="9.25" fill="url(#paint25_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter42_f_2362_1839)">
-                        <circle cx="442" cy="60" r="14" fill="#FF2600" />
+                        <circle cx="442" cy="60" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="515" cy="99" r="9.25" fill="url(#paint26_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="515" cy="99" r="9.25" fill="url(#paint26_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter43_f_2362_1839)">
-                        <circle cx="515" cy="99" r="14" fill="#FF2600" />
+                        <circle cx="515" cy="99" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="577" cy="162" r="9.25" fill="url(#paint27_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="577" cy="162" r="9.25" fill="url(#paint27_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter44_f_2362_1839)">
-                        <circle cx="577" cy="162" r="14" fill="#FF2600" />
+                        <circle cx="577" cy="162" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="620" cy="247" r="9.25" fill="url(#paint28_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="620" cy="247" r="9.25" fill="url(#paint28_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter45_f_2362_1839)">
-                        <circle cx="620" cy="247" r="14" fill="#FF2600" />
+                        <circle cx="620" cy="247" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="633" cy="337" r="9.25" fill="url(#paint29_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="633" cy="337" r="9.25" fill="url(#paint29_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter46_f_2362_1839)">
-                        <circle cx="633" cy="337" r="14" fill="#FF2600" />
+                        <circle cx="633" cy="337" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="619" cy="428" r="9.25" fill="url(#paint30_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="619" cy="428" r="9.25" fill="url(#paint30_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter47_f_2362_1839)">
-                        <circle cx="619" cy="428" r="14" fill="#FF2600" />
+                        <circle cx="619" cy="428" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="579" cy="506" r="9.25" fill="url(#paint31_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="579" cy="506" r="9.25" fill="url(#paint31_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter48_f_2362_1839)">
-                        <circle cx="579" cy="506" r="14" fill="#FF2600" />
+                        <circle cx="579" cy="506" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="511" cy="574" r="9.25" fill="url(#paint32_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="511" cy="574" r="9.25" fill="url(#paint32_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter49_f_2362_1839)">
-                        <circle cx="511" cy="574" r="14" fill="#FF2600" />
+                        <circle cx="511" cy="574" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="432" cy="614" r="9.25" fill="url(#paint33_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="432" cy="614" r="9.25" fill="url(#paint33_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter50_f_2362_1839)">
-                        <circle cx="432" cy="614" r="14" fill="#FF2600" />
+                        <circle cx="432" cy="614" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="341" cy="628" r="9.25" fill="url(#paint34_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="341" cy="628" r="9.25" fill="url(#paint34_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter51_f_2362_1839)">
-                        <circle cx="341" cy="628" r="14" fill="#FF2600" />
+                        <circle cx="341" cy="628" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="247" cy="614" r="9.25" fill="url(#paint35_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="247" cy="614" r="9.25" fill="url(#paint35_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter52_f_2362_1839)">
-                        <circle cx="247" cy="614" r="14" fill="#FF2600" />
+                        <circle cx="247" cy="614" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="170" cy="574" r="9.25" fill="url(#paint36_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="170" cy="574" r="9.25" fill="url(#paint36_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter53_f_2362_1839)">
-                        <circle cx="170" cy="574" r="14" fill="#FF2600" />
+                        <circle cx="170" cy="574" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="109" cy="514" r="9.25" fill="url(#paint37_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="109" cy="514" r="9.25" fill="url(#paint37_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter54_f_2362_1839)">
-                        <circle cx="109" cy="514" r="14" fill="#FF2600" />
+                        <circle cx="109" cy="514" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="64" cy="431" r="9.25" fill="url(#paint38_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="64" cy="431" r="9.25" fill="url(#paint38_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter55_f_2362_1839)">
-                        <circle cx="64" cy="431" r="14" fill="#FF2600" />
+                        <circle cx="64" cy="431" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="48" cy="336" r="9.25" fill="url(#paint39_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="48" cy="336" r="9.25" fill="url(#paint39_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter56_f_2362_1839)">
-                        <circle cx="48" cy="336" r="14" fill="#FF2600" />
+                        <circle cx="48" cy="336" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="61" cy="249" r="9.25" fill="url(#paint40_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="61" cy="249" r="9.25" fill="url(#paint40_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter57_f_2362_1839)">
-                        <circle cx="61" cy="249" r="14" fill="#FF2600" />
+                        <circle cx="61" cy="249" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="98" cy="172" r="9.25" fill="url(#paint41_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="98" cy="172" r="9.25" fill="url(#paint41_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter58_f_2362_1839)">
-                        <circle cx="98" cy="172" r="14" fill="#FF2600" />
+                        <circle cx="98" cy="172" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="168" cy="99" r="9.25" fill="url(#paint42_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="168" cy="99" r="9.25" fill="url(#paint42_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter59_f_2362_1839)">
-                        <circle cx="168" cy="99" r="14" fill="#FF2600" />
+                        <circle cx="168" cy="99" r="14"     fill="#ff2800"  />
                     </g>
-                    <circle cx="247" cy="58" r="9.25" fill="url(#paint43_radial_2362_1839)" stroke="#FF2200" stroke-width="2.5" />
+                    <circle cx="247" cy="58" r="9.25" fill="url(#paint43_radial_2362_1839)"stroke="#FF2200"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter60_f_2362_1839)">
-                        <circle cx="247" cy="58" r="14" fill="#FF2600" />
+                        <circle cx="247" cy="58" r="14"     fill="#ff2800"  />
                     </g>
 
                 </g>
@@ -345,81 +345,81 @@ const Spinner4 = React.forwardRef(function (
 
                 {/* Orange  */}
                 <g className="orangeLight" ref={orangeLight}>
-                    <circle cx="442" cy="60" r="9.25" fill="url(#paint44_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="442" cy="60" r="9.25" fill="url(#paint44_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter61_f_2362_1839)">
-                        <circle cx="442" cy="60" r="14" fill="#FF8400" />
+                        <circle cx="442" cy="60" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="515" cy="99" r="9.25" fill="url(#paint45_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="515" cy="99" r="9.25" fill="url(#paint45_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter62_f_2362_1839)">
-                        <circle cx="515" cy="99" r="14" fill="#FF8400" />
+                        <circle cx="515" cy="99" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="577" cy="162" r="9.25" fill="url(#paint46_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="577" cy="162" r="9.25" fill="url(#paint46_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter63_f_2362_1839)">
-                        <circle cx="577" cy="162" r="14" fill="#FF8400" />
+                        <circle cx="577" cy="162" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="620" cy="247" r="9.25" fill="url(#paint47_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="620" cy="247" r="9.25" fill="url(#paint47_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter64_f_2362_1839)">
-                        <circle cx="620" cy="247" r="14" fill="#FF8400" />
+                        <circle cx="620" cy="247" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="633" cy="337" r="9.25" fill="url(#paint48_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="633" cy="337" r="9.25" fill="url(#paint48_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter65_f_2362_1839)">
-                        <circle cx="633" cy="337" r="14" fill="#FF8400" />
+                        <circle cx="633" cy="337" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="619" cy="428" r="9.25" fill="url(#paint49_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="619" cy="428" r="9.25" fill="url(#paint49_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter66_f_2362_1839)">
-                        <circle cx="619" cy="428" r="14" fill="#FF8400" />
+                        <circle cx="619" cy="428" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="579" cy="506" r="9.25" fill="url(#paint50_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="579" cy="506" r="9.25" fill="url(#paint50_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter67_f_2362_1839)">
-                        <circle cx="579" cy="506" r="14" fill="#FF8400" />
+                        <circle cx="579" cy="506" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="511" cy="574" r="9.25" fill="url(#paint51_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="511" cy="574" r="9.25" fill="url(#paint51_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter68_f_2362_1839)">
-                        <circle cx="511" cy="574" r="14" fill="#FF8400" />
+                        <circle cx="511" cy="574" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="432" cy="614" r="9.25" fill="url(#paint52_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="432" cy="614" r="9.25" fill="url(#paint52_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter69_f_2362_1839)">
-                        <circle cx="432" cy="614" r="14" fill="#FF8400" />
+                        <circle cx="432" cy="614" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="341" cy="629" r="9.25" fill="url(#paint53_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="341" cy="629" r="9.25" fill="url(#paint53_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter70_f_2362_1839)">
-                        <circle cx="341" cy="629" r="14" fill="#FF8400" />
+                        <circle cx="341" cy="629" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="247" cy="614" r="9.25" fill="url(#paint54_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="247" cy="614" r="9.25" fill="url(#paint54_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter71_f_2362_1839)">
-                        <circle cx="247" cy="614" r="14" fill="#FF8400" />
+                        <circle cx="247" cy="614" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="170" cy="574" r="9.25" fill="url(#paint55_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="170" cy="574" r="9.25" fill="url(#paint55_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter72_f_2362_1839)">
-                        <circle cx="170" cy="574" r="14" fill="#FF8400" />
+                        <circle cx="170" cy="574" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="109" cy="514" r="9.25" fill="url(#paint56_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="109" cy="514" r="9.25" fill="url(#paint56_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter73_f_2362_1839)">
-                        <circle cx="109" cy="514" r="14" fill="#FF8400" />
+                        <circle cx="109" cy="514" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="64" cy="431" r="9.25" fill="url(#paint57_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="64" cy="431" r="9.25" fill="url(#paint57_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter74_f_2362_1839)">
-                        <circle cx="64" cy="431" r="14" fill="#FF8400" />
+                        <circle cx="64" cy="431" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="48" cy="336" r="9.25" fill="url(#paint58_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="48" cy="336" r="9.25" fill="url(#paint58_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter75_f_2362_1839)">
-                        <circle cx="48" cy="336" r="14" fill="#FF8400" />
+                        <circle cx="48" cy="336" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="61" cy="249" r="9.25" fill="url(#paint59_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="61" cy="249" r="9.25" fill="url(#paint59_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter76_f_2362_1839)">
-                        <circle cx="61" cy="249" r="14" fill="#FF8400" />
+                        <circle cx="61" cy="249" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="98" cy="172" r="9.25" fill="url(#paint60_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="98" cy="172" r="9.25" fill="url(#paint60_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter77_f_2362_1839)">
-                        <circle cx="98" cy="172" r="14" fill="#FF8400" />
+                        <circle cx="98" cy="172" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="168" cy="99" r="9.25" fill="url(#paint61_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="168" cy="99" r="9.25" fill="url(#paint61_radial_2362_1839)" stroke="#FF9500"   className="l1"stroke-width="2.5" />
                     <g filter="url(#filter78_f_2362_1839)">
-                        <circle cx="168" cy="99" r="14" fill="#FF8400" />
+                        <circle cx="168" cy="99" r="14"  fill="#ffed29" />
                     </g>
-                    <circle cx="247" cy="58" r="9.25" fill="url(#paint62_radial_2362_1839)" stroke="#FF9500" stroke-width="2.5" />
+                    <circle cx="247" cy="58" r="9.25" fill="url(#paint62_radial_2362_1839)" stroke="#FF9500"   className="l1" stroke-width="2.5" />
                     <g filter="url(#filter79_f_2362_1839)">
-                        <circle cx="247" cy="58" r="14" fill="#FF8400" />
+                        <circle cx="247" cy="58" r="14"  fill="#ffed29" />
                     </g>
 
                 </g>
@@ -428,79 +428,79 @@ const Spinner4 = React.forwardRef(function (
                 {/* Green  */}
 
                 <g className="greenLight" ref={greenLight}>
-                    <circle cx="442" cy="60" r="9.25" fill="url(#paint63_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="442" cy="60" r="9.25" fill="url(#paint63_radial_2362_1839)" stroke="#08F300"   className="l1" stroke-width="2.5" />
                     <g filter="url(#filter80_f_2362_1839)">
                         <circle cx="442" cy="60" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="515" cy="99" r="9.25" fill="url(#paint64_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="515" cy="99" r="9.25" fill="url(#paint64_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter81_f_2362_1839)">
                         <circle cx="515" cy="99" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="577" cy="162" r="9.25" fill="url(#paint65_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="577" cy="162" r="9.25" fill="url(#paint65_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter82_f_2362_1839)">
                         <circle cx="577" cy="162" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="620" cy="247" r="9.25" fill="url(#paint66_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="620" cy="247" r="9.25" fill="url(#paint66_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter83_f_2362_1839)">
                         <circle cx="620" cy="247" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="633" cy="337" r="9.25" fill="url(#paint67_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="633" cy="337" r="9.25" fill="url(#paint67_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter84_f_2362_1839)">
                         <circle cx="633" cy="337" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="619" cy="428" r="9.25" fill="url(#paint68_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="619" cy="428" r="9.25" fill="url(#paint68_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter85_f_2362_1839)">
                         <circle cx="619" cy="428" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="579" cy="506" r="9.25" fill="url(#paint69_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="579" cy="506" r="9.25" fill="url(#paint69_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter86_f_2362_1839)">
                         <circle cx="579" cy="506" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="511" cy="574" r="9.25" fill="url(#paint70_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="511" cy="574" r="9.25" fill="url(#paint70_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter87_f_2362_1839)">
                         <circle cx="511" cy="574" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="432" cy="614" r="9.25" fill="url(#paint71_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="432" cy="614" r="9.25" fill="url(#paint71_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter88_f_2362_1839)">
                         <circle cx="432" cy="614" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="341" cy="629" r="9.25" fill="url(#paint72_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="341" cy="629" r="9.25" fill="url(#paint72_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter89_f_2362_1839)">
                         <circle cx="341" cy="629" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="247" cy="614" r="9.25" fill="url(#paint73_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="247" cy="614" r="9.25" fill="url(#paint73_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter90_f_2362_1839)">
                         <circle cx="247" cy="614" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="170" cy="574" r="9.25" fill="url(#paint74_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="170" cy="574" r="9.25" fill="url(#paint74_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter91_f_2362_1839)">
                         <circle cx="170" cy="574" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="109" cy="514" r="9.25" fill="url(#paint75_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="109" cy="514" r="9.25" fill="url(#paint75_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter92_f_2362_1839)">
                         <circle cx="109" cy="514" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="64" cy="431" r="9.25" fill="url(#paint76_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="64" cy="431" r="9.25" fill="url(#paint76_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter93_f_2362_1839)">
                         <circle cx="64" cy="431" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="48" cy="336" r="9.25" fill="url(#paint77_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="48" cy="336" r="9.25" fill="url(#paint77_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter94_f_2362_1839)">
                         <circle cx="48" cy="336" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="61" cy="249" r="9.25" fill="url(#paint78_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="61" cy="249" r="9.25" fill="url(#paint78_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter95_f_2362_1839)">
                         <circle cx="61" cy="249" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="98" cy="172" r="9.25" fill="url(#paint79_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="98" cy="172" r="9.25" fill="url(#paint79_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter96_f_2362_1839)">
                         <circle cx="98" cy="172" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="168" cy="99" r="9.25" fill="url(#paint80_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="168" cy="99" r="9.25" fill="url(#paint80_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter97_f_2362_1839)">
                         <circle cx="168" cy="99" r="14" fill="#13FF0B" />
                     </g>
-                    <circle cx="247" cy="58" r="9.25" fill="url(#paint81_radial_2362_1839)" stroke="#08F300" stroke-width="2.5" />
+                    <circle cx="247" cy="58" r="9.25" fill="url(#paint81_radial_2362_1839)" stroke="#08F300"  className="l1" stroke-width="2.5" />
                     <g filter="url(#filter98_f_2362_1839)">
                         <circle cx="247" cy="58" r="14" fill="#13FF0B" />
                     </g>

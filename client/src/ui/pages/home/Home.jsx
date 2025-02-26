@@ -339,90 +339,25 @@ function Home() {
         }, 5000);
         }
 
-
-        // var tl = anime.timeline({ easing: "linear", duration: 300, loop: 3 });
-        // tl.add({
-        //   targets: [
-        //     greenLight.current.querySelectorAll("g"),
-        //     greenLight.current.querySelectorAll("circle"),
-        //   ],
-        //   opacity: 0,
-        // })
-        //   .add({
-        //     targets: [
-        //       greenLight.current.querySelectorAll("g"),
-        //       greenLight.current.querySelectorAll("circle"),
-        //     ],
-        //     opacity: 1,
-        //     fillOpacity: 1,
-        //   })
-        //   .add({
-        //     targets: [
-        //       orangeLight.current.querySelectorAll("g"),
-        //       orangeLight.current.querySelectorAll("circle"),
-        //     ],
-        //     opacity: 0,
-        //   })
-        //   .add({
-        //     targets: [
-        //       orangeLight.current.querySelectorAll("g"),
-        //       orangeLight.current.querySelectorAll("circle"),
-        //     ],
-        //     opacity: 1,
-        //     fillOpacity: 1,
-        //   })
-        //   .add({
-        //     targets: [
-        //       redLight.current.querySelectorAll("g"),
-        //       redLight.current.querySelectorAll("circle"),
-        //     ],
-        //     opacity: 0,
-        //   })
-        //   .add({
-        //     targets: [
-        //       redLight.current.querySelectorAll("g"),
-        //       redLight.current.querySelectorAll("circle"),
-        //     ],
-        //     opacity: 1,
-        //     fillOpacity: 1,
-        //   });
-
-        // anime({
-        //   targets: [
-        //     greenLight.current.querySelectorAll("g"),
-        //     redLight.current.querySelectorAll("g"),
-        //     redLight.current.querySelectorAll("circle"),
-        //     ,
-        //     orangeLight.current.querySelectorAll("g"),
-        //     orangeLight.current.querySelectorAll("circle"),
-        //   ],
-        //   fillOpacity: 0,
-        //   delay: 1500,
-        // });
-
-        var tl = anime.timeline({
-          direction: "alternate",
-          duration: 600,
-          loop: 4,
-        });
-        tl.add({
-          targets: [
-            greenLight.current.querySelectorAll("g"),
-            greenLight.current.querySelectorAll("circle"),
-          ],
-          opacity: [0, 1, 0],
-          fillOpacity: [0, 1, 0],
+        anime({
+          targets: greenLight.current.getElementsByClassName('l1'),
+          fillOpacity: 1, opacity: 1, duration:4000,delay:5000
         })
-          .add({
-            targets: redLight.current.querySelectorAll("circle"),
-            opacity: [0, 1, 0],
-            fillOpacity: [0, 1, 0],
-          })
-          .add({
-            targets: orangeLight.current.querySelectorAll("circle"),
-            opacity: [0, 1, 0],
-            fillOpacity: [0, 1, 0],
-          });
+        var tl = anime.timeline({ direction: 'alternate', duration: 300, loop: 6 })
+        tl.add({
+          targets: [greenLight.current.querySelectorAll('g'),greenLight.current.getElementsByClassName('l1')],
+          opacity:[0,0], fillOpacity:[0,0],duration:0
+        }).add({
+          targets:[redLight.current.querySelectorAll('g'),redLight.current.getElementsByClassName('l1')],
+          opacity: [0, 1], fillOpacity: [0, 1]
+        }).add({
+          targets:[orangeLight.current.querySelectorAll('g'),orangeLight.current.getElementsByClassName('l1')],
+          opacity: [0, 1], fillOpacity: [0, 1]
+        }).add({
+          targets: [greenLight.current.querySelectorAll('g'),greenLight.current.getElementsByClassName('l1')],
+          opacity: [0,1], fillOpacity:[0,1]
+        })
+       
       },
     });
 
@@ -430,7 +365,7 @@ function Home() {
       duration: 9,
       rotation: rotationNext,
       transformOrigin: "50% 50%",
-      ease: "none",
+      ease: "power2.out",
     });
 
     // Optional: Spin the second wheel, if necessary
@@ -441,7 +376,7 @@ function Home() {
           duration: 9,
           rotation: rotationNext,
           transformOrigin: "50% 50%",
-          ease: "none",
+          ease: "power2.out",
         },
         "<" // Start both animations simultaneously
       );
@@ -569,7 +504,7 @@ function Home() {
     if (!gameID) {
       setGameID(currentGameID);
     }
-    alert(isAutoClaim+"jshf");
+    // alert(isAutoClaim+"jshf");
     const payload = {
       // ticket_id: generateUniqueCode().toString(),
       // game_id: currentGameID, // Use the currentGameID here
@@ -632,9 +567,6 @@ function Home() {
               </div>
             </div>
             `;
-
-          // console.log("bill html isher 💁👌🎍😍", e.data.bet.ticket_id);
-
           window.electronAPI.printBill(billHTML, e.data.bet.ticket_id);
         }
       }
@@ -809,7 +741,7 @@ function Home() {
     //   response.response.data,
     //   "No gameID available, using default prediction"
     // );
-    console.log(response, "responseresponseresponseresponseresponse");
+    console.log(response, "responseresponseresponseresponse");
     if (response.status === 200) {
       // const win = response.message.general[0];
       localStorage.setItem(
@@ -818,7 +750,7 @@ function Home() {
       );
 
 
-      alert(response.data.haswon);
+      // alert(response.data.haswon);
       let hasWon = response.data.haswon;
 
       localStorage.setItem(
@@ -913,7 +845,7 @@ function Home() {
   const onEvery1m45s = useCallback(() => {
     const currentGameID = localStorage.getItem("gameID");
     console.log("1m45s - Current gameID:", currentGameID);
-
+    setinfoModal(false);
     fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
@@ -1022,7 +954,7 @@ function Home() {
             position: "relative",
           }}
         >
-          <Historyinfo betHistory={betHistory} setinfoModal={setinfoModal} />
+          <Historyinfo betHistory={betHistory} setinfoModal={isDisabled ? () => {} : setinfoModal} />
           <img
             src={StarPattern}
             alt="StarPattern"

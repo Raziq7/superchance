@@ -1,12 +1,22 @@
-.innerWheel g{
- fill-opacity:0;
+.innerWheel g {
+  fill-opacity: 0;
 }
-.greenLight  g{
-    fill-opacity:0;
+.greenLight g {
+  fill-opacity: 0;
+  box-shadow: inset 0px 0px 20px #13ff0b, inset 0px 0px 20px #13ff0b,
+    inset 0px 0px 20px #13ff0b, inset 0px 0px 20px #13ff0b,
+    inset 0px 0px 20px #13ff0b, inset 0px 0px 20px #13ff0b,
+    inset 0px 0px 20px #13ff0b, inset 0px 0px 20px #13ff0b,
+    inset 0px 0px 20px #13ff0b, inset 0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b,
+    0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b,
+    0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b,
+    0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b,
+    0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b,
+    0px 0px 20px #13ff0b, 0px 0px 20px #13ff0b;
 }
-.redLight{
-    fill-opacity:0;
+.redLight {
+  fill-opacity: 0;
 }
-.orangeLight{
-    fill-opacity:0;
+.orangeLight {
+  fill-opacity: 0;
 }

@@ -79,7 +79,7 @@ function Report() {
   };
 
   const printReport = () => {
-    const billHTML = /*html*/ `
+    const billHTML = /*html*/`
     <div>
     <p style="margin-bottom: 4px;">***Super Chance***</p>
     <p style="margin-bottom: 4px;">From Amusement Only</p>
@@ -89,8 +89,8 @@ function Report() {
     <p style="margin-bottom: 4px;">To Date: ${date.to.format("DD-MM-YYYY h:mm A")}</p>
     <p style="margin-bottom: 4px;">Sale Point: ${reportData.play}</p>
     <p style="margin-bottom: 4px;">Win Point: ${reportData.win}</p>
-    <p style="margin-bottom: 4px;">Commission: ${reportData.commission}</p>
-    <p style="margin-bottom: 4px;">NTP Point: ${reportData.net_profit}</p>
+    <p style="margin-bottom: 4px;">Commission: ${Number(reportData.net_profit) / 2}</p>
+    <p style="margin-bottom: 4px;">NTP Point: ${Number(reportData.net_profit) / 2}</p>
     </div>
     `;
 
@@ -154,7 +154,7 @@ function Report() {
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography sx={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-              FROM : {date.from.format("DD/MM/YYYY")}
+              Date : {date.from.format("DD/MM/YYYY")}
             </Typography>
             <IconButton onClick={handleIconClickFrom}>
               <input
@@ -166,7 +166,7 @@ function Report() {
               <CalanderIcon />
             </IconButton>
 
-            <Typography sx={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+            {/* <Typography sx={{ fontSize: "1.1rem", fontWeight: "bold" }}>
               TO : {date.to.format("DD/MM/YYYY")}
             </Typography>
             <IconButton onClick={handleIconClickTo}>
@@ -177,7 +177,7 @@ function Report() {
                 onChange={handleDateChangeTo}
               />
               <CalanderIcon />
-            </IconButton>
+            </IconButton> */}
             <FormControlLabel
               value="all"
               control={
@@ -214,6 +214,7 @@ function Report() {
                   width: "100%",
                 },
               }}
+              onClick={fetchDailyReport}
             >
               <img
                 src={ViewButton}

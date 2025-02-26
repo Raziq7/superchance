@@ -175,9 +175,11 @@ export const updateSpinner = async function (winningSlot) {
 
 export const fetchDailyGameReport = async function (date) {
   try {
-    const data = await axios("/api/user/fetchReport/", { params:{
-      date: date
-    }})
+    const data = await axios("/api/user/fetchReport/", { params:
+      {
+        date: date
+      }
+    })
     return data
   } catch (error) {
     return error

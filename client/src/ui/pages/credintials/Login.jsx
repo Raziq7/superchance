@@ -34,6 +34,7 @@ function Login() {
       TokenManager.setAuthTokens({accessToken: res.data.token});
       setLocal({ token: res.data.token, password: formData.password, ...res.data.admin });
       navigate("game");
+      window.location.reload();
     }
   };
 
