@@ -79,6 +79,9 @@ function Report() {
   };
 
   const printReport = () => {
+    let isPrinterEnabled = JSON.parse(localStorage.getItem("isPrinterEnabled"));
+
+    if (isPrinterEnabled) {
     const billHTML = /*html*/`
     <div>
     <p style="margin-bottom: 4px;">***Super Chance***</p>
@@ -95,6 +98,7 @@ function Report() {
     `;
 
     window.electronAPI.printBill(billHTML);
+    }
   };
 
   const fetchDailyReport = async () => {

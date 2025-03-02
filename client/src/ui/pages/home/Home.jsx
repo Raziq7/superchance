@@ -138,6 +138,7 @@ function Home() {
   const [play, setPlay] = useState(0);
 
   // const [isDisableBet, setIsDisableBet] = useState(false);
+  const [constBalance, setConstBalance] = useState(0)
   const [isShowBet, setisShowBet] = useState(false)
   const [isShowShfl, setIsShowShfl] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false);
@@ -150,7 +151,7 @@ function Home() {
   const [local, setLocal] = useLocalStorage("name", {});
   useLocalStorage("winPoint", null);
   // const [winPoint, setWinnigPoint] = useState(null);
-  const [isPrinterEnabled] = useLocalStorage("isPrinterEnabled", true);
+  // const [isPrinterEnabled] = useLocalStorage("isPrinterEnabled", true);
 
   const [userData, setuserData] = useState({
     id: "",
@@ -541,8 +542,11 @@ function Home() {
         );
         fetchBalance();
         setLocal([...betNumList]);
+        let isPrinterEnabled = JSON.parse(localStorage.getItem("isPrinterEnabled"));
 
         if (isPrinterEnabled) {
+          console.log("printing is going on", isPrinterEnabled);
+          
           const billHTML = /*html*/ `
             <div class="bill">
             <p style="margin-bottom: 4px;">***Super Chance***</p>
@@ -586,6 +590,7 @@ function Home() {
   };
 
   const betButtonClick = function (index) {
+    // let blc = constBalance;
     if (chipNum) {
       let newList = betNumList.map((e, i) => {
         if (index == i) {
@@ -602,6 +607,7 @@ function Home() {
       }, 0);
       setBalance(balance - chipNum);
       setPlay(totalTokens);
+      // setPlay(constBalance);
       setBetNumList(newList);
     }
   };
@@ -707,7 +713,7 @@ function Home() {
     }, 0);
     betCase === "clear"
       ? setBalance(play + balance)
-      : setBalance(balance - totalTokens);
+      : setBalance(constBalance - totalTokens);
     setPlay(totalTokens);
     setBetNumList(newList);
   };
@@ -735,8 +741,7 @@ function Home() {
   const fetchBalance = async function () {
     await get_gameUser().then((e) => {
       if (e.status === 200) {
-        console.log(e.data.balance);
-
+        setConstBalance(e.data.balance);
         setBalance(e.data.balance);
         setuserData(e.data);
       }
