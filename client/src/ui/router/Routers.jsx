@@ -1,13 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import Login from "../pages/credintials/Login";
 import Home from "../pages/home/Home";
-import Home2 from "../pages/home/Home2";
+import Lobby from "../pages/lobby/Lobby";
+
 function Routers() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/game" element={<Home />} />
-      {/* <Route path="/game" element={<Home2 />} /> */}
+      <Route path="/lobby" element={<Lobby />} />
     </Routes>
   );
 }

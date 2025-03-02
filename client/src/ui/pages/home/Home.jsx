@@ -4,7 +4,7 @@ import gsap from "gsap";
 import Header from "../../components/Header";
 // import Spinner from "../../components/Spinner/Spinner";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Historyinfo from "./components/Historyinfo";
 import BetNumbers from "./components/BetNumbers";
 import BottomPortion from "./components/BottomPortion";
@@ -138,7 +138,8 @@ function Home() {
   const [play, setPlay] = useState(0);
 
   // const [isDisableBet, setIsDisableBet] = useState(false);
-
+  const [isShowBet, setisShowBet] = useState(false)
+  const [isShowShfl, setIsShowShfl] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false);
   const [infoModal, setinfoModal] = useState(false);
   const [balance, setBalance] = useState(1000);
@@ -243,6 +244,7 @@ function Home() {
         if (!isSpinning.current) {
           // Double check we haven't started spinning again
           setCurrentMultiplier(midShefN);
+          setisShowBet(true);
         }
       }, 50);
     }
@@ -281,7 +283,7 @@ function Home() {
         stopImageShuffle();
         fetchGameResult();
         // console.log(localStorage.getItem("winAmount"), "winner");
-
+        // setisShowBet(true);
         if (JSON.parse(localStorage.getItem("hasWon"))) {
           handleYouWin();
           setWinAmount(localStorage.getItem("winAmount"));
@@ -384,9 +386,19 @@ function Home() {
   };
 
   useGSAP(() => {
-    gsap.set(wheelRef1.current, { rotation: 18, transformOrigin: "50% 50%" });
-    gsap.set(wheelRef2.current, { rotation: 18, transformOrigin: "50% 50%" });
-  }, []);
+    // console.log(betHistory[0].spinnerNumber, "history");
+    let targetNum = betHistory[0]?.spinnerNumber ?? 1;
+    const sections = 10; // Number of sections
+    const sectionAngle = 360 / sections; // Angle for each section
+    const angleOffset = sectionAngle / 2; // Offset to align with the center of the section
+    const initialRotation = -72; // Initial offset to align with "1"
+
+    const targetRotation =
+    360 - (targetNum * sectionAngle + angleOffset) - initialRotation;
+
+    gsap.set(wheelRef1.current, { rotation: targetRotation, transformOrigin: "50% 50%" });
+    gsap.set(wheelRef2.current, { rotation: targetRotation, transformOrigin: "50% 50%" });
+  }, [betHistory[0]?.spinnerNumber]);
 
   // Outer Ring animation
 
@@ -826,7 +838,8 @@ function Home() {
 
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
-    // setIsDisabled(false);
+    setIsShowShfl(false);
+    setisShowBet(false)
     setWinAmount(0);
     openAlertBox(`PLACE YOUR BET`, "", "");
     placeYourBetsSound.play();
@@ -854,6 +867,7 @@ function Home() {
 
   const onEvery2min = useCallback(async () => {
     // alert("2min - Starting new game cycle");
+    setIsShowShfl(true)
     const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
 
     // setTimeout(async () => {
@@ -900,9 +914,9 @@ function Home() {
     }
   }, [anchorEl]);
 
-  useEffect(() => {
-    console.log("Disabled state changed:", isDisabled);
-  }, [isDisabled]);
+  // useEffect(() => {
+  //   console.log("Disabled state changed:", isDisabled);
+  // }, [isDisabled]);
 
   useEffect(() => {
     console.log(
@@ -1014,6 +1028,30 @@ function Home() {
                 spinnerWeel={spinnerWeel}
                 spinnerRef={spinnerRef}
               />
+              {/* <Typography
+                style={{
+                  fontFamily: "Hahmlet",
+                  fontSize: "96px",
+                  fontWeight: 600,
+                  // filter: "drop-shadow(3px 3px 3px #000)",
+                  background: "linear-gradient(0deg, rgba(255,237,188,1) 0%, rgba(255,187,0,1) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  color: "transparent",
+                  filter: "drop-shadow(3px 3px 3px #000)",
+                  "-webkit-text-stroke": "1px #042655",
+                  position: "absolute",
+                  top: "52%",
+                  left: "53%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 100,
+                  transition: "opacity 0.1s ease-in-out",
+                  visibility: isShowBet ? "visible" : "hidden",
+                }}
+              >
+                {localStorage.getItem("winPoint")}
+              </Typography> */}
               <img
                 ref={midImageRef}
                 src={currentMultiplier}
@@ -1025,6 +1063,9 @@ function Home() {
                   transform: "translate(-50%, -50%)",
                   zIndex: 100,
                   transition: "opacity 0.1s ease-in-out",
+                  // scale: isShowBet ? "0.5" : "1",
+                  // visibility: isShowShfl ? "visible" : "hidden",
+                  visibility: isShowShfl ? "visible" : "hidden",
                 }}
               />
               {/* <Spinner5

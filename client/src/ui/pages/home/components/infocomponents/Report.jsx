@@ -46,12 +46,12 @@ function Report() {
 
   const [reportData, setReportData] = useState({
     name: local.userName,
-    play: "100000.00",
-    win: "90000.00",
-    claim: "90000.00",
-    end: "0.00",
-    commission: "10000.00",
-    net_profit: "5000.00",
+    play: "00",
+    win: "00",
+    claim: "00",
+    end: "00",
+    commission: "00",
+    net_profit: "00",
   });
 
   const handleIconClickFrom = () => {

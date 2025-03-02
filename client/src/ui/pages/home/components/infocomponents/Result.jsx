@@ -216,7 +216,7 @@ function Result() {
                     <TableCell component="th" scope="row">
                       {row.spinnerNumber}
                     </TableCell>
-                    <TableCell>{moment(row.dateTime).format("hh:mm A")}</TableCell>
+                    <TableCell>{row.time}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
