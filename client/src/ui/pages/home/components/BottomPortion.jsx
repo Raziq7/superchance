@@ -38,6 +38,7 @@ function BottomPortion({
   openAlertBox,
   remainingTime,
   isDisabled,
+  isDisableFunBtn,
   betFunc,
   play,
   betNumList,
@@ -145,7 +146,7 @@ function BottomPortion({
         style={{
           position: "absolute",
           bottom: -50,
-          left: 17,
+          left: 22,
           width: "599px",
           height: "342px",
         }}
@@ -211,7 +212,7 @@ function BottomPortion({
         ))}
       </Box>
 
-      <Box sx={{ position: "absolute", bottom: 16, left: 100, zIndex: 5 }}>
+      <Box sx={{ position: "absolute", bottom: 16, left: 120, zIndex: 5 }}>
         <Box sx={{ display: "flex", gap: 4, fontFamily: "Poppins-SemiBold" }}>
           <Box>
             {/* <Button sx={{ p: 0, mb: 1 }} onClick={() => handlePlay()}> */}
@@ -285,7 +286,7 @@ function BottomPortion({
             }}
           >
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "13.313rem",
@@ -297,7 +298,7 @@ function BottomPortion({
               UPPER LINE
             </GameButton>
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "13.313rem",
@@ -319,7 +320,7 @@ function BottomPortion({
             }}
           >
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "8.5rem",
@@ -332,7 +333,7 @@ function BottomPortion({
               ODDS
             </GameButton>
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "8.5rem",
@@ -345,7 +346,7 @@ function BottomPortion({
               EVENS
             </GameButton>
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "8.5rem",
@@ -368,7 +369,7 @@ function BottomPortion({
             }}
           >
             <GameButton
-              disabled={isDisabled}
+              disabled={isDisabled || isDisableFunBtn}
               variant="contained"
               sx={{
                 width: "8.5rem",
