@@ -138,6 +138,9 @@ function GameHistory({ fetchBalance }) {
     //           token: e.played,
     //         };
     //       });
+    let isPrinterEnabled = JSON.parse(localStorage.getItem("isPrinterEnabled"));
+
+    if (isPrinterEnabled) {
           printer_bill(
             ticketObj.ticket_id,
             moment(ticketObj.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
@@ -145,6 +148,7 @@ function GameHistory({ fetchBalance }) {
             ticketObj.data.reduce((sum, e) => sum + e.played, 0),
             ticketObj.data
           );
+        }
     //     }
     //   });
     // }

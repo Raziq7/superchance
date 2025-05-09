@@ -22,7 +22,6 @@ import NoMoreBetsPlease from "../../public/GAME SOUNDS/No more bets please.mp3";
 import YouWinSound from "../../public/GAME SOUNDS/Victory.mp3";
 import LastChance from "../../public/GAME SOUNDS/Last chance.mp3";
 import PlaceYourBets from "../../public/GAME SOUNDS/Place your bets.mp3";
-import Last10sec from "../../public/GAME SOUNDS/last10sec.mp3";
 
 import MessageModal from "../../components/CustomComponent/MessageModal";
 import {
@@ -72,10 +71,6 @@ const lastChanceSound = new Howl({
 
 const placeYourBetsSound = new Howl({
   src: [PlaceYourBets],
-});
-
-const last10secSound = new Howl({
-  src: [Last10sec],
 });
 
 //Mute the voice
@@ -147,7 +142,6 @@ function Home() {
   const [isShowBet, setisShowBet] = useState(false)
   const [isShowShfl, setIsShowShfl] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false);
-  const [isDisableFunBtn, setIsDisableFunBtn] = useState(false)
   const [infoModal, setinfoModal] = useState(false);
   const [balance, setBalance] = useState(1000);
   const [winAmount, setWinAmount] = useState(0);
@@ -597,15 +591,12 @@ function Home() {
 
   const betButtonClick = function (index) {
     // let blc = constBalance;
-    console.log(chipNum, 'Some is comes ');
-    
     if (chipNum) {
-      let chipAmount = chipNum >= balance ? balance : chipNum;
       let newList = betNumList.map((e, i) => {
         if (index == i) {
           return {
             ...e,
-            token: chipAmount + Number(e.token),
+            token: chipNum + Number(e.token),
           };
         }
         return e;
@@ -614,7 +605,7 @@ function Home() {
         const tokenValue = parseInt(item.token, 10) || 0; // Convert to integer, fallback to 0 if blank
         return sum + tokenValue;
       }, 0);
-      setBalance(balance - chipAmount);
+      setBalance(balance - chipNum);
       setPlay(totalTokens);
       // setPlay(constBalance);
       setBetNumList(newList);
@@ -649,21 +640,15 @@ function Home() {
   };
 
   const betFunction = function (betCase) {
-
-    console.log(chipNum);
-    
     let newList;
-    let currentBalance = balance;
     switch (betCase) {
       case "upperLine":
         newList = betNumList.map((e, i) => {
           if (i < 5) {
-            let returnObj = {
+            return {
               ...e,
-              token: chipNum > currentBalance ? currentBalance > 0 ? currentBalance : "" : chipNum,
+              token: chipNum,
             };
-            currentBalance = currentBalance - chipNum;
-            return returnObj;
           }
           return e;
         });
@@ -671,12 +656,10 @@ function Home() {
       case "lowerLine":
         newList = betNumList.map((e, i) => {
           if (i > 4) {
-            let returnObj = {
+            return {
               ...e,
-              token: chipNum > currentBalance ? currentBalance > 0 ? currentBalance : "" : chipNum,
+              token: chipNum,
             };
-            currentBalance = currentBalance - chipNum;
-            return returnObj;
           }
           return e;
         });
@@ -684,12 +667,10 @@ function Home() {
       case "odd":
         newList = betNumList.map((e, i) => {
           if (i % 2 === 0) {
-            let returnObj = {
+            return {
               ...e,
-              token: chipNum > currentBalance ? currentBalance > 0 ? currentBalance : "" : chipNum,
+              token: chipNum,
             };
-            currentBalance = currentBalance - chipNum;
-            return returnObj;
           }
           return e;
         });
@@ -697,26 +678,19 @@ function Home() {
       case "even":
         newList = betNumList.map((e, i) => {
           if (i % 2 === 1) {
-            let returnObj = {
+            return {
               ...e,
-              token: chipNum > currentBalance ? currentBalance > 0 ? currentBalance : "" : chipNum,
+              token: chipNum,
             };
-            currentBalance = currentBalance - chipNum;
-            return returnObj;
           }
           return e;
         });
         break;
       case "double":
-        newList = betNumList.map((e) => {
-          console.log(e);
-          let returnObj = {
-            ...e,
-            token: e.token > currentBalance ? e.token ? e.token : "" : e.token * 2,
-          };
-          // currentBalance = currentBalance - chipNum;
-          return returnObj;
-        });
+        newList = betNumList.map((e) => ({
+          ...e,
+          token: e.token ? e.token * 2 : "",
+        }));
 
         break;
       case "repeat":
@@ -893,7 +867,6 @@ function Home() {
     fetchPredictWinner();
     setIsDisabled(true);
     noMoreBetsPlease.play();
-    last10secSound.play();
     openAlertBox(`NO MORE BETS PLEASE`, "", "");
   }, []);
 
@@ -946,19 +919,23 @@ function Home() {
     }
   }, [anchorEl]);
 
+  // useEffect(() => {
+  //   console.log("Disabled state changed:", isDisabled);
+  // }, [isDisabled]);
+
   useEffect(() => {
-    if (constBalance <= 0) {
+    console.log(
+      "Balance effect - Balance:",
+      balance,
+      "IsCounting:",
+      isCounting
+    );
+    if (balance <= 0) {
       setIsDisabled(true);
     } else if (!isCounting) {
       setIsDisabled(false);
     }
-    if (balance <= 0) {
-      setIsDisableFunBtn(true);
-    } else {
-      setIsDisableFunBtn(false);
-    }
-
-  }, [balance, constBalance, isCounting]);
+  }, [balance, isCounting]);
 
   useEffect(() => {
     fetchBalance();
@@ -977,7 +954,7 @@ function Home() {
           minHeight: "900px",
           // background: "rgb(171,44,4)",
           background:
-            "linear-gradient(180deg, rgba(201,88,1,1) 33%, rgba(181,51,4,1) 58%, rgba(171,44,4,1) 70%, rgba(116,14,3,1) 100%)",
+            "linear-gradient(90deg, rgba(201,88,1,1) 33%, rgba(181,51,4,1) 58%, rgba(171,44,4,1) 70%, rgba(116,14,3,1) 100%)",
         }}
       >
         <Header
@@ -1130,7 +1107,6 @@ function Home() {
             openAlertBox={openAlertBox}
             remainingTime={countdown}
             isDisabled={isDisabled}
-            isDisableFunBtn={isDisableFunBtn}
             betFunc={betFunc}
             play={play}
             betNumList={betNumList}

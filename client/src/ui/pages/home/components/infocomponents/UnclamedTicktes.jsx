@@ -35,7 +35,7 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { printer_bill } from "../../../../utils/functions";
 
-function UnclamedTicktes() {
+function UnclamedTicktes({ fetchBalance }) {
   const dateRefFrom = useRef(null);
   const dateRefTo = useRef(null);
   const [date, setDate] = useState({
@@ -130,13 +130,16 @@ function UnclamedTicktes() {
       //         token: e.played,
       //       };
       //     });
-          printer_bill(
-            ticketObj.ticket_id,
-            moment(ticketObj.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
-            moment(ticketObj.ticket_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
-            ticketObj.played,
+      let isPrinterEnabled = JSON.parse(localStorage.getItem("isPrinterEnabled"));
+          if (isPrinterEnabled) {
+            printer_bill(
+              ticketObj.ticket_id,
+              moment(ticketObj.draw_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
+              moment(ticketObj.ticket_time, "HH:mm:ss.SSSSSS").format("hh:mm A"),
+              ticketObj.played,
             ticketObj.data
           );
+        }
     //     }
     //   });
     // }

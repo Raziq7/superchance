@@ -192,10 +192,10 @@ function Result() {
                   }}
                 >
                   <TableCell sx={{ width: "50%", fontSize: "0.9rem !important" }}>
-                    DRAW TIME
+                   RESULT
                   </TableCell>
                   <TableCell sx={{ width: "50%", fontSize: "0.9rem !important" }}>
-                    RESULT
+                    DRAW TIME
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -216,7 +216,7 @@ function Result() {
                     <TableCell component="th" scope="row">
                       {row.spinnerNumber}
                     </TableCell>
-                    <TableCell>{moment(row.dateTime).format("hh:mm A")}</TableCell>
+                    <TableCell>{row.time}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

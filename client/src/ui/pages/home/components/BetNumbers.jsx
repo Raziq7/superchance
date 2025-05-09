@@ -60,7 +60,7 @@ function BetNumbers({ betNumList, betButtonClick, betremoveClick, chipSound, isD
                   height: "38px",
                 }}
               >
-                {e.token && (
+                {e.token > 0 && (
                   <>
                     <img
                       src={token}
@@ -72,8 +72,8 @@ function BetNumbers({ betNumList, betButtonClick, betremoveClick, chipSound, isD
                         // fontSize: "17.56px",
                         fontWeight: "700",
                         color: "#042655",
-                        fontSize:"1.032rem",
-                        fontFamily: "Hemlets-ExtraBold",
+                        fontSize:"1.2rem",
+                        // fontFamily: "Hemlets-ExtraBold",
                   
                       }}
                     >
