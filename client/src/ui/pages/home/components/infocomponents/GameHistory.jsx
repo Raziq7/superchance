@@ -401,7 +401,7 @@ function GameHistory({ fetchBalance }) {
                         {row.status === "blank" ? '' : row.status}
                       </TableCell>
                       <TableCell>
-                        {row?.result ? row.result + "-N" : ""}
+                        {row?.result !== null ? row.result + "-N" : ""}
                       </TableCell>
                       <TableCell>{row.date}</TableCell>
                       <TableCell>
