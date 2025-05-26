@@ -25,7 +25,18 @@ function Login() {
   const submitForm = async function (e) {
     // setIsLoading(true);
     e.preventDefault();
+    let userName = formData.userName;
+    let password = formData.password;
+    alert(userName);
+    alert(password);
+    if (!userName || !password) {
+      setErrorMessage({ message: "Please enter all fields" });
+      return;
+    }
     const res = await login_user(formData);
+    // alert(formData.password);
+    // alert(formData.userName);
+
     // console.log(res);
     if (res.status === 200) {
       setIsLoading(false);
@@ -52,10 +63,10 @@ function Login() {
   useEffect(() => {
     let userData = localStorage.getItem("userDetails");
     if (userData) {
-      setFormData({
-        userName: JSON.parse(userData).userName,
-        password: JSON.parse(userData).password,
-      });
+      // setFormData({
+      //   userName: JSON.parse(userData).userName,
+      //   password: JSON.parse(userData).password,
+      // });
     }
   }, []);
 
@@ -88,6 +99,9 @@ function Login() {
           {/* <GameButton onClick={logcook} sx={{ fontSize: "14px", px: 2 }}>
             HOST NAME
           </GameButton> */}
+          <Typography sx={{ color: "red", fontSize: "20px" }}>
+           {errorMessage.message}
+          </Typography>
         </Box>
 
         <Box
