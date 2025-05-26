@@ -207,8 +207,26 @@ function Historyinfo({ setinfoModal, betHistory }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  // // width: "100%",
                   width: "50px",
+                  // "-webkit-box-shadow": i === 0 ? "0px 0px 0px 30px rgba(255,0,0,0.72)" : "none",
+                  // "-moz-box-shadow": i === 0 ? "0px 0px 0px 30px rgba(255,0,0,0.72)" : "none",
+                  // boxShadow: i === 0 ? "0px 0px 0px 3px rgba(255,0,0,0.72)" : "none",
+                  // animation: i === 0 ? 'highlight 2s ease-in-out infinite' : 'none',
+                  // '@keyframes highlight': {
+                  //   '0%': { boxShadow: '0 0 0 0 rgba(255, 0, 0, 0.7)' },
+                  //   // '25%': { boxShadow: '0 0 0 5px rgba(255, 0, 0, 0)' },
+                  //   '50%': { boxShadow: '0 0 0 10px rgba(255, 0, 0, 0)' },
+                  //   '100%': { boxShadow: '0 0 0 20px rgba(255, 0, 0, 0)' }
+                  // }
+                  animation: i === 0 ? "highlight 2s ease-in-out infinite" : "none",
+                  // boxShadow: "0 0 0 3px rgba(255, 0, 0, 0.7)", // Keep a base shadow always visible
+                  "@keyframes highlight":  {
+                    "0%": { boxShadow: "0 0 0px 3px rgba(255, 0, 0, 0.2)" },
+                    "25%": { boxShadow: "0 0 0px 3px rgba(255, 0, 0, 0.7)" }, // Brighter at midpoint
+                    "50%": { boxShadow: "0 0 0px 3px rgba(255, 0, 0, 2)" }, // Brighter at midpoint
+                    "75%": { boxShadow: "0 0 0px 3px rgba(255, 0, 0, 1)" }, // Brighter at midpoint
+                    "100%": { boxShadow: "0 0 0px 3px rgba(255, 0, 0, 0.4)" },
+                  },
                 }}
               >
                 <Typography

@@ -46,6 +46,7 @@ import midShef5 from "../../public/midShfl/5X.png";
 import midShef6 from "../../public/midShfl/6X.png";
 import midShef7 from "../../public/midShfl/7X.png";
 import StarsBg from "../../public/backgrounds/StarsBg.png";
+import CustomEase from "gsap/CustomEase";
 
 // const crypto = window.crypto || window.msCrypto;
 
@@ -144,7 +145,8 @@ function Home() {
 
   // const [isDisableBet, setIsDisableBet] = useState(false);
   const [constBalance, setConstBalance] = useState(0)
-  const [isShowBet, setisShowBet] = useState(false)
+  const [isShowBet, setisShowBet] = useState(true)
+  const [isshufAnim, setIsshufAnim] = useState(true)
   const [isShowShfl, setIsShowShfl] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false);
   const [isDisableFunBtn, setIsDisableFunBtn] = useState(false)
@@ -155,7 +157,7 @@ function Home() {
   const [gameID, setGameID] = useLocalStorage("gameID", "");
   const [isOpen, setIsOpen] = useState(false);
   const [local, setLocal] = useLocalStorage("name", {});
-  useLocalStorage("winPoint", null);
+  // useLocalStorage("winPoint", null);
   // const [winPoint, setWinnigPoint] = useState(null);
   // const [isPrinterEnabled] = useLocalStorage("isPrinterEnabled", true);
 
@@ -252,6 +254,7 @@ function Home() {
           // Double check we haven't started spinning again
           setCurrentMultiplier(midShefN);
           setisShowBet(true);
+          setIsShowShfl(false);
         }
       }, 50);
     }
@@ -287,6 +290,7 @@ function Home() {
         isSpinning.current = true;
       },
       onComplete: () => {
+        youWinSound.play();
         stopImageShuffle();
         fetchGameResult();
         // console.log(localStorage.getItem("winAmount"), "winner");
@@ -318,7 +322,7 @@ function Home() {
           (path) => path.getAttribute("index") === targetNumber.toString()
         );
 
-        console.log(winningPath2, "same is one");
+        // console.log(winningPath2, "same is one");
 
         if (winningPath) {
           winningPath.style.filter = "brightness(1)"; // Keep winning section bright
@@ -374,7 +378,9 @@ function Home() {
       duration: 9,
       rotation: rotationNext,
       transformOrigin: "50% 50%",
-      ease: "power2.out",
+      // ease: CustomEase.create("custom", "M0,0 C0.298,0.331 0.189,0.23 0.351,0.36 0.58,0.542 0.943,0.891 1,1 "),
+      // ease: "expoScale(0.5,7,none)",
+      ease: "none"
     });
 
     // Optional: Spin the second wheel, if necessary
@@ -385,7 +391,9 @@ function Home() {
           duration: 9,
           rotation: rotationNext,
           transformOrigin: "50% 50%",
-          ease: "power2.out",
+          // ease: CustomEase.create("custom", "M0,0 C0.298,0.331 0.189,0.23 0.351,0.36 0.58,0.542 0.943,0.891 1,1 ")
+          // ease: "expoScale(0.5,7,none)",
+          ease: "none"
         },
         "<" // Start both animations simultaneously
       );
@@ -406,12 +414,6 @@ function Home() {
     gsap.set(wheelRef1.current, { rotation: targetRotation, transformOrigin: "50% 50%" });
     gsap.set(wheelRef2.current, { rotation: targetRotation, transformOrigin: "50% 50%" });
   }, [betHistory[0]?.spinnerNumber]);
-
-  // Outer Ring animation
-
-  // useEffect(() => {
-  //   console.log(spinnerWeel, "Somer is (((((((((((((((((((((((((())))))))))))))))))))))))))");
-  // }, []);
 
   // Inner Ring animation
 
@@ -654,6 +656,10 @@ function Home() {
     
     let newList;
     let currentBalance = balance;
+    const totalTokunValue = betNumList.reduce((sum, item) => {
+      const tokenValue = parseInt(item.token, 10) || 0; // Convert to integer, fallback to 0 if blank
+      return sum + tokenValue;
+    }, 0);
     switch (betCase) {
       case "upperLine":
         newList = betNumList.map((e, i) => {
@@ -712,9 +718,8 @@ function Home() {
           console.log(e);
           let returnObj = {
             ...e,
-            token: e.token > currentBalance ? e.token ? e.token : "" : e.token * 2,
+            token: totalTokunValue > currentBalance ? e.token ? e.token : "" : e.token * 2,
           };
-          // currentBalance = currentBalance - chipNum;
           return returnObj;
         });
 
@@ -857,7 +862,7 @@ function Home() {
 
   const handleYouWin = () => {
     setIsOpen(true);
-    youWinSound.play();
+    // youWinSound.play();
     // setAlertMessage("message");
     fetchBalance();
   };
@@ -869,8 +874,8 @@ function Home() {
 
   const onEvery15sec = useCallback(() => {
     // fetchPredictWinner();
-    setIsShowShfl(false);
-    setisShowBet(false)
+    // setIsshufAnim(false);
+    // setisShowBet(false);
     setWinAmount(0);
     openAlertBox(`PLACE YOUR BET`, "", "");
     placeYourBetsSound.play();
@@ -887,6 +892,8 @@ function Home() {
 
   // Move these callback definitions before any other state or refs
   const onEvery1m45s = useCallback(() => {
+    setIsshufAnim(false);
+    setisShowBet(false);
     const currentGameID = localStorage.getItem("gameID");
     console.log("1m45s - Current gameID:", currentGameID);
     setinfoModal(false);
@@ -900,6 +907,7 @@ function Home() {
   const onEvery2min = useCallback(async () => {
     // alert("2min - Starting new game cycle");
     setIsShowShfl(true)
+    setIsshufAnim(true)
     const storedWinPoint = JSON.parse(localStorage.getItem("winPoint"));
 
     // setTimeout(async () => {
@@ -1056,12 +1064,11 @@ function Home() {
                 spinnerWeel={spinnerWeel}
                 spinnerRef={spinnerRef}
               />
-              {/* <Typography
+              <Typography
                 style={{
                   fontFamily: "Hahmlet",
                   fontSize: "96px",
                   fontWeight: 600,
-                  // filter: "drop-shadow(3px 3px 3px #000)",
                   background: "linear-gradient(0deg, rgba(255,237,188,1) 0%, rgba(255,187,0,1) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -1070,30 +1077,31 @@ function Home() {
                   filter: "drop-shadow(3px 3px 3px #000)",
                   "-webkit-text-stroke": "1px #042655",
                   position: "absolute",
-                  top: "52%",
+                  top: "48%",
                   left: "53%",
                   transform: "translate(-50%, -50%)",
                   zIndex: 100,
-                  transition: "opacity 0.1s ease-in-out",
+                  opacity: isShowBet ? 1 : 0,
+                  transition: "all 0.5s ease-in-out",
                   visibility: isShowBet ? "visible" : "hidden",
+                  scale: isShowBet ? 1 : 0.5,
                 }}
               >
                 {localStorage.getItem("winPoint")}
-              </Typography> */}
+              </Typography>
               <img
                 ref={midImageRef}
                 src={currentMultiplier}
                 alt=""
                 style={{
                   position: "absolute",
-                  top: "52%",
-                  left: "53%",
-                  transform: "translate(-50%, -50%)",
+                  top: isShowShfl ? "52%" : "58%",
+                  left: isShowShfl ? "53%" : "51.7%",
+                  transform: !isShowShfl ? "translate(-50%, -50%)" : "translate(-49%, -48%)",
                   zIndex: 100,
-                  transition: "opacity 0.1s ease-in-out",
-                  // scale: isShowBet ? "0.5" : "1",
-                  // visibility: isShowShfl ? "visible" : "hidden",
-                  visibility: isShowShfl ? "visible" : "hidden",
+                  transition: "all 0.5s ease-in-out",
+                  scale: isShowShfl ? "1" : "0.7",
+                  visibility: isshufAnim ? "visible" : "hidden",
                 }}
               />
               {/* <Spinner5
