@@ -54,20 +54,22 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access  Public (or Private if necessary)
 export const getLastSpinnerResults = asyncHandler(async (req, res) => {
   try {
-    // Get current time in minutes
     const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-    console.log("Current Time (Minutes Since Midnight):", currentMinutes);
+    // Generate an array of 10 timeInMinutes with interval 2 starting from currentMinutes
+    const minutesArray = [];
+    for (let i = 0; i < 10; i++) {
+      minutesArray.push(currentMinutes + i * 2);
+    }
 
-    // Fetch last 10 records up to now
+    console.log("Minutes to query:", minutesArray);
+
+    // Query spinner results where timeInMinutes is in the array
     const results = await SpinnerResult.find({
-      timeInMinutes: { $lte: currentMinutes }, // Find entries before the current time
+      timeInMinutes: { $in: minutesArray }
     })
-      .sort({ timeInMinutes: -1 }) // Sort descending (latest first)
-      .limit(10);
-
-    console.log("Fetched Results:", results);
+      .sort({ timeInMinutes: 1 }); // ascending order
 
     if (results.length === 0) {
       return res.status(404).json({ message: "No spinner results found" });

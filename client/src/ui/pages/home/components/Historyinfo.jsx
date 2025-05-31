@@ -177,7 +177,7 @@ function Historyinfo({ setinfoModal, betHistory }) {
             height: "104px",
           }}
         >
-          {betHistory.map((e, i) => (
+          {betHistory?.map((e, i) => (
             <Box
               key={i}
               sx={
@@ -197,7 +197,7 @@ function Historyinfo({ setinfoModal, betHistory }) {
                 }}
               >
                 {/* {moment(e.dateTime, "HH:mm:ss.SSSSSS").format("hh:mm A")} */}
-                {e.time.replace(/:\d{2} /, " ")}
+                {e?.time?.replace(/:\d{2} /, " ")}
               </Typography>
               <Paper
                 elevation={0}

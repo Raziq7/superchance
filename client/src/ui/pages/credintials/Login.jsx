@@ -27,8 +27,6 @@ function Login() {
     e.preventDefault();
     let userName = formData.userName;
     let password = formData.password;
-    alert(userName);
-    alert(password);
     if (!userName || !password) {
       setErrorMessage({ message: "Please enter all fields" });
       return;
